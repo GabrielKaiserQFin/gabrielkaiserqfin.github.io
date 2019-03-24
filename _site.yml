@@ -9,6 +9,16 @@ navbar:
       href: about.html
     - text: "CAPM"
       href: CAPM.html
+    - text: "Minimum Variance Portfolio"
+      href: Markowitz.html
+    - text: "Introduction to Portfolio Management"
+      href: IntroductionPortfolioManagement.html
+    - text: "Regularization"
+      href: Regularization.html
+    - text: "Invariance"
+      href: Invariance.html
+    - text: "Fun with RBase"
+      href: RBase.html
 right:
     - icon: fa-envelope fa-lg
       href: contact.html
@@ -21,5 +31,5 @@ right:
       
 output:
   html_document:
-    theme: flatly
+    theme: paper
     css: Standarstyle.css
