@@ -9,6 +9,15 @@ navbar:
       href: about.html
     - text: "CAPM"
       href: CAPM.html
+right:
+    - icon: fa-envelope fa-lg
+      href: contact.html
+    - icon: fa-github fa-lg
+      href: http://github.com/gabrielkaiserqfin
+    - icon: fa-twitter fa-lg
+      href: https://twitter.com/QuantGk
+    - icon: fa-linkedin fa-lg
+      href: https://www.linkedin.com/in/gabriel-kaiser-a98a0083/
       
 output:
   html_document:

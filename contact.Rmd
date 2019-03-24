@@ -1,0 +1,24 @@
+---
+title: "Contact"
+output: html_document
+---
+
+<link rel="stylesheet" href="styles.css" type="text/css">
+
+I'd love to hear from you, so feel free to reach out:
+
+Luxembourg School of Finance<br>
+Postal Address 	Campus Kirchberg, Université du Luxembourg<br>
+6, rue Richard Coudenhove-Kalergi<br>
+L-1359 Luxembourg <br>
+(+352) 46 66 44 5948<br>
+gabriel.kaiser@uni.lu<br>
+
+Currently, I live in London:
+London School of Economics and Political Science<br>
+Financial Markets Group Research Centre<br>
+Houghton Street, 1th floor<br>
+London, UK WC2A 2AE<br>
+g.kaiser@lse.ac.uk<br>
+
+Or connect with me on GitHub, Twitter, or Linkedin.
