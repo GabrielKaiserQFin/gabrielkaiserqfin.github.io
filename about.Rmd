@@ -1,7 +1,0 @@
----
-title: "About Me"
----
-
-- __Name:__ Gabriel
-- __Ocupation:__ "Phd Student"
-- __Hobbies:__ Learning software development instead of studying for exams.

@@ -5,7 +5,7 @@ navbar:
   left:
     - text: "Home"
       href: index.html
-    - text: "About Me"
+    - text: "Research"
       href: about.html
     - text: "CAPM"
       href: CAPM.html
@@ -13,12 +13,14 @@ navbar:
       href: Markowitz.html
     - text: "Introduction to Portfolio Management"
       href: IntroductionPortfolioManagement.html
-    - text: "Regularization"
+    - text: "Curse of Dimensionality"
       href: Regularization.html
     - text: "Invariance"
       href: Invariance.html
     - text: "Fun with RBase"
       href: RBase.html
+    - text: "CV"
+      href: about.html
 right:
     - icon: fa-envelope fa-lg
       href: contact.html

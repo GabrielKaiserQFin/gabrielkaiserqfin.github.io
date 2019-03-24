@@ -6,8 +6,8 @@ title: "About me"
 
 <img src="images/G_Kai.jpg" style="width:25%; border:0px solid; margin-right: 20px" align="left">
 
-I like to analyze data to answer research questions and test hypotheses. Currently, I investigate questions related to time-series predictability of market anomalies through my JMP. 
+I like to analyze data to answer research questions and test hypotheses. Currently, I investigate time-series predictability of market anomalies in my JMP. 
 
-I graduated with honors from the [Vienna University of economics and Business](https://www.wu.ac.at/studium/master/quantitative-finance/overview/) with a two years MSc in Quantitative Finance in 2016. Simultanously, I was working as researcher in the R&D department at the [Quantitative Asset Manager](https://www.iqam.com/). In November the same year, I began working toward my PhD in Finance [University of Luxembourg, LSF](https://wwwen.uni.lu/research/fdef/luxembourg_school_of_finance_research/people/gabriel_kaiser), where I apply financial econometrics and machine learning methods to study market anomalies. Currently, I live in London since I am a visiting scholar at LSE(http://www.lse.ac.uk/fmg). I expect to graduate by the mid of 2020.
+I graduated with honors from the [Vienna University of economics and Business](https://www.wu.ac.at/studium/master/quantitative-finance/overview/) in a two years MSc in Quantitative Finance in 2016. Simultanously, I was working as researcher in the R&D department at the [Quantitative Asset Manager](https://www.iqam.com/). In November the same year, I began working toward my PhD in Finance [University of Luxembourg, LSF](https://wwwen.uni.lu/research/fdef/luxembourg_school_of_finance_research/people/gabriel_kaiser), where I apply financial econometrics and machine learning methods to study market anomalies. Currently, I live in London since I am a visiting scholar at LSE(http://www.lse.ac.uk/fmg). I expect to graduate by mid of 2020.
 
 My full CV is available [here](CV_EN_A_Industry.pdf).
