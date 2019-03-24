@@ -1,0 +1,9 @@
+name: "gabriels-website"
+output_dir: "."
+navbar:
+  title: "Gabriel Kaiser"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "About Me"
+      href: about.html
