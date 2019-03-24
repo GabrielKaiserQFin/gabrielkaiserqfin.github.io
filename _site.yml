@@ -7,6 +7,9 @@ navbar:
       href: index.html
     - text: "About Me"
       href: about.html
+    - text: "CAPM"
+      href: CAPM.html
+      
 output:
   html_document:
     theme: flatly
