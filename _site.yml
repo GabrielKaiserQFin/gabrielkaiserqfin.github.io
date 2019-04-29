@@ -6,19 +6,23 @@ navbar:
     - text: "Home"
       href: index.html
     - text: "Research"
-      href: about.html
-    - text: "CAPM"
       href: CAPM.html
-    - text: "Minimum Variance Portfolio"
-      href: Markowitz.html
-    - text: "Introduction to Portfolio Management"
-      href: IntroductionPortfolioManagement.html
-    - text: "Curse of Dimensionality"
-      href: Regularization.html
-    - text: "Invariance"
-      href: Invariance.html
-    - text: "Fun with RBase"
-      href: RBase.html
+    - text: "Teaching"
+      href: teaching.html
+    - text: "Tutorials/Programming"
+      menu:
+          - text: "CAPM"
+            href: CAPM.html
+          - text: "Minimum Variance Portfolio"
+            href: Markowitz.html
+          - text: "Introduction to Portfolio Management"
+            href: IntroductionPortfolioManagement.html
+          - text: "Curse of Dimensionality"
+            href: Regularization.html
+          - text: "Invariance"
+            href: Invariance.html
+          - text: "Fun with RBase"
+            href: RBase.html
   right:
     - icon: fa-envelope fa-lg
       href: contact.html

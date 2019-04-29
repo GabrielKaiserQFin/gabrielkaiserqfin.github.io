@@ -3,8 +3,6 @@ title: "Contact"
 output: html_document
 ---
 
-<link rel="stylesheet" href="styles.css" type="text/css">
-
 I'd love to hear from you, so feel free to reach out:
 
 Luxembourg School of Finance<br>
