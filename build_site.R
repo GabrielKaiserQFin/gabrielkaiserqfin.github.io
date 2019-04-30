@@ -4,7 +4,7 @@
 #working on at the time. 
 setwd(paste0("C:/Users/", 
              Sys.info()["login"], 
-             "/Google Drive/Blog/Website/"))
+             "/Google Drive/Blog/Website"))
 
 #render your sweet site. 
 rmarkdown::render_site()

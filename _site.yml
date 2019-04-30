@@ -11,12 +11,12 @@ navbar:
       href: teaching.html
     - text: "Tutorials/Programming"
       menu:
-          - text: "CAPM"
-            href: CAPM.html
-          - text: "Minimum Variance Portfolio"
-            href: Markowitz.html
           - text: "Introduction to Portfolio Management"
             href: IntroductionPortfolioManagement.html
+          - text: "Minimum Variance Portfolio"
+            href: Markowitz.html
+          - text: "CAPM"
+            href: CAPM.html
           - text: "Curse of Dimensionality"
             href: Regularization.html
           - text: "Invariance"
