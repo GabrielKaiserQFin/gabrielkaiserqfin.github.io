@@ -11,7 +11,7 @@
 
 
 
-<title>Load custom functions at startup from the cloud</title>
+<title>Research.utf8</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -357,149 +357,57 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Load custom functions at startup from the cloud</h1>
 
 </div>
 
 
-<p>In this short post, you find the user-specific R configuration file, where you can place more personal functions preferences, shortcuts, aliases, and hacks that are used regularly. You can also download the .RBase file from my Github repository, which is linked to this webpage.</p>
-<div id="instructions" class="section level3">
-<h3>Instructions:</h3>
-<p>I use the user-specific .Rprofile to source functions whenever I start RStudio.</p>
-<p>To setup you RStudio start-up follow this 4 steps:</p>
-<ol style="list-style-type: decimal">
-<li><p>You may find the .Rprofile file in your Documents folder. Just replace it with my file at Github.</p></li>
-<li><p>Download the Base.R file store it, wherever it is convenient for you, as for instance Google drive.</p></li>
-<li><p>Change the path for Base.R accordingly in .Profile.</p></li>
-<li><p>Now you may add functions, which you want to load automatically, in your Base.R.</p></li>
-</ol>
-<p><strong>Done</strong></p>
-<p>Usually, R searches for the .R Profile file in 3 directories:</p>
+<!-- \newcommand{\E}[1]{\mathbb{E}\left[ #1 \right]} -->
+<!-- \newcommand{\Cov}[2]{\mathrm{Cov}\left[ #1, #2\right]} -->
+<p><br />
+<br />
+</p>
+<hr />
+<div id="job-market-paper" class="section level2">
+<h2>Job Market Paper</h2>
+<hr />
+<div id="nonlinearities-everywhere" class="section level4">
+<h4>Nonlinearities Everywhere:</h4>
 </div>
-<div id="installation-path" class="section level3">
-<h3>Installation path:</h3>
-<ul>
-<li>Go to your Home Directory of Windows or Mac</li>
-<li><p>Working Directory: The simplest way is to change the working directory, by going to “RStudio -&gt; Tools -&gt; GlobalOptions -&gt; General -&gt; Default Working Directory”. I changed it to my specific cloud where I placed both files: .Rprofile and Base.R</p></li>
-<li><p>Change the Library folder to the cloud in the .Rprofile.</p></li>
-</ul>
-<p>This is quite useful if you work on several computers and want to install a package only once. In order to sync so to say you R installed packages, just copy the Documents/win-Library to your cloud and change the .Rprofile accordingly. Afterwards you can delete the packages in Documents/library on the local machine.</p>
+<div id="sparse-supervised-learning-of-market-anomalies" class="section level4">
+<h4>Sparse Supervised Learning of Market Anomalies</h4>
+<p>This paper proposes a semi-parametric one-step approach to identify a reduced information set that produces expected return spreads in the cross-section. I show that penalized single-stage models introduce enough sparsity to answer the multidimensional challenge imposed by the ‘zoo of anomalies’. The determined information subset discovered is not time-invariant. Moreover, applying supervised learning on the selected information subset improves the approximation of investor beliefs. In this regard, I find natural splines to be the preferable functional form due to their resistance to extreme values. Nonetheless, the results are consistent across various nonlinear functions. Further, I emphasize the importance of higher moments for estimation purposes of market anomalies with insurance-like payoffs.<br />
+<br />
+</p>
+<hr />
 </div>
-<div id="base-file" class="section level3">
-<h3>Base file</h3>
-<p>The functions below and settings are loaded automatically in every start-up. For instance, the first two functions let you easily copy data from Excel to R and vice versa. Actually, it also works for any clipboard content, lets say a data table from a webpage, etc. Depending on the separator, the data is split. You can change this parameter, as well as the header and decimal point seperator.</p>
-<pre class="r"><code>#######Useful functions###############
-
-
-#Copy Clipboard from Excel to R
-read.excel &lt;- function(header=FALSE, sep=&quot;\t&quot;, dec=&quot;.&quot;) {
-  read.table(&quot;clipboard&quot;,sep=sep,header=header, dec=dec)
-   
-}
-
-#Paste Clipboard from R to Excel
-write.excel &lt;- function(x,row.names=FALSE,col.names=TRUE,seperator=&quot;\t&quot;,...) {
-  write.table(x,&quot;clipboard&quot;,sep=seperator,row.names=row.names,col.names=col.names,...)
-}
-
-
-
-#Newtons method is an iterative root-finding algorithm where we start with an initial guess x0
-#and each successive guess is refined using the iterative process:
-#  
-#  xn+1=xn-f(xn)/f&#39;(xn)
-#
-#The algorithm will run until either the number of steps N has been reached, or 
-#the error tolerance |xn+1???xn|&lt;??, where ?? is defined as the tolerance parameter tol.
-#
-newton &lt;- function(f, tol=1E-12,x0=1,N=20, stepSize = 0.001) {
-  h &lt;- stepSize
-  i &lt;- 1; x1 &lt;- x0
-  p &lt;- numeric(N)
-  while (i&lt;=N) {
-    df.dx &lt;- (f(x0+h)-f(x0))/h
-    x1 &lt;- (x0 - (f(x0)/df.dx))
-    p[i] &lt;- x1
-    i &lt;- i + 1
-    if (abs(x1-x0) &lt; tol) break
-    x0 &lt;- x1
-  }
-  return(p[1:(i-1)])
-}
-
-
-
-#get packages: install them if necessary and load them
-getPackages &lt;- function(x){
-  for( i in x ){
-    i = gsub(&quot;.*/&quot;, &quot;&quot;, i)
-    #  require returns TRUE invisibly if it was able to load package
-    if( ! require( i , character.only = TRUE )){
-      #  If package was not able to be loaded then re-install
-      (install.packages( i , dependencies = TRUE))
-      
-      #  If package was not able to be installed then re-install with github   
-      if( ! require( i , character.only = TRUE )){
-        (devtools::install_github( i , dependencies = TRUE ))
-        print(&quot;Github Installation!&quot;)
-      }
-    }
-      
-      #  Load package
-    suppressPackageStartupMessages(require( i , character.only = TRUE ))
-  }
-}
-
-###Update R, RStudio, Github,...
-#suppressPackageStartupMessages(library(installr))
-#updateR()
-#check.for.updates.R()
-
-#do not save after q()
-# q &lt;- function (save = &quot;n&quot;, status = 0, runLast = TRUE)
-#   .Internal(quit(save, status, runLast))
-
-
-local({r &lt;- getOption(&quot;repos&quot;)
-r[&quot;CRAN&quot;] &lt;- &quot;https://cran.wu.ac.at/&quot;
-options(repos=r)})
-
-options(stringsAsFactors=FALSE)
-
-options(max.print=100)
-
-options(scipen=10)
-
-options(editor=&quot;vim&quot;)
-
-# options(show.signif.stars=FALSE)
-
-options(menu.graphics=FALSE)
-
-options(prompt=&quot;&gt; &quot;)
-options(continue=&quot;... &quot;)
-
-options(width = 80)
-
-
-utils::rc.settings(ipck=TRUE)
-
-.env &lt;- new.env()
-attach(.env)
-
-.env$unrowname &lt;- function(x) {
-  rownames(x) &lt;- NULL
-  x
-}
-
-.env$unfactor &lt;- function(df){
-  id &lt;- sapply(df, is.factor)
-  df[id] &lt;- lapply(df[id], as.character)
-  df
-}
-
-message(&quot;Successfully loaded .Rprofile&quot;)</code></pre>
-<pre><code>## Successfully loaded .Rprofile</code></pre>
+</div>
+<div id="working-papers" class="section level2">
+<h2>Working papers</h2>
+<hr />
+<div id="context-dependent-elicitation-of-risk-preferences-in-markets" class="section level4">
+<h4>Context-dependent Elicitation of Risk Preferences in Markets</h4>
+<p>This paper proposes an experimental elicitation of individual risk attitudes in a market context. We evaluate the preferences of bidders from a first-price auction in a nested model that incorporates the constant relative risk aversion model and the dual probability of winning model as special cases. These models predict individual behavior across different market sizes for a given parametrization. We test the relevance of the elicited measures of risk aversion in an asset market setting. Our results suggest that the constant relative risk aversion model explains the behavior of the asset market well, and better than alternative risk aversion elicitation measures. We find that markets with higher levels of risk aversion have lower price levels, and that individuals with higher risk aversion submit lower limit offers to sell. We also observe that subjects who submit non-monotonous bids in the first price auction make trading losses in the asset market. Our non-monotonicity score is correlated to the score of the cognitive reflection test.<br />
+<br />
+<br />
+</p>
+</div>
+<div id="the-speed-of-wall-street" class="section level4">
+<h4>The Speed of Wall Street:</h4>
+</div>
+<div id="time-decaying-market-frictions" class="section level4">
+<h4>Time-decaying Market Frictions</h4>
+<p>This paper explores the time-variation of expected abnormal portfolio excess returns. Explicitly, long-short equity returns subject to large quantities of arbitrage capital subsequently increase before they decay in the long-run. In order to identify periods of increased arbitrage activity, we study states with elevated abnormal net trading volume and eras that coincide with publication dates of market anomalies. The interaction of both measures is an ideal proxy for these periods. What is more, we are able to associate the pace of the time-variation of an anomaly to the demand in hedged returns as well as its turnover.<br />
+<br />
+<br />
+</p>
+</div>
+<div id="transparency-of-call-auctions" class="section level4">
+<h4>Transparency of Call Auctions:</h4>
+</div>
+<div id="a-comparison-of-euronext-and-xetra" class="section level4">
+<h4>A Comparison of Euronext and Xetra</h4>
+<p>We compare the call auction designs of two major European stock exchanges. In our paper, Euronext is classified as transparent and Xetra as opaque auction mechanism. For a sample of 79 matched stocks, we ï¬nd that Euronext auctions contribute more to price discovery and provide more liquidity due to lower bid-ask spreads. Nonetheless, the opaque auction attracts higher trading volume relative to daily trading volume. Moreover, we detect in both exchanges significant return reversals subsequent to the opening and closing auction, which implys positive expected profits for liquidity providers.</p>
+</div>
 </div>
 
 
