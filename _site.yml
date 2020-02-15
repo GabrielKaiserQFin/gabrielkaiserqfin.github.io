@@ -23,6 +23,8 @@ navbar:
             href: Invariance.html
           - text: "Fun with RBase"
             href: RBase.html
+    - text: "My Book"
+      href: 'https://aiap.rbind.io/'
   right:
     - icon: fa-envelope fa-lg
       href: contact.html

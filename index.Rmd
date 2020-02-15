@@ -4,7 +4,7 @@ title: "About me"
 
 <link rel="stylesheet" href="styles.css" type="text/css">
 
-<img src="G_Kai.jpg" style="width:20%; border:0px solid; margin-right: 20px" align="left">
+<img src="img/G_Kai.jpg" style="width:20%; border:0px solid; margin-right: 20px" align="left">
 
 Welcome to my website! Here you will find a portfolio that describes my passion and the work I have done during my PhD. My research interests include Asset Pricing, Market Microstructure, Experimental Finance and Financial Econometrics. In my JMP, I apply Machine Learning methods to study the dynamics of expected equity returns.
 
@@ -14,4 +14,4 @@ Both of my CVs, academic and industry, can be downloaded here: [Academic CV](Aca
 
 
 
-![](bm.gif)
+![](img/bm.gif)

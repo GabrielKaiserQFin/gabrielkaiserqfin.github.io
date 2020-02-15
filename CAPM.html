@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -86,7 +86,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -235,6 +234,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -246,18 +246,6 @@ $(document).ready(function () {
   display: none;
 }
 </style>
-
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
 
 <!-- code folding -->
 
@@ -362,7 +350,16 @@ $(document).ready(function () {
 </div>
 
 
-<p>In this post we introduce a risk-free asset. That implies that we can construct a tangency portfolio, which enables us to hold a combination of the risk-free asset and the tangency portfolio. This tangency line is called Security Market Line (SML) and it enables us to surf the SML instead of the bullet, which ultimately leads to larger expected returns. The weights between the risk-free asset and the tangency portfolio are set depending on our individual risk appetite. A famous researcher told me once, that it might make sense to deviate from the SML and ride the bullet a bit as rebalancing is quite expensive and minor inefficiencies are negligible. However, the main difference to the <a href="https://gabrielkaiserqfin.github.io/Markowitz.html">minimum variance portfolio</a> is that we add another constraint. The second constraint introduces the possibility to construct our portfolio from risky and risk-free assets. <span class="math display">\[\min_{\mathrm{w}\in \mathbb{R}^{n}}\frac{1}{2}w&#39;\Sigma w+0\cdot(1-w&#39;1) \  \text{         subject to         } \  w&#39;\mathop {\mathbb E}[r]+(1-w&#39;1)r_{f}=\mu \]</span> The first order condition in this case lead to: <span class="math display">\[\Sigma w=\lambda(\mathop {\mathbb E}[\mathrm{r}]-1r_{f})\]</span> After setting lambda to one and considering that weights sum up to one we obtain the final solution: <span class="math display">\[\Rightarrow \mathrm{w}=\Sigma^{-1}(\mathop {\mathbb E}[\mathrm{r}]-1r_{f})\ ,\ w^{*}=\frac{w}{w&#39;1} \]</span> If investors have the same return and risk expectations, then the optimal portfolio of risky assets is the same for everyone. The tolerance for risk or risk aversion by an investor is not adjusted by reallocating among risky assets, but through the split between risky and risk-free assets. The portfolio of risky assets that investors should hold will contain a large number of assets, and thus being well diversified. This time I want to introduce a very helpful package called <strong>fPortfolio</strong>, that allows us to compute and plot the CAPM in very short steps.</p>
+<div id="sml" class="section level3">
+<h3>SML</h3>
+<p>In this post we introduce a risk-free asset. That implies that we can construct a <strong>tangency portfolio</strong>, which enables us to hold a combination of the risk-free asset and the tangency portfolio. This tangency line is called <strong>Security Market Line</strong> (SML) and it enables us to surf the SML instead of the bullet, which ultimately leads to larger expected returns. The weights between the risk-free asset and the tangency portfolio are set depending on our individual risk appetite. So far the difference to the Minimum variance optimization problem discussed in the previous chapter is just another constraint. The second constraint introduces the possibility to construct our portfolio from risky and risk-free assets. <span class="math display">\[\min_{\mathrm{w}\in \mathbb{R}^{n}}\frac{1}{2}w&#39;\Sigma w+0\cdot(1-w&#39;1) \  \text{         subject to         } \  w&#39;\mathop {\mathbb E}[r]+(1-w&#39;1)r_{f}=\mu \]</span> The first order condition in this case lead to: <span class="math display">\[\Sigma w=\lambda(\mathop {\mathbb E}[\mathrm{r}]-1r_{f})\]</span> After setting lambda to one and considering that weights sum up to one we obtain the final solution: <span class="math display">\[\Rightarrow \mathrm{w}=\Sigma^{-1}(\mathop {\mathbb E}[\mathrm{r}]-1r_{f})\ ,\ w^{*}=\frac{w}{w&#39;1} \]</span> If investors have the same return and risk expectations, then the optimal portfolio of risky assets is the same for everyone. The tolerance for risk or risk aversion by an investor is not adjusted by reallocating among risky assets, but through the split between risky and risk-free assets. The portfolio of risky assets that investors should hold will contain a large number of assets, and thus being well diversified. This time I want to introduce a very helpful package called <span class="pack">fPortfolio</span>, that allows us to compute and plot the MV frontier including a risk-free rate.</p>
+</div>
+<div id="capm" class="section level3">
+<h3>CAPM</h3>
+<p>However, the main difference of the CAPM to the <a href="https://gabrielkaiserqfin.github.io/Markowitz.html">Markowitz’s Modern Portfolio Theory (MPT)</a>is not the introduction of a risk free rate rather than a simplification of the MPT concept. The CAPM is more practical and actually introduces the idea of <strong>idiosyncratic</strong> and <strong>systematic risk</strong>. <span class="citation">Sharpe (1964)</span>, <span class="citation">Lintner (1965)</span> and <span class="citation">Mossin (1966)</span> worked simultanously on the equilibrium model, which can be written as:</p>
+<p><span class="math display">\[\E[R_i]=R_{f}+(\E[R_{M}]-R_{f})\cdot \beta_{i} = R_{f}+(\E[R_{M}]-R_{f})\cdot {\frac {\mathrm {Cov} (R_{M},R_{i})}{\mathrm {Var} (R_{M})}}\]</span></p>
+<p>Whereas MPT has arbitrary correlation between all investments, the CAPM only links investments via the market, such as the SP500. CAPM is an example of an <strong>equilibrium model</strong> such as the <strong>ICAPM</strong> (<span class="citation">Merton (1973)</span>) or <strong>CCAPM</strong> (<span class="citation">Breeden, Gibbons, and Litzenberger (1989)</span>), as opposed to model based on <strong>no-arbitrage pricing theory</strong> (<span class="citation">Ross (2013)</span>), such as <strong>State Preference Theory</strong> (<span class="citation">Arrow and Debreu (1954)</span>), <strong>Black-Scholes Option Pricing</strong> (black1973pricing) or <strong>Term Structure Models</strong> (<span class="citation">Heath, Jarrow, and Morton (1992)</span>). <span class="citation">Cochrane (2009)</span> uncovered the equivalance between APT and equilibrium theory via the <strong>Euler Equation</strong> of the <strong>stochastic discount factor</strong> approach.</p>
+<p><span class="math display">\[\E_t[R_{t+1} m_{t+1}] = 1\]</span></p>
 <p>Since we consider the entire SP500 for a period of 5 years, we obtain more stocks than time-points. As a consequence, the covariance matrix is singular as the matrix of returns does not have full rank. Solutions to overcome this problem, as for instance using Principal Component Analysis, are presented in upcoming posts. For now, we choose a random subset of stocks to avoid a dependent structure. The largest 10 weights in absolute terms are printed below.</p>
 <pre class="r"><code># Load packages and data
 Packages2Load &lt;- c(&quot;Matrix&quot;, &quot;quadprog&quot;, &quot;corrplot&quot;, &quot;tseries&quot;, &quot;fPortfolio&quot;, &quot;matrixcalc&quot;, &quot;metricsgraphics&quot;, &quot;dplyr&quot;)
@@ -374,26 +371,24 @@ SP500 &lt;- read.csv(link, header = TRUE, sep = &quot;,&quot;)
 
 set.seed(12)
 index &lt;- sample.int(ncol(SP500), 50, replace = FALSE) # since the return matrix does not have full rank, the cov matrix would be singular
-SP500 &lt;- timeSeries(SP500[, index])
-
+SP50 &lt;- timeSeries(SP500[, index])
 # fPortfolio package
 Constraints &lt;- &quot;LongOnly&quot; # &quot;Short&quot;
-
 globminSpec &lt;- portfolioSpec()
 
 # setSolver(globminSpec) &lt;- solveRshortExact #Only if unlimited Short selling
 
 globminPortfolio &lt;- minvariancePortfolio(
-  data = SP500,
-  spec =
-    globminSpec, constraints = Constraints
+  data = SP50,
+  spec = globminSpec, 
+  constraints = Constraints
 )
 
-head(getWeights(globminPortfolio))</code></pre>
+DT::datatable(cbind(getWeights(globminPortfolio)))</code></pre>
 <p>The portfolio with the smallest risk is the global MV portfolio, indicated by the largest dot in the graph below. The efficient frontier starts from that point onwards and goes up to the right. Obviously, every portfolio on the bullet below the global MV portfolio is called MV inefficient portfolio. The frontier is the border of all feasible portfolios. The two fund theorem implies that every linear combination of two MV portfolios is again a MV portfolio. That in mind implies that we can ride the upper side of the bullet (depending on the risk appetite) by holding a convex combination of only two efficient portfolios. (A convex combination is a linear combination of points where all coefficients are non-negative and sum to one.)</p>
 <pre class="r"><code># Efficient Portfolio
 setNFrontierPoints(globminSpec) &lt;- 100
-longFrontier &lt;- portfolioFrontier(SP500, globminSpec)
+longFrontier &lt;- portfolioFrontier(SP50, globminSpec)
 x11()
 tailoredFrontierPlot(
   object = longFrontier,
@@ -401,7 +396,8 @@ tailoredFrontierPlot(
   return = &quot;mu&quot;,
   risk = &quot;Sigma&quot;
 )</code></pre>
-<p><img src="CAPM_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="CAPM_files/figure-html/EF-1.png" width="672" /></p>
+</div>
 <div id="pros-of-the-mean-variance-analysis" class="section level3">
 <h3>Pros of the mean-variance analysis:</h3>
 <ul>
@@ -427,6 +423,35 @@ tailoredFrontierPlot(
 <div id="rolls-critique" class="section level3">
 <h3>Roll’s critique:</h3>
 <p>The only testable implication of the CAPM is that the market portfolio is MV efficient. If the market portfolio is unobservable, and no assumption can be made about it, then the CAPM is not testable. So, the CAPM can only be used to test the acceptance of the H0 of the efficient market hypothesis. If it rejects H0, markets could be either inefficient or the model is incorrect or the entire set of assets is unknown. Some possible solutions regarding the estimation of <span class="math inline">\(\Sigma\)</span> or even skipping this step are discussed in upcoming posts.</p>
+<div id="refs" class="references">
+<div id="ref-arrow1954existence">
+<p>Arrow, Kenneth J, and Gerard Debreu. 1954. “Existence of an Equilibrium for a Competitive Economy.” <em>Econometrica: Journal of the Econometric Society</em>, 265–90.</p>
+</div>
+<div id="ref-breeden1989empirical">
+<p>Breeden, Douglas T, Michael R Gibbons, and Robert H Litzenberger. 1989. “Empirical Tests of the Consumption-Oriented Capm.” <em>The Journal of Finance</em> 44 (2): 231–62.</p>
+</div>
+<div id="ref-cochrane2009asset">
+<p>Cochrane, J. H. 2009. <em>Asset Pricing: Revised Edition</em>. Princeton University Press. <a href="https://books.google.lu/books?id=20pmeMaKNwsC">https://books.google.lu/books?id=20pmeMaKNwsC</a>.</p>
+</div>
+<div id="ref-heath1992bond">
+<p>Heath, David, Robert Jarrow, and Andrew Morton. 1992. “Bond Pricing and the Term Structure of Interest Rates: A New Methodology for Contingent Claims Valuation.” <em>Econometrica: Journal of the Econometric Society</em>, 77–105.</p>
+</div>
+<div id="ref-lintner1965security">
+<p>Lintner, John. 1965. “Security Prices, Risk, and Maximal Gains from Diversification.” <em>The Journal of Finance</em> 20 (4): 587–615.</p>
+</div>
+<div id="ref-merton1973intertemporal">
+<p>Merton, Robert C. 1973. “An Intertemporal Capital Asset Pricing Model.” <em>Econometrica: Journal of the Econometric Society</em>, 867–87.</p>
+</div>
+<div id="ref-mossin1966equilibrium">
+<p>Mossin, Jan. 1966. “Equilibrium in a Capital Asset Market.” <em>Econometrica: Journal of the Econometric Society</em>, 768–83.</p>
+</div>
+<div id="ref-ross2013arbitrage">
+<p>Ross, Stephen A. 2013. “The Arbitrage Theory of Capital Asset Pricing.” In <em>Handbook of the Fundamentals of Financial Decision Making: Part I</em>, 11–30. World Scientific.</p>
+</div>
+<div id="ref-sharpe1964capital">
+<p>Sharpe, William F. 1964. “Capital Asset Prices: A Theory of Market Equilibrium Under Conditions of Risk.” <em>The Journal of Finance</em> 19 (3): 425–42.</p>
+</div>
+</div>
 </div>
 
 
@@ -446,6 +471,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
