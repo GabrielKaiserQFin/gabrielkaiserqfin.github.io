@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -86,7 +86,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -235,6 +234,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -246,18 +246,6 @@ $(document).ready(function () {
   display: none;
 }
 </style>
-
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
 
 <!-- code folding -->
 
@@ -322,6 +310,9 @@ $(document).ready(function () {
     </li>
   </ul>
 </li>
+<li>
+  <a href="https://aiap.rbind.io/">My Book</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -363,9 +354,6 @@ $(document).ready(function () {
 
 <!-- \newcommand{\E}[1]{\mathbb{E}\left[ #1 \right]} -->
 <!-- \newcommand{\Cov}[2]{\mathrm{Cov}\left[ #1, #2\right]} -->
-<p><br />
-<br />
-</p>
 <hr />
 <div id="job-market-paper" class="section level2">
 <h2>Job Market Paper</h2>
@@ -377,7 +365,7 @@ $(document).ready(function () {
 <h4>Sparse Supervised Learning of Market Anomalies</h4>
 <p>This paper proposes a semi-parametric one-step approach to identify a reduced information set that produces expected return spreads in the cross-section. I show that penalized single-stage models introduce enough sparsity to answer the multidimensional challenge imposed by the ‘zoo of anomalies’. The determined information subset discovered is not time-invariant. Moreover, applying supervised learning on the selected information subset improves the approximation of investor beliefs. In this regard, I find natural splines to be the preferable functional form due to their resistance to extreme values. Nonetheless, the results are consistent across various nonlinear functions. Further, I emphasize the importance of higher moments for estimation purposes of market anomalies with insurance-like payoffs.<br />
 <br />
-</p>
+<a href="GKaiser.pdf">latest version</a></p>
 <hr />
 </div>
 </div>
@@ -427,6 +415,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
