@@ -5,12 +5,13 @@ output: html_document
 
 I'd love to hear from you, so feel free to reach out:
 
-Luxembourg School of Finance<br>
-Postal Address 	Campus Kirchberg, Université du Luxembourg<br>
-6, rue Richard Coudenhove-Kalergi<br>
-L-1359 Luxembourg <br>
-(+352) 46 66 44 5948<br>
-gabriel.kaiser[at]uni.lu<br>
+<!-- Luxembourg School of Finance<br> -->
+<!-- Postal Address 	Campus Kirchberg, Université du Luxembourg<br> -->
+<!-- 6, rue Richard Coudenhove-Kalergi<br> -->
+<!-- L-1359 Luxembourg <br> -->
+<!-- (+352) 46 66 44 5948<br> -->
+<!-- gabriel.kaiser[at]uni.lu<br> -->
+quantresearch.gk[at]gmail.com<br>
 
 <!-- Currently, I live in London: -->
 <!-- London School of Economics and Political Science<br> -->
