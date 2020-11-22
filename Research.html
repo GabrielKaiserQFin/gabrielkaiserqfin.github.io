@@ -11,8 +11,9 @@
 
 
 
-<title>Research.utf8</title>
+<title>Research</title>
 
+<script src="site_libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
@@ -22,8 +23,19 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -348,47 +360,39 @@ $(document).ready(function () {
 
 
 
+<h1 class="title toc-ignore">Research</h1>
 
 </div>
 
 
-<!-- \newcommand{\E}[1]{\mathbb{E}\left[ #1 \right]} -->
-<!-- \newcommand{\Cov}[2]{\mathrm{Cov}\left[ #1, #2\right]} -->
 <hr />
-<div id="job-market-paper" class="section level2">
-<h2>Job Market Paper</h2>
+<div id="job-market-paper" class="section level3">
+<h3>Job Market Paper</h3>
 <hr />
 <div id="nonlinearities-almost-everywhere" class="section level4">
 <h4>Nonlinearities almost Everywhere:</h4>
 </div>
 <div id="sparse-supervised-learning-of-market-anomalies" class="section level4">
 <h4>Sparse Supervised Learning of Market Anomalies</h4>
-<p>This paper proposes a semi-parametric one-step approach to identify a reduced information set that produces expected return spreads in the cross-section. I show that penalized single-stage models introduce enough sparsity to answer the multidimensional challenge imposed by the ‘zoo of anomalies’. The determined information subset discovered is not time-invariant. Moreover, applying supervised learning on the selected information subset improves the approximation of investor beliefs. In this regard, I find natural splines to be the preferable functional form due to their resistance to extreme values. Nonetheless, the results are consistent across various nonlinear functions. Further, I emphasize the importance of higher moments for estimation purposes of market anomalies with insurance-like payoffs.<br />
-<br />
-<a href="Paper_GKaiser.pdf">Paper latest version</a></p>
+<p>This paper studies various regularization terms of nonparametric return forecasting models to identify a reduced set of characteristics associated with expected return spreads in the cross-section. The models employed are outlier-resistant, computationally eﬃcient, and able to handle high dimensional data. The number of discovered ﬁrm characteristics range between two and eight, out of a total of 90, taken from a novel market anomaly database. This study ﬁnds that in a multivariate setting, nonlinearities as well as variations in time matter for the cross-section of expected returns. Out-of-sample results suggest that Elastic Net regularization terms tend to overﬁt the data, while MCP and SCAD penalties suggest sparse models with remarkable Sharpe ratios.</p>
+<p><a href="JMP_GabrielKaiser.pdf">Paper latest version</a></p>
 <p><a href="Presentation_GKaiser.pdf">Presentation</a></p>
 <hr />
 </div>
 </div>
-<div id="working-papers" class="section level2">
-<h2>Working papers</h2>
+<div id="working-papers" class="section level3">
+<h3>Working papers</h3>
 <hr />
 <div id="context-dependent-elicitation-of-risk-preferences-in-markets" class="section level4">
 <h4>Context-dependent Elicitation of Risk Preferences in Markets</h4>
-<p>This paper proposes an experimental elicitation of individual risk attitudes in a market context. We evaluate the preferences of bidders from a first-price auction in a nested model that incorporates the constant relative risk aversion model and the dual probability of winning model as special cases. These models predict individual behavior across different market sizes for a given parametrization. We test the relevance of the elicited measures of risk aversion in an asset market setting. Our results suggest that the constant relative risk aversion model explains the behavior of the asset market well, and better than alternative risk aversion elicitation measures. We find that markets with higher levels of risk aversion have lower price levels, and that individuals with higher risk aversion submit lower limit offers to sell. We also observe that subjects who submit non-monotonous bids in the first price auction make trading losses in the asset market. Our non-monotonicity score is correlated to the score of the cognitive reflection test.<br />
-<br />
-<br />
-</p>
+<p>This paper proposes an experimental elicitation of individual risk attitudes in a market context. We evaluate the preferences of bidders from a first-price auction in a nested model that incorporates the constant relative risk aversion model and the dual probability of winning model as special cases. These models predict individual behavior across different market sizes for a given parametrization. We test the relevance of the elicited measures of risk aversion in an asset market setting. Our results suggest that the constant relative risk aversion model explains the behavior of the asset market well, and better than alternative risk aversion elicitation measures. We find that markets with higher levels of risk aversion have lower price levels, and that individuals with higher risk aversion submit lower limit offers to sell. We also observe that subjects who submit non-monotonous bids in the first price auction make trading losses in the asset market. Our non-monotonicity score is correlated to the score of the cognitive reflection test.</p>
 </div>
 <div id="the-speed-of-wall-street" class="section level4">
 <h4>The Speed of Wall Street:</h4>
 </div>
 <div id="time-decaying-market-frictions" class="section level4">
 <h4>Time-decaying Market Frictions</h4>
-<p>This paper explores the time-variation of expected abnormal portfolio excess returns. Explicitly, long-short equity returns subject to large quantities of arbitrage capital subsequently increase before they decay in the long-run. In order to identify periods of increased arbitrage activity, we study states with elevated abnormal net trading volume and eras that coincide with publication dates of market anomalies. The interaction of both measures is an ideal proxy for these periods. What is more, we are able to associate the pace of the time-variation of an anomaly to the demand in hedged returns as well as its turnover.<br />
-<br />
-<br />
-</p>
+<p>This paper explores the time-variation of expected abnormal portfolio excess returns. Explicitly, long-short equity returns subject to large quantities of arbitrage capital subsequently increase before they decay in the long-run. In order to identify periods of increased arbitrage activity, we study states with elevated abnormal net trading volume and eras that coincide with publication dates of market anomalies. The interaction of both measures is an ideal proxy for these periods. What is more, we are able to associate the pace of the time-variation of an anomaly to the demand in hedged returns as well as its turnover.</p>
 </div>
 <div id="transparency-of-call-auctions" class="section level4">
 <h4>Transparency of Call Auctions:</h4>
@@ -408,7 +412,7 @@ $(document).ready(function () {
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
