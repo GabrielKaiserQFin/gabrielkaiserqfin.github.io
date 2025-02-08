@@ -23,6 +23,8 @@ navbar:
             href: Invariance.html
           - text: "Fun with RBase"
             href: RBase.html
+          - text: "Rpackage GroqR: Fun with LLM"
+            href: groqR.html
     - text: "My Book"
       href: 'https://aiap.rbind.io/'
   right:
