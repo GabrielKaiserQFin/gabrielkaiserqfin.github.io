@@ -1,36 +1,50 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
 
 <title>Curse of Dimensionality</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -43,30 +57,29 @@ if (window.hljs) {
 
 
 
+
+
 <style type="text/css">
-h1 {
-  font-size: 34px;
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
 }
-h1.title {
-  font-size: 38px;
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
 }
-h2 {
-  font-size: 30px;
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
 }
-h3 {
-  font-size: 24px;
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
 }
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
+div.csl-indent {
+  margin-left: 2em;
 }
 </style>
 
@@ -80,13 +93,8 @@ h6 {
   margin-left: auto;
   margin-right: auto;
 }
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
-}
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -100,40 +108,16 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 64px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h2 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h3 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h4 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h5 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h6 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -161,7 +145,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -173,7 +157,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -183,11 +167,28 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.parent().addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -199,13 +200,12 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -213,16 +213,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -235,6 +228,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -246,18 +240,6 @@ $(document).ready(function () {
   display: none;
 }
 </style>
-
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
 
 <!-- code folding -->
 
@@ -277,7 +259,7 @@ $(document).ready(function () {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -296,7 +278,7 @@ $(document).ready(function () {
   <a href="teaching.html">Teaching</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Tutorials
      
     <span class="caret"></span>
@@ -320,7 +302,13 @@ $(document).ready(function () {
     <li>
       <a href="RBase.html">Fun with RBase</a>
     </li>
+    <li>
+      <a href="groqR.html">Rpackage GroqR: Fun with LLM</a>
+    </li>
   </ul>
+</li>
+<li>
+  <a href="https://aiap.rbind.io/">My Book</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -353,7 +341,7 @@ $(document).ready(function () {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -364,39 +352,151 @@ $(document).ready(function () {
 
 <!-- \newcommand{\Var}{\operatorname{Var}} -->
 <!-- \newcommand{\argmin}{\operatorname{\arg\!\min}} -->
-<p>This is a short summary how to handle the curse of dimensionality in a linear model framework using R. The methods to overcome this trade-off are called <strong>Regularization</strong> or <strong>Penalization</strong>. I use <span class="math inline">\(R(.)\)</span> to denote a regularization function, however <span class="math inline">\(P(.)\)</span> is also often considered in the literature. These methods are also applicable to non-linear functions as for instance Poisson, Cox or logit model (logistic regression).</p>
+<p>This is a short summary how to handle the curse of dimensionality in
+a linear model framework using R. The methods to overcome this trade-off
+are called <strong>Regularization</strong> or
+<strong>Penalization</strong>. I use <span
+class="math inline">\(R(.)\)</span> to denote a regularization function,
+however <span class="math inline">\(P(.)\)</span> is also often
+considered in the literature. These methods are also applicable to
+non-linear functions as for instance Poisson, Cox or logit model
+(logistic regression).</p>
 <div id="bias-and-efficiency-trade-off" class="section level3">
 <h3>Bias and efficiency trade-off:</h3>
-<p>In general, regularization methods try to optimize the trade-off between model bias and efficiency. If we assume a linear model such as <span class="math inline">\(y =f(X) + \epsilon\)</span>, where the innovation term is standard Gaussian with variance <span class="math inline">\(\sigma^2\)</span>. Then under the assumption of linearity, full rank (non-singular matrix X), strict exogeneity, and homoscedasticity (uncorrelatedness) the <strong>Gauss-Markov Theorem</strong> suggests that the MSE estimator is a <strong>BLUE</strong>. What is more, X can be stochastic and if our assumption of normal distributed residuals hold, then our estimator has minimum variance across all unbiased estimators and is thus efficient. The decomposition of the MSE leads to three parts: <span class="math display">\[{\mathbb E} {\Big [}{\big (}y-{\hat {f}}(X){\big )}^{2}{\Big ]} = {\Big (}\operatorname {Bias} {\big [}{\hat {f}}(X){\big ]}{\Big )}^{2}+\operatorname {Var} {\big [}{\hat {f}}(X){\big ]}\]</span> with a bias given by <span class="math display">\[\text{Bias} {\big [}{\hat {f}}(X){\big ]}={\mathbb E} {\big [}{\hat {f}}(X){\big ]}-f(X)\]</span> and variance by <span class="math display">\[\text{Var} {\big [}{\hat {f}}(X){\big ]}={\mathbb E} [{\hat {f}}(X)^{2}]-{\mathbb E} [{\hat {f}}(X)]^{2}\]</span> However, since we are in a linear framework we can also write bias and variance in terms of the parameters itself, i.e. <span class="math display">\[\text{Bias}[{\hat {\theta }}]={\mathbb E}[\hat{\theta}]-\theta ={\mathbb E}[\hat{\theta }-\theta]\]</span> and <span class="math display">\[\text{Var}[{\hat {\theta }}]={\mathbb E}[\hat{\theta^2}]-{\mathbb E}[\hat{\theta}]^2\]</span> With increasing dimensionality of <span class="math inline">\(X\)</span> grows the dimension of <span class="math inline">\(\theta\)</span> and hence the variance given a very small bias. This is called the the <strong>curse of dimensionality</strong>. So large variance or inefficiency leads to over-fitting whereas a large bias leads to parameter estimates that under fit the true parameters.</p>
-<p>We continue with the most common linear model, the MSE is the first part of our objective function but could be replaced by any other linear function <span class="math inline">\(f(.)\)</span>: <span class="math display">\[\hat{\beta}= \min_{\hat{\beta}}  \frac{1}{2n} \Vert y - X\beta \Vert^2+\lambda R(\beta) \]</span> <span class="math inline">\(\lambda\)</span> is often called tuning parameter and actually determines the weight at which the linear model is penalized.</p>
+<p>In general, regularization methods try to optimize the trade-off
+between model bias and efficiency. If we assume a linear model such as
+<span class="math inline">\(y =f(X) + \epsilon\)</span>, where the
+innovation term is standard Gaussian with variance <span
+class="math inline">\(\sigma^2\)</span>. Then under the assumption of
+linearity, full rank (non-singular matrix X), strict exogeneity, and
+homoscedasticity (uncorrelatedness) the <strong>Gauss-Markov
+Theorem</strong> suggests that the MSE estimator is a
+<strong>BLUE</strong>. What is more, X can be stochastic and if our
+assumption of normal distributed residuals hold, then our estimator has
+minimum variance across all unbiased estimators and is thus efficient.
+The decomposition of the MSE leads to three parts: <span
+class="math display">\[{\mathbb E} {\Big [}{\big (}y-{\hat {f}}(X){\big
+)}^{2}{\Big ]} = {\Big (}\operatorname {Bias} {\big [}{\hat {f}}(X){\big
+]}{\Big )}^{2}+\operatorname {Var} {\big [}{\hat {f}}(X){\big
+]}\]</span> with a bias given by <span
+class="math display">\[\text{Bias} {\big [}{\hat {f}}(X){\big
+]}={\mathbb E} {\big [}{\hat {f}}(X){\big ]}-f(X)\]</span> and variance
+by <span class="math display">\[\text{Var} {\big [}{\hat {f}}(X){\big
+]}={\mathbb E} [{\hat {f}}(X)^{2}]-{\mathbb E} [{\hat
+{f}}(X)]^{2}\]</span> However, since we are in a linear framework we can
+also write bias and variance in terms of the parameters itself, i.e.
+<span class="math display">\[\text{Bias}[{\hat {\theta }}]={\mathbb
+E}[\hat{\theta}]-\theta ={\mathbb E}[\hat{\theta }-\theta]\]</span> and
+<span class="math display">\[\text{Var}[{\hat {\theta }}]={\mathbb
+E}[\hat{\theta^2}]-{\mathbb E}[\hat{\theta}]^2\]</span> With increasing
+dimensionality of <span class="math inline">\(X\)</span> grows the
+dimension of <span class="math inline">\(\theta\)</span> and hence the
+variance given a very small bias. This is called the the <strong>curse
+of dimensionality</strong>. So large variance or inefficiency leads to
+over-fitting whereas a large bias leads to parameter estimates that
+under fit the true parameters.</p>
+<p>We continue with the most common linear model, the MSE is the first
+part of our objective function but could be replaced by any other linear
+function <span class="math inline">\(f(.)\)</span>: <span
+class="math display">\[\hat{\beta}= \min_{\hat{\beta}}  \frac{1}{2n}
+\Vert y - X\beta \Vert^2+\lambda R(\beta) \]</span> <span
+class="math inline">\(\lambda\)</span> is often called tuning parameter
+and actually determines the weight at which the linear model is
+penalized.</p>
 </div>
 <div id="ridge-regression" class="section level3">
 <h3>Ridge Regression:</h3>
-<p>The ridge regression applies the Tikhonov regularization, which is the <span class="math inline">\(l_2\)</span> norm, i.e. <span class="math display">\[R(w) = \frac{1}{2n}{\Vert \beta\Vert}_2^2=\frac{1}{2n}\sum_{i=1}^{n}\beta^2_i\]</span> It controls the complexity of the model and is differentiable and thus easily optimizable.</p>
+<p>The ridge regression applies the Tikhonov regularization, which is
+the <span class="math inline">\(l_2\)</span> norm, i.e. <span
+class="math display">\[R(w) = \frac{1}{2n}{\Vert
+\beta\Vert}_2^2=\frac{1}{2n}\sum_{i=1}^{n}\beta^2_i\]</span> It controls
+the complexity of the model and is differentiable and thus easily
+optimizable.</p>
 </div>
 <div id="lasso" class="section level3">
 <h3>Lasso:</h3>
-<p>The Lasso algorithm utilizes the <span class="math inline">\(l_1\)</span> norm instead, i.e. <span class="math display">\[R(w) = \frac{1}{n}{\Vert \beta\Vert}_1=\frac{1}{n}\sum_{i=1}^{n}|\beta_i|\]</span> It also controls the comlpexity of the model but is non-differentiable around zero and thus harder to optimze. It pushes the entries towards zero and thus enforces sparsity.</p>
+<p>The Lasso algorithm utilizes the <span
+class="math inline">\(l_1\)</span> norm instead, i.e. <span
+class="math display">\[R(w) = \frac{1}{n}{\Vert
+\beta\Vert}_1=\frac{1}{n}\sum_{i=1}^{n}|\beta_i|\]</span> It also
+controls the comlpexity of the model but is non-differentiable around
+zero and thus harder to optimze. It pushes the entries towards zero and
+thus enforces sparsity.</p>
 </div>
 <div id="group-lasso" class="section level3">
 <h3>Group Lasso:</h3>
-<p>Another regularizer is the <span class="math inline">\(l_{2,1}\)</span> norm, i.e. <span class="math display">\[R(w) = \frac{1}{n}{\Vert \beta\Vert}_{2,1}=\frac{1}{n}\sum_{g=1}^{n_g} \sqrt{ \sum_{f=1}^{n_f}\beta^2_{g,f}}\]</span> It also controls the comlpexity of the model but the <span class="math inline">\(l_{2,1}\)</span> norm is not squared and hence non-differentiable around zero and thus harder to optimze. It pushes the entries towards zero and thus enforces sparsity at the group level.</p>
+<p>Another regularizer is the <span
+class="math inline">\(l_{2,1}\)</span> norm, i.e. <span
+class="math display">\[R(w) = \frac{1}{n}{\Vert
+\beta\Vert}_{2,1}=\frac{1}{n}\sum_{g=1}^{n_g} \sqrt{
+\sum_{f=1}^{n_f}\beta^2_{g,f}}\]</span> It also controls the comlpexity
+of the model but the <span class="math inline">\(l_{2,1}\)</span> norm
+is not squared and hence non-differentiable around zero and thus harder
+to optimze. It pushes the entries towards zero and thus enforces
+sparsity at the group level.</p>
 </div>
 <div id="fused-lasso" class="section level3">
 <h3>Fused Lasso:</h3>
-<p>Transformed norms are similar as above just that regularization is applied over a linear transformation, i.e. <span class="math inline">\(w=T\beta\)</span>, which can be applied to all three regularization methods. The most common example of transformed norms is the <strong>Total Variation</strong>, which is a special family of regularizers that penalize the differences between adjacent (neighboring) entries and hence assumes spatial location. In this case <span class="math inline">\(T\)</span> is a differentiating matrix, such that <span class="math inline">\(T_{i,i}=-1\)</span>, <span class="math inline">\(T_{i,i+1}=1\)</span> and zero otherwise. <span class="math display">\[R(\beta) = \frac{1}{n}{\Vert T\beta\Vert}_{1}\]</span> Other examples for transformed norms are <strong>Graph-Based Total Variation</strong> or <strong>Trend Filtering</strong>.</p>
+<p>Transformed norms are similar as above just that regularization is
+applied over a linear transformation, i.e. <span
+class="math inline">\(w=T\beta\)</span>, which can be applied to all
+three regularization methods. The most common example of transformed
+norms is the <strong>Total Variation</strong>, which is a special family
+of regularizers that penalize the differences between adjacent
+(neighboring) entries and hence assumes spatial location. In this case
+<span class="math inline">\(T\)</span> is a differentiating matrix, such
+that <span class="math inline">\(T_{i,i}=-1\)</span>, <span
+class="math inline">\(T_{i,i+1}=1\)</span> and zero otherwise. <span
+class="math display">\[R(\beta) = \frac{1}{n}{\Vert
+T\beta\Vert}_{1}\]</span> Other examples for transformed norms are
+<strong>Graph-Based Total Variation</strong> or <strong>Trend
+Filtering</strong>.</p>
 </div>
 <div id="elastic-network" class="section level3">
 <h3>Elastic-Network:</h3>
-<p>Several combinations of the above mentioned methods exist as well. The most common is the <strong>Elastic-Network</strong> model, which is just the combination between Ridge and Lasso, i.e. <span class="math display">\[R(w) = \frac{1}{n}{\Vert \beta\Vert}_1 +\frac{1}{2n}{\Vert \beta\Vert}_2^2=\frac{1}{n}\sum_{i=1}^{n}|\beta_i|+\frac{1}{2n}\sum_{i=1}^{n}\beta^2_i\]</span> Typically, these functions are weighted independently from each other, leading to two tuning parameter <span class="math inline">\(\lambda_1\)</span> and <span class="math inline">\(\lambda_2\)</span>.</p>
+<p>Several combinations of the above mentioned methods exist as well.
+The most common is the <strong>Elastic-Network</strong> model, which is
+just the combination between Ridge and Lasso, i.e. <span
+class="math display">\[R(w) = \frac{1}{n}{\Vert \beta\Vert}_1
++\frac{1}{2n}{\Vert
+\beta\Vert}_2^2=\frac{1}{n}\sum_{i=1}^{n}|\beta_i|+\frac{1}{2n}\sum_{i=1}^{n}\beta^2_i\]</span>
+Typically, these functions are weighted independently from each other,
+leading to two tuning parameter <span
+class="math inline">\(\lambda_1\)</span> and <span
+class="math inline">\(\lambda_2\)</span>.</p>
 </div>
 <div id="adaptive-lasso" class="section level3">
 <h3>Adaptive Lasso:</h3>
-<p><a href="http://pages.cs.wisc.edu/~shao/stat992/zou2006.pdf">‘<span class="citation">Zou (2006)</span>’</a> state that the standard lasso model does not have the <strong>Oracel</strong> properties. The oracle procedure ensures an optimal estimation rate and thus is more efficient. Moreover, it provides unbiased estimates. The procedure includes an adaptive weight vector <span class="math inline">\(w_i = |\hat{\beta_i}|^{-\gamma}\)</span>, where the parameter vector <span class="math inline">\(\beta\)</span> is typically estimated by a Ridge regression. Consequently, adaptive lasso penalizes those coefficients with lower initial estimates more. The adjustment parameter <span class="math inline">\(\gamma\)</span> is non-negaive and typically in the set {0.5, 1, 2}. <span class="math display">\[R(w) = \frac{1}{n}{\Vert w&#39; \beta\Vert}_1=\frac{1}{n}\sum_{i=1}^{n}w_i|\beta_i|\]</span></p>
+<p><a href="http://pages.cs.wisc.edu/~shao/stat992/zou2006.pdf">‘<span
+class="citation">Zou (2006)</span>’</a> state that the standard lasso
+model does not have the <strong>Oracel</strong> properties. The oracle
+procedure ensures an optimal estimation rate and thus is more efficient.
+Moreover, it provides unbiased estimates. The procedure includes an
+adaptive weight vector <span class="math inline">\(w_i =
+|\hat{\beta_i}|^{-\gamma}\)</span>, where the parameter vector <span
+class="math inline">\(\beta\)</span> is typically estimated by a Ridge
+regression. Consequently, adaptive lasso penalizes those coefficients
+with lower initial estimates more. The adjustment parameter <span
+class="math inline">\(\gamma\)</span> is non-negaive and typically in
+the set {0.5, 1, 2}. <span class="math display">\[R(w) =
+\frac{1}{n}{\Vert w&#39;
+\beta\Vert}_1=\frac{1}{n}\sum_{i=1}^{n}w_i|\beta_i|\]</span></p>
 </div>
 <div id="code" class="section level3">
 <h3>Code:</h3>
-<p>In R, several packages allow us to estimate a model applying various regularization methods. For instance, the package <strong>glmnet</strong> implements the lasso or ridge penalty for generalized linear models via penalized maximum likelihood. <span class="math display">\[\min_{(\beta_0, \beta) \in \mathbb{R}^{p+1}}\frac{1}{2N} \sum_{i=1}^N (y_i -\beta_0-x_i^T \beta)^2+\lambda \left[ (1-\alpha)||\beta||_2^2/2 + \alpha||\beta||_1\right]\]</span> In order to obtain the Ridge algorithm we just need to set all the weight on the <span class="math inline">\(l2\)</span> norm, i.e. <span class="math inline">\(\alpha=0\)</span>. The cross validation glmnet function already performs n-fold cross validation to choose the best <span class="math inline">\(\lambda\)</span>.</p>
+<p>In R, several packages allow us to estimate a model applying various
+regularization methods. For instance, the package
+<strong>glmnet</strong> implements the lasso or ridge penalty for
+generalized linear models via penalized maximum likelihood. <span
+class="math display">\[\min_{(\beta_0, \beta) \in
+\mathbb{R}^{p+1}}\frac{1}{2N} \sum_{i=1}^N (y_i -\beta_0-x_i^T
+\beta)^2+\lambda \left[ (1-\alpha)||\beta||_2^2/2 +
+\alpha||\beta||_1\right]\]</span> In order to obtain the Ridge algorithm
+we just need to set all the weight on the <span
+class="math inline">\(l2\)</span> norm, i.e. <span
+class="math inline">\(\alpha=0\)</span>. The cross validation glmnet
+function already performs n-fold cross validation to choose the best
+<span class="math inline">\(\lambda\)</span>.</p>
 <pre class="r"><code>require(glmnet, quietly = TRUE)
 # load some data
 x &lt;- as.matrix(trees[, -1]) # independent variables
@@ -433,19 +533,22 @@ abline(v = log(fit$lambda.1se))</code></pre>
 <p><img src="Regularization_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
 <pre class="r"><code>coef(fit, s = fit$lambda.1se)</code></pre>
 <pre><code>## 3 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
-##                     1
-## (Intercept) 8.5444511
-## Height      .        
-## Volume      0.1559094</code></pre>
+##                   s1
+## (Intercept) 8.397319
+## Height      .       
+## Volume      0.160786</code></pre>
 <pre class="r"><code>coef &lt;- coef(fit, s = &quot;lambda.1se&quot;)
 selected_attributes &lt;- (coef@i[-1] + 1)
 # lasso.pred &lt;- predict(lasso.mod, s = bestlam, newx = x[test,])
 # mean((lasso.pred-ytest)^2)
 
 # plot(fit$glmnet,&quot;lambda&quot;,ylim=c(-2,2))</code></pre>
-<div id="refs" class="references">
-<div id="ref-zou2006adaptive">
-<p>Zou, Hui. 2006. “The Adaptive Lasso and Its Oracle Properties.” <em>Journal of the American Statistical Association</em> 101 (476): 1418–29.</p>
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
+<div id="ref-zou2006adaptive" class="csl-entry">
+Zou, Hui. 2006. <span>“The Adaptive Lasso and Its Oracle
+Properties.”</span> <em>Journal of the American Statistical
+Association</em> 101 (476): 1418–29.
 </div>
 </div>
 </div>
@@ -459,7 +562,7 @@ selected_attributes &lt;- (coef@i[-1] + 1)
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
@@ -467,6 +570,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

@@ -13,24 +13,51 @@
 
 <title>CAPM - SML</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="site_libs/datatables-binding-0.33/datatables.js"></script>
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/nouislider-7.0.10/jquery.nouislider.min.css" rel="stylesheet" />
+<script src="site_libs/nouislider-7.0.10/jquery.nouislider.min.js"></script>
+<link href="site_libs/selectize-0.12.0/selectize.bootstrap3.css" rel="stylesheet" />
+<script src="site_libs/selectize-0.12.0/selectize.min.js"></script>
+<link href="site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -43,30 +70,29 @@ if (window.hljs) {
 
 
 
+
+
 <style type="text/css">
-h1 {
-  font-size: 34px;
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
 }
-h1.title {
-  font-size: 38px;
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
 }
-h2 {
-  font-size: 30px;
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
 }
-h3 {
-  font-size: 24px;
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
 }
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
+div.csl-indent {
+  margin-left: 2em;
 }
 </style>
 
@@ -79,10 +105,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -99,40 +121,16 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 64px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h2 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h3 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h4 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h5 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h6 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -160,7 +158,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -172,7 +170,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -182,11 +180,28 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.parent().addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -198,13 +213,12 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -212,16 +226,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -265,7 +272,7 @@ $(document).ready(function () {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -284,7 +291,7 @@ $(document).ready(function () {
   <a href="teaching.html">Teaching</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Tutorials
      
     <span class="caret"></span>
@@ -308,7 +315,13 @@ $(document).ready(function () {
     <li>
       <a href="RBase.html">Fun with RBase</a>
     </li>
+    <li>
+      <a href="groqR.html">Rpackage GroqR: Fun with LLM</a>
+    </li>
   </ul>
+</li>
+<li>
+  <a href="https://aiap.rbind.io/">My Book</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -341,7 +354,7 @@ $(document).ready(function () {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -352,17 +365,81 @@ $(document).ready(function () {
 
 <div id="sml" class="section level3">
 <h3>SML</h3>
-<p>In this post we introduce a risk-free asset. That implies that we can construct a <strong>tangency portfolio</strong>, which enables us to hold a combination of the risk-free asset and the tangency portfolio. This tangency line is called <strong>Security Market Line</strong> (SML) and it enables us to surf the SML instead of the bullet, which ultimately leads to larger expected returns. The weights between the risk-free asset and the tangency portfolio are set depending on our individual risk appetite. So far the difference to the Minimum variance optimization problem discussed in the previous chapter is just another constraint. The second constraint introduces the possibility to construct our portfolio from risky and risk-free assets. <span class="math display">\[\min_{\mathrm{w}\in \mathbb{R}^{n}}\frac{1}{2}w&#39;\Sigma w+0\cdot(1-w&#39;1) \  \text{         subject to         } \  w&#39;\mathop {\mathbb E}[r]+(1-w&#39;1)r_{f}=\mu \]</span> The first order condition in this case lead to: <span class="math display">\[\Sigma w=\lambda(\mathop {\mathbb E}[\mathrm{r}]-1r_{f})\]</span> After setting lambda to one and considering that weights sum up to one we obtain the final solution: <span class="math display">\[\Rightarrow \mathrm{w}=\Sigma^{-1}(\mathop {\mathbb E}[\mathrm{r}]-1r_{f})\ ,\ w^{*}=\frac{w}{w&#39;1} \]</span> If investors have the same return and risk expectations, then the optimal portfolio of risky assets is the same for everyone. The tolerance for risk or risk aversion by an investor is not adjusted by reallocating among risky assets, but through the split between risky and risk-free assets. The portfolio of risky assets that investors should hold will contain a large number of assets, and thus being well diversified. This time I want to introduce a very helpful package called <span class="pack">fPortfolio</span>, that allows us to compute and plot the MV frontier including a risk-free rate.</p>
+<p>In this post we introduce a risk-free asset. That implies that we can
+construct a <strong>tangency portfolio</strong>, which enables us to
+hold a combination of the risk-free asset and the tangency portfolio.
+This tangency line is called <strong>Security Market Line</strong> (SML)
+and it enables us to surf the SML instead of the bullet, which
+ultimately leads to larger expected returns. The weights between the
+risk-free asset and the tangency portfolio are set depending on our
+individual risk appetite. However, in certain situations, it may be
+sensible to deviate slightly from the SML and “ride the bullet”, since
+frequent rebalancing can be costly, and minor inefficiencies are
+generally negligible. However, the main difference to the <a
+href="https://gabrielkaiserqfin.github.io/Markowitz.html">minimum
+variance portfolio</a> is that we add another constraint. The second
+constraint introduces the possibility to construct our portfolio from
+risky and risk-free assets. <span
+class="math display">\[\min_{\mathrm{w}\in
+\mathbb{R}^{n}}\frac{1}{2}w&#39;\Sigma w+0\cdot(1-w&#39;1)
+\  \text{         subject to         } \  w&#39;\mathop {\mathbb
+E}[r]+(1-w&#39;1)r_{f}=\mu \]</span> The first order condition in this
+case lead to: <span class="math display">\[\Sigma w=\lambda(\mathop
+{\mathbb E}[\mathrm{r}]-1r_{f})\]</span> After setting lambda to one and
+considering that weights sum up to one we obtain the final solution:
+<span class="math display">\[\Rightarrow \mathrm{w}=\Sigma^{-1}(\mathop
+{\mathbb E}[\mathrm{r}]-1r_{f})\ ,\ w^{*}=\frac{w}{w&#39;1} \]</span> If
+investors have the same return and risk expectations, then the optimal
+portfolio of risky assets is the same for everyone. The tolerance for
+risk or risk aversion by an investor is not adjusted by reallocating
+among risky assets, but through the split between risky and risk-free
+assets. The portfolio of risky assets that investors should hold will
+contain a large number of assets, and thus being well diversified. This
+time I want to introduce a very helpful package called
+<strong>fPortfolio</strong>, that allows us to compute and plot the CAPM
+in very short steps.</p>
 </div>
 <div id="capm" class="section level3">
 <h3>CAPM</h3>
-<p>However, the main difference of the CAPM to the <a href="https://gabrielkaiserqfin.github.io/Markowitz.html">Markowitz’s Modern Portfolio Theory (MPT)</a>is not the introduction of a risk free rate rather than a simplification of the MPT concept. The CAPM is more practical and actually introduces the idea of <strong>idiosyncratic</strong> and <strong>systematic risk</strong>. <span class="citation">Sharpe (1964)</span>, <span class="citation">Lintner (1965)</span> and <span class="citation">Mossin (1966)</span> worked simultanously on the equilibrium model, which can be written as:</p>
-<p><span class="math display">\[\E[R_i]=R_{f}+(\E[R_{M}]-R_{f})\cdot \beta_{i} = R_{f}+(\E[R_{M}]-R_{f})\cdot {\frac {\mathrm {Cov} (R_{M},R_{i})}{\mathrm {Var} (R_{M})}}\]</span></p>
-<p>Whereas MPT has arbitrary correlation between all investments, the CAPM only links investments via the market, such as the SP500. CAPM is an example of an <strong>equilibrium model</strong> such as the <strong>ICAPM</strong> (<span class="citation">Merton (1973)</span>) or <strong>CCAPM</strong> (<span class="citation">Breeden, Gibbons, and Litzenberger (1989)</span>), as opposed to model based on <strong>no-arbitrage pricing theory</strong> (<span class="citation">Ross (2013)</span>), such as <strong>State Preference Theory</strong> (<span class="citation">Arrow and Debreu (1954)</span>), <strong>Black-Scholes Option Pricing</strong> (black1973pricing) or <strong>Term Structure Models</strong> (<span class="citation">Heath, Jarrow, and Morton (1992)</span>). <span class="citation">Cochrane (2009)</span> uncovered the equivalance between APT and equilibrium theory via the <strong>Euler Equation</strong> of the <strong>stochastic discount factor</strong> approach.</p>
-<p><span class="math display">\[\E_t[R_{t+1} m_{t+1}] = 1\]</span></p>
-<p>Since we consider the entire SP500 for a period of 5 years, we obtain more stocks than time-points. As a consequence, the covariance matrix is singular as the matrix of returns does not have full rank. Solutions to overcome this problem, as for instance using Principal Component Analysis, are presented in upcoming posts. For now, we choose a random subset of stocks to avoid a dependent structure. The largest 10 weights in absolute terms are printed below.</p>
+<p>However, the main difference of the CAPM to the <a
+href="https://gabrielkaiserqfin.github.io/Markowitz.html">Markowitz’s
+Modern Portfolio Theory (MPT)</a> is not the introduction of a risk free
+rate rather than a simplification of the MPT concept. The CAPM is more
+practical and actually introduces the idea of
+<strong>idiosyncratic</strong> and <strong>systematic risk</strong>.
+<span class="citation">Sharpe (1964)</span>, <span
+class="citation">Lintner (1965)</span> and <span class="citation">Mossin
+(1966)</span> worked simultanously on the equilibrium model, which can
+be written as: <span
+class="math display">\[E[R_i]=R_{f}+(E[R_{M}]-R_{f})\cdot \beta_{i} =
+R_{f}+(E[R_{M}]-R_{f})\cdot {\frac {\mathrm {Cov} (R_{M},R_{i})}{\mathrm
+{Var} (R_{M})}}\]</span></p>
+<p>Whereas MPT has arbitrary correlation between all investments, the
+CAPM only links investments via the market, such as the SP500. CAPM is
+an example of an <strong>equilibrium model</strong> such as the
+<strong>ICAPM</strong> (<span class="citation">Merton (1973)</span>) or
+<strong>CCAPM</strong> (<span class="citation">Breeden, Gibbons, and
+Litzenberger (1989)</span>), as opposed to model based on
+<strong>no-arbitrage pricing theory</strong> (<span
+class="citation">Ross (2013)</span>), such as <strong>State Preference
+Theory</strong> (<span class="citation">Arrow and Debreu (1954)</span>),
+<strong>Black-Scholes Option Pricing</strong> (<span
+class="citation">Black and Scholes (1973)</span>) or <strong>Term
+Structure Models</strong> (<span class="citation">Heath, Jarrow, and
+Morton (1992)</span>). <span class="citation">Cochrane (2009)</span>
+uncovered the equivalance between APT and equilibrium theory via the
+<strong>Euler Equation</strong> of the <strong>stochastic discount
+factor</strong> approach.</p>
+<p><span class="math display">\[E_t[R_{t+1} m_{t+1}] = 1\]</span></p>
+<p>Since we consider the entire SP500 for a period of 5 years, we obtain
+more stocks than time-points. As a consequence, the covariance matrix is
+singular as the matrix of returns does not have full rank. Solutions to
+overcome this problem, as for instance using Principal Component
+Analysis, are presented in upcoming posts. For now, we choose a random
+subset of stocks to avoid a dependent structure. The largest 10 weights
+in absolute terms are printed below.</p>
 <pre class="r"><code># Load packages and data
-Packages2Load &lt;- c(&quot;Matrix&quot;, &quot;quadprog&quot;, &quot;corrplot&quot;, &quot;tseries&quot;, &quot;fPortfolio&quot;, &quot;matrixcalc&quot;, &quot;metricsgraphics&quot;, &quot;dplyr&quot;)
+Packages2Load &lt;- c(&quot;Matrix&quot;, &quot;quadprog&quot;, &quot;corrplot&quot;, &quot;tseries&quot;, &quot;fPortfolio&quot;, &quot;matrixcalc&quot;, &quot;metricsgraphics&quot;, &quot;dplyr&quot;, &quot;data.table&quot;)
 sapply(Packages2Load, function(x) suppressPackageStartupMessages(require(x, character.only = TRUE)))
 
 # Load data
@@ -371,32 +448,45 @@ SP500 &lt;- read.csv(link, header = TRUE, sep = &quot;,&quot;)
 
 set.seed(12)
 index &lt;- sample.int(ncol(SP500), 50, replace = FALSE) # since the return matrix does not have full rank, the cov matrix would be singular
-SP50 &lt;- timeSeries(SP500[, index])
+SP500 &lt;- timeSeries(SP500[, index])
+
 # fPortfolio package
 Constraints &lt;- &quot;LongOnly&quot; # &quot;Short&quot;
+
 globminSpec &lt;- portfolioSpec()
 
 # setSolver(globminSpec) &lt;- solveRshortExact #Only if unlimited Short selling
 
 globminPortfolio &lt;- minvariancePortfolio(
-  data = SP50,
-  spec = globminSpec, 
-  constraints = Constraints
-)
-
-DT::datatable(cbind(getWeights(globminPortfolio)))</code></pre>
-<p>The portfolio with the smallest risk is the global MV portfolio, indicated by the largest dot in the graph below. The efficient frontier starts from that point onwards and goes up to the right. Obviously, every portfolio on the bullet below the global MV portfolio is called MV inefficient portfolio. The frontier is the border of all feasible portfolios. The two fund theorem implies that every linear combination of two MV portfolios is again a MV portfolio. That in mind implies that we can ride the upper side of the bullet (depending on the risk appetite) by holding a convex combination of only two efficient portfolios. (A convex combination is a linear combination of points where all coefficients are non-negative and sum to one.)</p>
+  data = SP500,
+  spec =
+    globminSpec, constraints = Constraints
+)</code></pre>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-6a0429cb181b6a618f09" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-6a0429cb181b6a618f09">{"x":{"filter":"top","vertical":false,"filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0\" data-max=\"0.242777234448724\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","data":[["AMERICAN.INTERNATIONAL.GROUP","AMERIPRISE.FINANCIAL.INC","AMETEK.INC","AUTOMATIC.DATA.PROCESSING","BOSTON.SCIENTIFIC.CORP","C.H.ROBINSON.WORLDWIDE.INC","CA.INC","CBRE.GROUP.INC","CENTERPOINT.ENERGY.INC","CHUBB.CORP","COCA.COLA.CO","COLGATE.PALMOLIVE.CO","COMPUTER.SCIENCES.CORP","CONSOLIDATED.EDISON.INC","DAVITA.HEALTHCARE.PARTNERS","DISCOVER.FINANCIAL.SVCS.INC","DU.PONT..E.I..DE.NEMOURS","EATON.CORP.PLC","EQT.CORP","EQUINIX.INC","FEDEX.CORP","FIFTH.THIRD.BANCORP","FMC.CORP","ILLINOIS.TOOL.WORKS","INTERCONTINENTAL.EXCHANGE","KIMBERLY.CLARK.CORP","KOHL.S.CORP","LEGGETT...PLATT.INC","LINEAR.TECHNOLOGY.CORP","MARRIOTT.INTL.INC","MEAD.JOHNSON.NUTRITION.CO","MICROSOFT.CORP","NIKE.INC","PAYCHEX.INC","PPG.INDUSTRIES.INC","PROLOGIS.INC","RALPH.LAUREN.CORP","RANGE.RESOURCES.CORP","SMUCKER..JM..CO","SOUTHWEST.AIRLINES","THERMO.FISHER.SCIENTIFIC.INC","UNITED.RENTALS.INC","UNITEDHEALTH.GROUP.INC","VERISIGN.INC","VORNADO.REALTY.TRUST","WHIRLPOOL.CORP","XCEL.ENERGY.INC","XILINX.INC","XL.GROUP.PLC","ZIONS.BANCORPORATION"],[0,0,0,0,0.02335759931744175,0.04852735322052951,0,0,0,0,0,0.09852295217746025,0.01675379738598521,0.2427772344487233,0.07330968330653451,0,0,0,0,0,0,0,0,0,0,0.1380237324642163,0.05150119324606246,0,0,0,0,0.05312906195930783,0.07168553597246553,0,0,0,0,0.02169226384212481,0,0,0.03396685499249246,0,0.1267527376666563,0,0,0,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Names<\/th>\n      <th>Weights<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":15,"dom":"tip","columnDefs":[{"className":"dt-right","targets":1},{"name":"Names","targets":0},{"name":"Weights","targets":1}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true,"lengthMenu":[10,15,25,50,100]},"selection":{"mode":"multiple","selected":null,"target":"row","selectable":null}},"evals":[],"jsHooks":[]}</script>
+<p>The portfolio with the smallest risk is the global MV portfolio,
+indicated by the largest dot in the graph below. The efficient frontier
+starts from that point onwards and goes up to the right. Obviously,
+every portfolio on the bullet below the global MV portfolio is called MV
+inefficient portfolio. The frontier is the border of all feasible
+portfolios. The two fund theorem implies that every linear combination
+of two MV portfolios is again a MV portfolio. That in mind implies that
+we can ride the upper side of the bullet (depending on the risk
+appetite) by holding a convex combination of only two efficient
+portfolios. (A convex combination is a linear combination of points
+where all coefficients are non-negative and sum to one.)</p>
 <pre class="r"><code># Efficient Portfolio
 setNFrontierPoints(globminSpec) &lt;- 100
-longFrontier &lt;- portfolioFrontier(SP50, globminSpec)
-x11()
+longFrontier &lt;- portfolioFrontier(SP500, globminSpec)
+
 tailoredFrontierPlot(
   object = longFrontier,
   mText = &quot;CAPM - Long Only Constraints&quot;,
   return = &quot;mu&quot;,
   risk = &quot;Sigma&quot;
 )</code></pre>
-<p><img src="CAPM_files/figure-html/EF-1.png" width="672" /></p>
+<p><img src="CAPM_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><br/></p>
 </div>
 <div id="pros-of-the-mean-variance-analysis" class="section level3">
 <h3>Pros of the mean-variance analysis:</h3>
@@ -405,51 +495,95 @@ tailoredFrontierPlot(
 <li>A simple approach and thus easy to implement</li>
 <li>Widely used</li>
 </ul>
+<p><br/></p>
 </div>
 <div id="cons-of-the-mean-variance-analysis" class="section level3">
 <h3>Cons of the mean-variance analysis:</h3>
 <ul>
-<li>It is impossible to include every asset available, such as Real Estate, Human Capital, etc.</li>
-<li>Markowitz’s portfolio theory tells us nothing about where expected returns, variances or covariances come from.</li>
-<li>Noisy estimation of parameters can lead to optimization results, which are driven by estimation errors.</li>
-<li>Homogeneous expectations implies that all investors hold portfolios on the same MV efficient frontier. Thus, comes up with the same solution, which is super unrealistic.</li>
+<li>It is impossible to include every asset available, such as Real
+Estate, Human Capital, etc.</li>
+<li>Markowitz’s portfolio theory tells us nothing about where expected
+returns, variances or covariances come from.</li>
+<li>Noisy estimation of parameters can lead to optimization results,
+which are driven by estimation errors.</li>
+<li>Homogeneous expectations implies that all investors hold portfolios
+on the same MV efficient frontier. Thus, comes up with the same
+solution, which is super unrealistic.</li>
 <li>Investment horizon is only one period.</li>
-<li>Investors individual decision do affect market prices, e.g.. Flash crash, but here we assume the opposite.</li>
-<li>Last but most importantly, ex post returns might be a bad proxy for expected returns!</li>
-<li>Does not include market frictions as for instance: transaction costs, short selling, tax, etc.</li>
-<li>Invokes that asset mean returns are linear in their betas wrt the market portfolio.</li>
+<li>Investors individual decision do affect market prices, e.g.. Flash
+crash, but here we assume the opposite.</li>
+<li>Last but most importantly, ex post returns might be a bad proxy for
+expected returns!</li>
+<li>Does not include market frictions as for instance: transaction
+costs, short selling, tax, etc.</li>
+<li>Invokes that asset mean returns are linear in their betas wrt the
+market portfolio.</li>
 </ul>
+<p><br/></p>
 </div>
 <div id="rolls-critique" class="section level3">
 <h3>Roll’s critique:</h3>
-<p>The only testable implication of the CAPM is that the market portfolio is MV efficient. If the market portfolio is unobservable, and no assumption can be made about it, then the CAPM is not testable. So, the CAPM can only be used to test the acceptance of the H0 of the efficient market hypothesis. If it rejects H0, markets could be either inefficient or the model is incorrect or the entire set of assets is unknown. Some possible solutions regarding the estimation of <span class="math inline">\(\Sigma\)</span> or even skipping this step are discussed in upcoming posts.</p>
-<div id="refs" class="references">
-<div id="ref-arrow1954existence">
-<p>Arrow, Kenneth J, and Gerard Debreu. 1954. “Existence of an Equilibrium for a Competitive Economy.” <em>Econometrica: Journal of the Econometric Society</em>, 265–90.</p>
+<p>The only testable implication of the CAPM is that the market
+portfolio is MV efficient. If the market portfolio is unobservable, and
+no assumption can be made about it, then the CAPM is not testable. So,
+the CAPM can only be used to test the acceptance of the H0 of the
+efficient market hypothesis. If it rejects H0, markets could be either
+inefficient or the model is incorrect or the entire set of assets is
+unknown. Some possible solutions regarding the estimation of <span
+class="math inline">\(\Sigma\)</span> or even skipping this step are
+discussed in upcoming posts.</p>
+<p><br/></p>
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
+<div id="ref-arrow1954existence" class="csl-entry">
+Arrow, Kenneth J, and Gerard Debreu. 1954. <span>“Existence of an
+Equilibrium for a Competitive Economy.”</span> <em>Econometrica: Journal
+of the Econometric Society</em>, 265–90.
 </div>
-<div id="ref-breeden1989empirical">
-<p>Breeden, Douglas T, Michael R Gibbons, and Robert H Litzenberger. 1989. “Empirical Tests of the Consumption-Oriented Capm.” <em>The Journal of Finance</em> 44 (2): 231–62.</p>
+<div id="ref-black1973pricing" class="csl-entry">
+Black, Fischer, and Myron Scholes. 1973. <span>“The Pricing of Options
+and Corporate Liabilities.”</span> <em>Journal of Political Economy</em>
+81 (3): 637–54.
 </div>
-<div id="ref-cochrane2009asset">
-<p>Cochrane, J. H. 2009. <em>Asset Pricing: Revised Edition</em>. Princeton University Press. <a href="https://books.google.lu/books?id=20pmeMaKNwsC">https://books.google.lu/books?id=20pmeMaKNwsC</a>.</p>
+<div id="ref-breeden1989empirical" class="csl-entry">
+Breeden, Douglas T, Michael R Gibbons, and Robert H Litzenberger. 1989.
+<span>“Empirical Tests of the Consumption-Oriented CAPM.”</span> <em>The
+Journal of Finance</em> 44 (2): 231–62.
 </div>
-<div id="ref-heath1992bond">
-<p>Heath, David, Robert Jarrow, and Andrew Morton. 1992. “Bond Pricing and the Term Structure of Interest Rates: A New Methodology for Contingent Claims Valuation.” <em>Econometrica: Journal of the Econometric Society</em>, 77–105.</p>
+<div id="ref-cochrane2009asset" class="csl-entry">
+Cochrane, J. H. 2009. <em>Asset Pricing: Revised Edition</em>. Princeton
+University Press. <a
+href="https://books.google.lu/books?id=20pmeMaKNwsC">https://books.google.lu/books?id=20pmeMaKNwsC</a>.
 </div>
-<div id="ref-lintner1965security">
-<p>Lintner, John. 1965. “Security Prices, Risk, and Maximal Gains from Diversification.” <em>The Journal of Finance</em> 20 (4): 587–615.</p>
+<div id="ref-heath1992bond" class="csl-entry">
+Heath, David, Robert Jarrow, and Andrew Morton. 1992. <span>“Bond
+Pricing and the Term Structure of Interest Rates: A New Methodology for
+Contingent Claims Valuation.”</span> <em>Econometrica: Journal of the
+Econometric Society</em>, 77–105.
 </div>
-<div id="ref-merton1973intertemporal">
-<p>Merton, Robert C. 1973. “An Intertemporal Capital Asset Pricing Model.” <em>Econometrica: Journal of the Econometric Society</em>, 867–87.</p>
+<div id="ref-lintner1965security" class="csl-entry">
+Lintner, John. 1965. <span>“Security Prices, Risk, and Maximal Gains
+from Diversification.”</span> <em>The Journal of Finance</em> 20 (4):
+587–615.
 </div>
-<div id="ref-mossin1966equilibrium">
-<p>Mossin, Jan. 1966. “Equilibrium in a Capital Asset Market.” <em>Econometrica: Journal of the Econometric Society</em>, 768–83.</p>
+<div id="ref-merton1973intertemporal" class="csl-entry">
+Merton, Robert C. 1973. <span>“An Intertemporal Capital Asset Pricing
+Model.”</span> <em>Econometrica: Journal of the Econometric
+Society</em>, 867–87.
 </div>
-<div id="ref-ross2013arbitrage">
-<p>Ross, Stephen A. 2013. “The Arbitrage Theory of Capital Asset Pricing.” In <em>Handbook of the Fundamentals of Financial Decision Making: Part I</em>, 11–30. World Scientific.</p>
+<div id="ref-mossin1966equilibrium" class="csl-entry">
+Mossin, Jan. 1966. <span>“Equilibrium in a Capital Asset Market.”</span>
+<em>Econometrica: Journal of the Econometric Society</em>, 768–83.
 </div>
-<div id="ref-sharpe1964capital">
-<p>Sharpe, William F. 1964. “Capital Asset Prices: A Theory of Market Equilibrium Under Conditions of Risk.” <em>The Journal of Finance</em> 19 (3): 425–42.</p>
+<div id="ref-ross2013arbitrage" class="csl-entry">
+Ross, Stephen A. 2013. <span>“The Arbitrage Theory of Capital Asset
+Pricing.”</span> In <em>Handbook of the Fundamentals of Financial
+Decision Making: Part i</em>, 11–30. World Scientific.
+</div>
+<div id="ref-sharpe1964capital" class="csl-entry">
+Sharpe, William F. 1964. <span>“Capital Asset Prices: A Theory of Market
+Equilibrium Under Conditions of Risk.”</span> <em>The Journal of
+Finance</em> 19 (3): 425–42.
 </div>
 </div>
 </div>
@@ -463,7 +597,7 @@ tailoredFrontierPlot(
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
@@ -481,7 +615,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>

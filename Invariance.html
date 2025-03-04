@@ -1,36 +1,50 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
 
 <title>Market Microstructure Invariance</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -43,30 +57,29 @@ if (window.hljs) {
 
 
 
+
+
 <style type="text/css">
-h1 {
-  font-size: 34px;
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
 }
-h1.title {
-  font-size: 38px;
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
 }
-h2 {
-  font-size: 30px;
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
 }
-h3 {
-  font-size: 24px;
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
 }
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
+div.csl-indent {
+  margin-left: 2em;
 }
 </style>
 
@@ -80,13 +93,8 @@ h6 {
   margin-left: auto;
   margin-right: auto;
 }
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
-}
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -100,40 +108,16 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 64px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h2 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h3 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h4 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h5 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h6 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -161,7 +145,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -173,7 +157,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -183,11 +167,28 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.parent().addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -199,13 +200,12 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -213,16 +213,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -235,6 +228,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -246,18 +240,6 @@ $(document).ready(function () {
   display: none;
 }
 </style>
-
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
 
 <!-- code folding -->
 
@@ -277,7 +259,7 @@ $(document).ready(function () {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -296,7 +278,7 @@ $(document).ready(function () {
   <a href="teaching.html">Teaching</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Tutorials
      
     <span class="caret"></span>
@@ -320,7 +302,13 @@ $(document).ready(function () {
     <li>
       <a href="RBase.html">Fun with RBase</a>
     </li>
+    <li>
+      <a href="groqR.html">Rpackage GroqR: Fun with LLM</a>
+    </li>
   </ul>
+</li>
+<li>
+  <a href="https://aiap.rbind.io/">My Book</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -353,7 +341,7 @@ $(document).ready(function () {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -362,41 +350,134 @@ $(document).ready(function () {
 </div>
 
 
-
-<p>The market microstructure invariance paper by <span class="citation">Kyle and Obizhaeva (2016)</span> suggests that the distribution of risk transfers (bets) and transaction costs are constant in the crosssection and timeseries when scaled per unit of business time. These constants are structual estimates and allow to infer the arrival rate of bets (market velocity), the bet size distribution and transaction costs. <br/></p>
+<p>The market microstructure invariance paper by <span
+class="citation">Kyle and Obizhaeva (2016)</span> suggests that the
+distribution of risk transfers (bets) and transaction costs are constant
+in the crosssection and timeseries when scaled per unit of business
+time. These constants are structual estimates and allow to infer the
+arrival rate of bets (market velocity), the bet size distribution and
+transaction costs. <br/></p>
 <div id="definitions" class="section level2">
 <h2>1.Definitions</h2>
 <div id="market-velocity" class="section level3">
 <h3>Market velocity</h3>
-<p>Business time or market velocity measures the rate at which bets are submitted to the market. Consequently, for activly traded assets or large asstes with high trading volume and high volatility buisness time passes at a greater pace than for small assets with low trading volume and low volatility. The expected arrival rate of bets is defined as <span class="math inline">\(\gamma_{i, t}\)</span>, which follows a Poisson process and its unit is bets per calender day. Market velocity allows us to scale market charactersitics in order to interpret them across different assets. For instance, if the arrival rate rises by a factor of 9, then bet volatility decreases by a factor of 3 as <span class="math inline">\(\bar{\sigma}_{i, t} \cdot \gamma_{i, t}^{-1/2}\)</span>.</p>
+<p>Business time or market velocity measures the rate at which bets are
+submitted to the market. Consequently, for activly traded assets or
+large asstes with high trading volume and high volatility buisness time
+passes at a greater pace than for small assets with low trading volume
+and low volatility. The expected arrival rate of bets is defined as
+<span class="math inline">\(\gamma_{i, t}\)</span>, which follows a
+Poisson process and its unit is bets per calender day. Market velocity
+allows us to scale market charactersitics in order to interpret them
+across different assets. For instance, if the arrival rate rises by a
+factor of 9, then bet volatility decreases by a factor of 3 as <span
+class="math inline">\(\bar{\sigma}_{i, t} \cdot \gamma_{i,
+t}^{-1/2}\)</span>.</p>
 </div>
 <div id="trading-games" class="section level3">
 <h3>Trading Games</h3>
-<p>The transfer of risk is the decisions to buy or sell a long-term position in a specific asset of certain size. In this transfer, or as Treynor would call it, in this game informed traders, noise traders and market makers trade with each other. The bets themselves are assumed to be approximately independently distributed and thus are random variables. On the other hand, short term trading by liquidity providers, (ultra-) high frequency traders or arbitrageurs is not considered as bet but as intermediary that clears the price of a bet. For instance, restructuring a portfolio is a single bet, even if the trade is splitted over days due to its size. Another example for a single bet based on several orders is when multiple customers of a specific analyst invest in the same recommendation. To summarize trading games the signed size is introduced. It is the number of shares of a bet, which is also a random variable and denoted by <span class="math inline">\(\tilde{Q}_{i, t}\)</span> with <span class="math inline">\(\mathop {\mathbb E}[\tilde{Q}_{i, t}] = 0\)</span>. <br/></p>
+<p>The transfer of risk is the decisions to buy or sell a long-term
+position in a specific asset of certain size. In this transfer, or as
+Treynor would call it, in this game informed traders, noise traders and
+market makers trade with each other. The bets themselves are assumed to
+be approximately independently distributed and thus are random
+variables. On the other hand, short term trading by liquidity providers,
+(ultra-) high frequency traders or arbitrageurs is not considered as bet
+but as intermediary that clears the price of a bet. For instance,
+restructuring a portfolio is a single bet, even if the trade is splitted
+over days due to its size. Another example for a single bet based on
+several orders is when multiple customers of a specific analyst invest
+in the same recommendation. To summarize trading games the signed size
+is introduced. It is the number of shares of a bet, which is also a
+random variable and denoted by <span class="math inline">\(\tilde{Q}_{i,
+t}\)</span> with <span class="math inline">\(\mathop {\mathbb
+E}[\tilde{Q}_{i, t}] = 0\)</span>. <br/></p>
 </div>
 <div id="bet-volume" class="section level3">
 <h3>Bet volume</h3>
-<p>The trading volume <span class="math inline">\(V_{i, t}\)</span> are all shares traded per day of an asset and can be decomposed in bet volume <span class="math inline">\(\zeta_{i, t} \cdot V_{i, t}\)</span> and intermediary volume <span class="math inline">\((\zeta_{i, t}-1) \cdot V_{i, t}\)</span>. If no intermediaries participate in the market, then <span class="math inline">\(\zeta_{i, t}=1\)</span>. Considering a monopolistic intermediary, then <span class="math inline">\(\zeta_{i, t}=2\)</span>, such that the factor increases linearly in intermediaries. Therefore expected bet volume can be defined as: <span class="math display">\[\bar{V}_{i, t} := \gamma_{i, t} \cdot \mathop {\mathbb E}[|\tilde{Q}_{i, t}|]= \frac{2}{\zeta_{i, t}} \cdot V_{i, t}\]</span></p>
+<p>The trading volume <span class="math inline">\(V_{i, t}\)</span> are
+all shares traded per day of an asset and can be decomposed in bet
+volume <span class="math inline">\(\zeta_{i, t} \cdot V_{i, t}\)</span>
+and intermediary volume <span class="math inline">\((\zeta_{i, t}-1)
+\cdot V_{i, t}\)</span>. If no intermediaries participate in the market,
+then <span class="math inline">\(\zeta_{i, t}=1\)</span>. Considering a
+monopolistic intermediary, then <span class="math inline">\(\zeta_{i,
+t}=2\)</span>, such that the factor increases linearly in
+intermediaries. Therefore expected bet volume can be defined as: <span
+class="math display">\[\bar{V}_{i, t} := \gamma_{i, t} \cdot \mathop
+{\mathbb E}[|\tilde{Q}_{i, t}|]= \frac{2}{\zeta_{i, t}} \cdot V_{i,
+t}\]</span></p>
 </div>
 <div id="bet-volatility" class="section level3">
 <h3>Bet volatility</h3>
-<p>Similarly, return volatility <span class="math inline">\(\sigma_{i, t}\)</span> is the percentage standard deviation of daily returns per asset <span class="math inline">\(i\)</span>, which can be again decomposed in bet volatility <span class="math display">\[\bar{\sigma}_{i, t} := \psi_{i, t} \cdot \sigma_{i, t}\]</span> and intermediary volatility. Then the dollar volatility of a bet is the product of the asset price <span class="math inline">\(P_{i, t}\)</span> and the bet volatility.</p>
+<p>Similarly, return volatility <span class="math inline">\(\sigma_{i,
+t}\)</span> is the percentage standard deviation of daily returns per
+asset <span class="math inline">\(i\)</span>, which can be again
+decomposed in bet volatility <span
+class="math display">\[\bar{\sigma}_{i, t} := \psi_{i, t} \cdot
+\sigma_{i, t}\]</span> and intermediary volatility. Then the dollar
+volatility of a bet is the product of the asset price <span
+class="math inline">\(P_{i, t}\)</span> and the bet volatility.</p>
 </div>
 <div id="invariance-of-bets" class="section level3">
 <h3>Invariance of Bets</h3>
-<p>From these definitions we can already derive the signed standard deviation: <span class="math display">\[\tilde{I}_{i, t} :=\tilde{Q}_{i, t} \cdot P_{i, t}  \frac{\bar{\sigma}_{i, t}}{\gamma_{i, t}^{1/2}} \overset{d}{=} \tilde{I}\]</span> This measure can be interpreted as the dollar risk transfer per unit of business time. The signed std. dev. is negative for short and positive for long positions. One advantage of using dollar volume is that the measure is unaffected by stock splits. Furthermore, it is immune to leverage effects as an increase in leverage would decrease the price at approximately the same rate as it would increase volatility. <span class="citation">Kyle and Obizhaeva (2016)</span> hypothesizes that the signed std. dev. is constant in distribution across assets and time and thus one should find the same value per quantile for different stocks or timepoints.</p>
+<p>From these definitions we can already derive the signed standard
+deviation: <span class="math display">\[\tilde{I}_{i, t} :=\tilde{Q}_{i,
+t} \cdot P_{i, t}  \frac{\bar{\sigma}_{i, t}}{\gamma_{i, t}^{1/2}}
+\overset{d}{=} \tilde{I}\]</span> This measure can be interpreted as the
+dollar risk transfer per unit of business time. The signed std. dev. is
+negative for short and positive for long positions. One advantage of
+using dollar volume is that the measure is unaffected by stock splits.
+Furthermore, it is immune to leverage effects as an increase in leverage
+would decrease the price at approximately the same rate as it would
+increase volatility. <span class="citation">Kyle and Obizhaeva
+(2016)</span> hypothesizes that the signed std. dev. is constant in
+distribution across assets and time and thus one should find the same
+value per quantile for different stocks or timepoints.</p>
 </div>
 <div id="trading-activity" class="section level3">
 <h3>Trading Activity</h3>
-<p>Also the aggregate dollar risk transferred by all traded orders <span class="math inline">\(W_{i, t}=\sigma_{i, t}P_{i, t}V_{i, t}\)</span> can be broken into an intermediary and a bet part. The bet trading activity is simply derived and lead to several expressions: <span class="math display">\[\bar{W}_{i, t}=\bar{\sigma}_{i, t}P_{i, t}\bar{V}_{i, t}= \bar{\sigma}_{i, t}P_{i, t}\gamma_{i, t} \cdot \mathop {\mathbb E}[|\tilde{Q}_{i, t}|] = \gamma_{i, t}^{3/2} \mathop {\mathbb E}[|\tilde{I}|]= \psi_{i, t} \cdot \sigma_{i, t}P_{i, t}\frac{2}{\zeta_{i, t}} \cdot V_{i, t} = W_{i, t} \cdot \frac{2\psi_{i, t}}{\zeta_{i, t}}\]</span></p>
+<p>Also the aggregate dollar risk transferred by all traded orders <span
+class="math inline">\(W_{i, t}=\sigma_{i, t}P_{i, t}V_{i, t}\)</span>
+can be broken into an intermediary and a bet part. The bet trading
+activity is simply derived and lead to several expressions: <span
+class="math display">\[\bar{W}_{i, t}=\bar{\sigma}_{i, t}P_{i,
+t}\bar{V}_{i, t}= \bar{\sigma}_{i, t}P_{i, t}\gamma_{i, t} \cdot \mathop
+{\mathbb E}[|\tilde{Q}_{i, t}|] = \gamma_{i, t}^{3/2} \mathop {\mathbb
+E}[|\tilde{I}|]= \psi_{i, t} \cdot \sigma_{i, t}P_{i,
+t}\frac{2}{\zeta_{i, t}} \cdot V_{i, t} = W_{i, t} \cdot \frac{2\psi_{i,
+t}}{\zeta_{i, t}}\]</span></p>
 </div>
 </div>
 <div id="key-results-of-the-invariance-of-bets" class="section level2">
 <h2>2.Key Results of the Invariance of Bets</h2>
-<p>From the level of bet trading activity they infer the unobservable market velocity (middle term from above) as well as the expected size of bets (first bet volume term): <span class="math display">\[\gamma_{i, t}=\bar{W}_{i, t}^{2/3}\cdot  \mathop {\mathbb E}[|\tilde{I}|]^{-2/3} \qquad \text{ with } \qquad \frac{\partial\gamma_{i, t}}{\partial\bar{W}_{i, t}}=\frac{2}{3}\bar{W}_{i, t}^{-1/3}\cdot  \mathop {\mathbb E}[|\tilde{I}|]^{-2/3}\]</span> and <span class="math display">\[\mathop {\mathbb E}[|\tilde{Q}_{i, t}|]=\bar{V}_{i, t} \cdot \bar{W}_{i, t}^{-2/3} \mathop {\mathbb E}[|\tilde{I}|]^{2/3} =\bar{W}_{i, t}^{1/3} \cdot \frac{\mathop {\mathbb E}[|\tilde{I}|]^{2/3}}{\bar{\sigma}_{i, t}P_{i, t}}\]</span> Which immediately leads to: <span class="math display">\[\frac{\tilde{Q}_{i, t}}{\bar{V}_{i, t} }\overset{d}{=} \bar{W}_{i, t}^{-2/3} \cdot \tilde{I} \cdot\mathop {\mathbb E}[|\tilde{I}|]^{-1/3}\]</span> The above finding implies that the expected arrival rate of bets changes by 2/3 whenever the trading activity changes by 1% and the distribution of bet size increases by 1/3 of 1%. Another example for interpretaion could be to observe in the market an increase in market velocity by a factor of 9, as mentioned above. If the invariance hypothesis is correct, it is necessary that the bet size <span class="math inline">\(\tilde{Q}_{i, t}\)</span> rises by 3.</p>
-<div id="refs" class="references">
-<div id="ref-kyle2016market">
-<p>Kyle, Albert S, and Anna A Obizhaeva. 2016. “Market Microstructure Invariance: Empirical Hypotheses.” <em>Econometrica</em> 84 (4): 1345–1404.</p>
+<p>From the level of bet trading activity they infer the unobservable
+market velocity (middle term from above) as well as the expected size of
+bets (first bet volume term): <span class="math display">\[\gamma_{i,
+t}=\bar{W}_{i, t}^{2/3}\cdot  \mathop {\mathbb E}[|\tilde{I}|]^{-2/3}
+\qquad \text{ with } \qquad \frac{\partial\gamma_{i,
+t}}{\partial\bar{W}_{i, t}}=\frac{2}{3}\bar{W}_{i,
+t}^{-1/3}\cdot  \mathop {\mathbb E}[|\tilde{I}|]^{-2/3}\]</span> and
+<span class="math display">\[\mathop {\mathbb E}[|\tilde{Q}_{i,
+t}|]=\bar{V}_{i, t} \cdot \bar{W}_{i, t}^{-2/3} \mathop {\mathbb
+E}[|\tilde{I}|]^{2/3} =\bar{W}_{i, t}^{1/3} \cdot \frac{\mathop {\mathbb
+E}[|\tilde{I}|]^{2/3}}{\bar{\sigma}_{i, t}P_{i, t}}\]</span> Which
+immediately leads to: <span class="math display">\[\frac{\tilde{Q}_{i,
+t}}{\bar{V}_{i, t} }\overset{d}{=} \bar{W}_{i, t}^{-2/3} \cdot \tilde{I}
+\cdot\mathop {\mathbb E}[|\tilde{I}|]^{-1/3}\]</span> The above finding
+implies that the expected arrival rate of bets changes by 2/3 whenever
+the trading activity changes by 1% and the distribution of bet size
+increases by 1/3 of 1%. Another example for interpretaion could be to
+observe in the market an increase in market velocity by a factor of 9,
+as mentioned above. If the invariance hypothesis is correct, it is
+necessary that the bet size <span class="math inline">\(\tilde{Q}_{i,
+t}\)</span> rises by 3.</p>
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
+<div id="ref-kyle2016market" class="csl-entry">
+Kyle, Albert S, and Anna A Obizhaeva. 2016. <span>“Market Microstructure
+Invariance: Empirical Hypotheses.”</span> <em>Econometrica</em> 84 (4):
+1345–1404.
 </div>
 </div>
 </div>
@@ -410,7 +491,7 @@ $(document).ready(function () {
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
@@ -418,6 +499,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

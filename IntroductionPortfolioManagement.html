@@ -13,20 +13,27 @@
 
 <title>A smooth Introduction to Portfolio Management</title>
 
-<script src="site_libs/header-attrs-2.5/header-attrs.js"></script>
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
-<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -38,11 +45,6 @@
     </style>
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -55,30 +57,29 @@ if (window.hljs) {
 
 
 
+
+
 <style type="text/css">
-h1 {
-  font-size: 34px;
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
 }
-h1.title {
-  font-size: 38px;
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
 }
-h2 {
-  font-size: 30px;
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
 }
-h3 {
-  font-size: 24px;
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
 }
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
+div.csl-indent {
+  margin-left: 2em;
 }
 </style>
 
@@ -91,10 +92,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -111,40 +108,16 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 64px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h2 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h3 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h4 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h5 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h6 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -172,7 +145,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -184,7 +157,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -194,11 +167,28 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.parent().addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -210,13 +200,12 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -224,16 +213,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -277,7 +259,7 @@ $(document).ready(function () {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -296,7 +278,7 @@ $(document).ready(function () {
   <a href="teaching.html">Teaching</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Tutorials
      
     <span class="caret"></span>
@@ -319,6 +301,9 @@ $(document).ready(function () {
     </li>
     <li>
       <a href="RBase.html">Fun with RBase</a>
+    </li>
+    <li>
+      <a href="groqR.html">Rpackage GroqR: Fun with LLM</a>
     </li>
   </ul>
 </li>
@@ -356,11 +341,12 @@ $(document).ready(function () {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
-<h1 class="title toc-ignore">A smooth Introduction to Portfolio Management</h1>
+<h1 class="title toc-ignore">A smooth Introduction to Portfolio
+Management</h1>
 
 </div>
 
@@ -374,42 +360,156 @@ $(document).ready(function () {
 <p><br/> <br/> <br/></p>
 <div id="introduction-to-portfolio-management" class="section level2">
 <h2>Introduction to Portfolio Management</h2>
-<p>In this short blog I am going to introduce the basics of portfolio theory. It is an introduction to a set of blogs dedicated to <strong>portfolio choices</strong> that focus on <strong>long holding periods</strong>. In particular, these periods are between 10 and 30 years. Several studies revealed that frequently switching between funds leads investors to withdraw from and invest into the market at wrong times. This implies that market-timing does not work for the average investor. Dalbar for instance, publishes continuous reports on <a href="https://www.qidllc.com/wp-content/uploads/2016/02/2016-Dalbar-QAIB-Report.pdf">“Quantitative Analysis of Investor Behavior”</a> that support the idea that short-term investing might lead to make the exact wrong decision. The definitions below will help to build methodologies for a systematic approach to investing. I will try to keep everything as short as possible. <br/> So lets start with the <strong>risk-return tradeoff</strong>, which is the principle that expected return rises with an increase in risk. Thus, an investor can expect higher profits only if the investor is willing to accept the possibility of higher losses. Markowitz (1991) shows how to maximize expected return for a given level of variance. He assumes that investors prefer asset A over B with same expected return, whenever asset A has a smaller variance than asset B.<br/> <br/></p>
+<p>In this short blog I am going to introduce the basics of portfolio
+theory. It is an introduction to a set of blogs dedicated to
+<strong>portfolio choices</strong> that focus on <strong>long holding
+periods</strong>. In particular, these periods are between 10 and 30
+years. Several studies revealed that frequently switching between funds
+leads investors to withdraw from and invest into the market at wrong
+times. This implies that market-timing does not work for the average
+investor. Dalbar for instance, publishes continuous reports on <a
+href="https://www.ifa.com/articles/understanding-investor-behavior-portfolio-performance">“Quantitative
+Analysis of Investor Behavior”</a> that support the idea that short-term
+investing might lead to make the exact wrong decision. The definitions
+below will help to build methodologies for a systematic approach to
+investing. I will try to keep everything as short as possible. <br/> So
+lets start with the <strong>risk-return tradeoff</strong>, which is the
+principle that expected return rises with an increase in risk. Thus, an
+investor can expect higher profits only if the investor is willing to
+accept the possibility of higher losses. Markowitz (1991) shows how to
+maximize expected return for a given level of variance. He assumes that
+investors prefer asset A over B with same expected return, whenever
+asset A has a smaller variance than asset B.<br/> <br/></p>
 <div id="definitions" class="section level3">
 <h3>Definitions</h3>
-<p>In order to get a logical understanding of the topic and developing it further, we need to make some definitions that will be referred to across posts. First and foremost, the <strong>portfolio return</strong> is defined as: <span class="math display">\[ r_p = \sum_{i=1}^n w_i r_i = w&#39;r \]</span> with <strong>weights</strong> summing up to 1: <span class="math display">\[ \sum_{i=1}^n w_i = w&#39; 1\]</span></p>
-<p>The <strong>expected return of a portfolio</strong> is <span class="math display">\[\mu_p = \mathop {\mathbb E}[r_p] = \sum_{i=1}^n  w_i \mathop {\mathbb E}[r_i] = w&#39; \mathop {\mathbb E}[r]\]</span> and the corresponding <strong>variance of the portfolio return</strong> is: <span class="math display">\[ \sigma_p^2 = \sum_{i=1}^n w_i^2 \sigma_i^2  + \sum_{i=1}^n\sum_{i\neq j} w_i w_j    Cov[r_i, r_j] = w&#39;\Sigma w\]</span><br/> <br/></p>
+<p>In order to get a logical understanding of the topic and developing
+it further, we need to make some definitions that will be referred to
+across posts. First and foremost, the <strong>portfolio return</strong>
+is defined as: <span class="math display">\[ r_p = \sum_{i=1}^n w_i r_i
+= w&#39;r \]</span> with <strong>weights</strong> summing up to 1: <span
+class="math display">\[ \sum_{i=1}^n w_i = w&#39; 1\]</span></p>
+<p>The <strong>expected return of a portfolio</strong> is <span
+class="math display">\[\mu_p = \mathop {\mathbb E}[r_p] =
+\sum_{i=1}^n  w_i \mathop {\mathbb E}[r_i] = w&#39; \mathop {\mathbb
+E}[r]\]</span> and the corresponding <strong>variance of the portfolio
+return</strong> is: <span class="math display">\[ \sigma_p^2 =
+\sum_{i=1}^n w_i^2 \sigma_i^2  + \sum_{i=1}^n\sum_{i\neq j} w_i
+w_j    Cov[r_i, r_j] = w&#39;\Sigma w\]</span><br/> <br/></p>
 </div>
 <div id="diversification" class="section level3">
 <h3>Diversification</h3>
-<p>The last equation reveals that portfolio risk consists of <strong>two components</strong>. The first part is called <strong>idiosyncratic risk</strong> and is almost fully diversifiable. In general, diversification is a technique that reduces risk by allocating investments among various financial instruments, industries, and other categories. It aims to maximize return by investing in different areas or assets that are expected to move in different directions given a specific shock. As a result, <strong>idiosyncratic risks</strong> are risks specific to a company, industry, market, economy, or country are reduced, if not eliminated. The concept of diversification can also be shown by a mathematical proof, which is derived in only one line.<br/> <br/></p>
+<p>The last equation reveals that portfolio risk consists of <strong>two
+components</strong>. The first part is called <strong>idiosyncratic
+risk</strong> and is almost fully diversifiable. In general,
+diversification is a technique that reduces risk by allocating
+investments among various financial instruments, industries, and other
+categories. It aims to maximize return by investing in different areas
+or assets that are expected to move in different directions given a
+specific shock. As a result, <strong>idiosyncratic risks</strong> are
+risks specific to a company, industry, market, economy, or country are
+reduced, if not eliminated. The concept of diversification can also be
+shown by a mathematical proof, which is derived in only one line.<br/>
+<br/></p>
 <div id="proof" class="section level4">
 <h4>Proof:</h4>
-<p><br/> For this purpose we assume a zero covariance, meaning that the correlation between assets is zero. If we use an equally weighted portfolio, such that <span class="math inline">\(w_i = 1/n\)</span>, then the portfolio’s variance will converge to zero as n goes to infinity. Most ETFs on indices however are value-weighted and automatically introduce exposure to a value risk premium, which might not be intended by the investor. In particular, the proof below would also hold for a value-weighted portfolios as the weights would be a function of individual market capitalization and <span class="math inline">\(n\)</span>, such that <span class="math inline">\((w_i = MC_i/(\overline{MC}\cdot n)\)</span>. Thus the portfolio variance converges slower to 0 as <span class="math inline">\(n\)</span> grows linearly instead of exponentially.</p>
-<p><span class="math display">\[\lim_{n \to \infty} \sigma_p^2 = \lim_{n \rightarrow \infty}  \sum_{i=1}^n \frac{ \sigma_i^2} {n^2} + \sum_{i=1}^n\sum_{i\neq j} \frac{ 0} {n^2}= 0\]</span> We can see that it is desirable to benefit from the <strong>diversification effect</strong> which reduces portfolio risk.<br/> <br/></p>
+<p><br/> For this purpose we assume a zero covariance, meaning that the
+correlation between assets is zero. If we use an equally weighted
+portfolio, such that <span class="math inline">\(w_i = 1/n\)</span>,
+then the portfolio’s variance will converge to zero as n goes to
+infinity. Most ETFs on indices however are value-weighted and
+automatically introduce exposure to a value risk premium, which might
+not be intended by the investor. In particular, the proof below would
+also hold for a value-weighted portfolios as the weights would be a
+function of individual market capitalization and <span
+class="math inline">\(n\)</span>, such that <span
+class="math inline">\((w_i = MC_i/(\overline{MC}\cdot n)\)</span>. Thus
+the portfolio variance converges slower to 0 as <span
+class="math inline">\(n\)</span> grows linearly instead of
+exponentially.</p>
+<p><span class="math display">\[\lim_{n \to \infty} \sigma_p^2 = \lim_{n
+\rightarrow \infty}  \sum_{i=1}^n \frac{ \sigma_i^2} {n^2} +
+\sum_{i=1}^n\sum_{i\neq j} \frac{ 0} {n^2}= 0\]</span> We can see that
+it is desirable to benefit from the <strong>diversification
+effect</strong> which reduces portfolio risk.<br/> <br/></p>
 </div>
 <div id="geometric-proof" class="section level4">
 <h4>Geometric Proof:</h4>
-<p>The second part of the portfolio variance is the weighted covariance. This part can also be represented by entries of the correlation matrix multiplied by the standard deviation. Hence, <strong>any correlation contributes positively or negatively to the overall portfolio risk</strong>. For illustration purposes consider the plot below: It shows two assets with various return correlations. The blue dots indicate a full investment in either one of the two assets. Further, the dashed line indicates all possible portfolios constructed by these two assets. Only if the correlation is perfectly negative, the portfolio risk will be zero.</p>
-<p><br/> <br/> <br/> <img src="img/correlation_example.png" /> <br/> <br/> <br/></p>
-<p>Unfortunately, zero correlations across assets are unobservable (see also US Stock-Bond plot) and thus, the second part of the portfolio variance is unequal to zero. In general, <strong>systematic risks</strong> are variations in inflation rates and exchange rates, political and economic instability, war, and interest rate changes, which is <strong>undiversifiable</strong>. Nonetheless, the latter risk component is supposed to be priced in financial markets and is the compensation for bearing systematic risks. This compensation is known as the <strong>risk premium</strong> or discount rate. These discount rates are time varying as a result of time variation in the underlying portfolio return correlations. Idiosyncratic risk on the other hand, is not compensated as it is diversifiable. <br/> <br/> Obviously, if the last part is negative, the entire variation is smaller, which is the main idea of the 60/40 asset allocation rule that invests in stocks and bonds. The idea thereby is that the two asset classes generally move in opposite directions and are thus negatively correlated. Unfortunately, since 1999, the negative relationship has turned positive for long-term holdings as plotted above. <br/></p>
-<p><br/> <br/> <img src="img/cor.png" style="width:50.0%" /> <br/> <br/></p>
-<p>Fortunately, a very large set of different approaches exists that try to implement low correlations with the market and simultaneously take advantage of the diversification effect. Some of these methodologies are discussed in later sections. These examples try to optimize the trade-off between risk and return, but also wrt higher moments. Some of these methods also consider reduced transaction costs by decreasing the turnover or the number of assets n as there exists an obvious trade-off between high diversification, implying a large number of assets <span class="math inline">\(n\)</span>, and fees. <br/> Before we jump to MV estimation we should mention the behavior of discount rates. Surprisingly, it turned out that <strong>expected stock returns are time-varying</strong> in contrast to the view of the 1970s. As a consequence, discount rate variation over time and across assets has replaced <strong>informational efficiency</strong> as the central organizing question of asset pricing. Several arguments try to explain the time variation:</p>
+<p>The second part of the portfolio variance is the weighted covariance.
+This part can also be represented by entries of the correlation matrix
+multiplied by the standard deviation. Hence, <strong>any correlation
+contributes positively or negatively to the overall portfolio
+risk</strong>. For illustration purposes consider the plot below: It
+shows two assets with various return correlations. The blue dots
+indicate a full investment in either one of the two assets. Further, the
+dashed line indicates all possible portfolios constructed by these two
+assets. Only if the correlation is perfectly negative, the portfolio
+risk will be zero.</p>
+<p><br/> <br/> <br/> <img src="img/correlation_example.png" /> <br/>
+<br/> <br/></p>
+<p>Unfortunately, zero correlations across assets are unobservable (see
+also US Stock-Bond plot) and thus, the second part of the portfolio
+variance is unequal to zero. In general, <strong>systematic
+risks</strong> are variations in inflation rates and exchange rates,
+political and economic instability, war, and interest rate changes,
+which is <strong>undiversifiable</strong>. Nonetheless, the latter risk
+component is supposed to be priced in financial markets and is the
+compensation for bearing systematic risks. This compensation is known as
+the <strong>risk premium</strong> or discount rate. These discount rates
+are time varying as a result of time variation in the underlying
+portfolio return correlations. Idiosyncratic risk on the other hand, is
+not compensated as it is diversifiable. <br/> <br/> Obviously, if the
+last part is negative, the entire variation is smaller, which is the
+main idea of the 60/40 asset allocation rule that invests in stocks and
+bonds. The idea thereby is that the two asset classes generally move in
+opposite directions and are thus negatively correlated. Unfortunately,
+since 1999, the negative relationship has turned positive for long-term
+holdings as plotted above. <br/></p>
+<p><br/> <br/> <img src="img/cor.png" style="width:50.0%" /> <br/>
+<br/></p>
+<p>Fortunately, a very large set of different approaches exists that try
+to implement low correlations with the market and simultaneously take
+advantage of the diversification effect. Some of these methodologies are
+discussed in later sections. These examples try to optimize the
+trade-off between risk and return, but also wrt higher moments. Some of
+these methods also consider reduced transaction costs by decreasing the
+turnover or the number of assets n as there exists an obvious trade-off
+between high diversification, implying a large number of assets <span
+class="math inline">\(n\)</span>, and fees. <br/> Before we jump to MV
+estimation we should mention the behavior of discount rates.
+Surprisingly, it turned out that <strong>expected stock returns are
+time-varying</strong> in contrast to the view of the 1970s. As a
+consequence, discount rate variation over time and across assets has
+replaced <strong>informational efficiency</strong> as the central
+organizing question of asset pricing. Several arguments try to explain
+the time variation:</p>
 <ul>
-<li><span class="citation">Campbell and Cochrane (1999)</span>: time-varying risk aversion</li>
-<li><span class="citation">Bansal and Yaron (2004)</span>: time-varying diffusive risk</li>
-<li><span class="citation">Wachter (2013)</span>: time-varying disaster risk</li>
+<li><span class="citation">Campbell and Cochrane (1999)</span>:
+time-varying risk aversion</li>
+<li><span class="citation">Bansal and Yaron (2004)</span>: time-varying
+diffusive risk</li>
+<li><span class="citation">Wachter (2013)</span>: time-varying disaster
+risk</li>
 </ul>
-<p>Although, we are not completely confident what causes time-variation, we should bear in mind that expectations estimated via the short to medium run might be better approximations for expected returns than long run measures.</p>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<p>Although, we are not completely confident what causes time-variation,
+we should bear in mind that expectations estimated via the short to
+medium run might be better approximations for expected returns than long
+run measures.</p>
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
 <div id="ref-Bansal2004" class="csl-entry">
-Bansal, Ravi, and Amir Yaron. 2004. <span>“Risks for the Long Run: A Potential Resolution of Asset Pricing Puzzles.”</span> <em>The Journal of Finance</em> 59 (4): 1481–1509.
+Bansal, Ravi, and Amir Yaron. 2004. <span>“Risks for the Long Run: A
+Potential Resolution of Asset Pricing Puzzles.”</span> <em>The Journal
+of Finance</em> 59 (4): 1481–1509.
 </div>
 <div id="ref-campbell1999force" class="csl-entry">
-Campbell, John Y, and John H Cochrane. 1999. <span>“By Force of Habit: A Consumption-Based Explanation of Aggregate Stock Market Behavior.”</span> <em>Journal of Political Economy</em> 107 (2): 205–51.
+Campbell, John Y, and John H Cochrane. 1999. <span>“By Force of Habit: A
+Consumption-Based Explanation of Aggregate Stock Market
+Behavior.”</span> <em>Journal of Political Economy</em> 107 (2): 205–51.
 </div>
 <div id="ref-wachter2013can" class="csl-entry">
-Wachter, Jessica A. 2013. <span>“Can Time-Varying Risk of Rare Disasters Explain Aggregate Stock Market Volatility?”</span> <em>The Journal of Finance</em> 68 (3): 987–1035.
+Wachter, Jessica A. 2013. <span>“Can Time-Varying Risk of Rare Disasters
+Explain Aggregate Stock Market Volatility?”</span> <em>The Journal of
+Finance</em> 68 (3): 987–1035.
 </div>
 </div>
 </div>
@@ -443,7 +543,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>
