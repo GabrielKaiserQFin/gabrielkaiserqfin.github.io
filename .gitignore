@@ -5,11 +5,7 @@
 *.Rmd
 BackUp/
 InProgress/
-Regularization_files/
 site_libs/
 js/
 img/
 css/
-groqR_cache/
-CAPM_files/
-figures/
