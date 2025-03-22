@@ -8,5 +8,5 @@ InProgress/
 img/
 *.Rproj
 *.R
-*.RData
+*.Rdata
 
