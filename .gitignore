@@ -6,4 +6,7 @@
 BackUp/
 InProgress/
 img/
+*.Rproj
+*.R
+*.RData
 
