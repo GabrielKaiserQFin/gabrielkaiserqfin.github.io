@@ -27,6 +27,8 @@ navbar:
             href: groqR.html
     - text: "My Book"
       href: 'https://aiap.rbind.io/'
+    - text: "Risk Return App"
+      href: 'https://quantresearchgk.shinyapps.io/Risk_Return_app/'
   right:
     - icon: fa-envelope fa-lg
       href: contact.html
