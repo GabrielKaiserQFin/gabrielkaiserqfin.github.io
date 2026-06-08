@@ -25,10 +25,14 @@ navbar:
             href: RBase.html
           - text: "Rpackage GroqR: Fun with LLM"
             href: groqR.html
+          - text: "Path-Dependent Volatility"
+            href: PDV.html
     - text: "My Book"
       href: 'https://aiap.rbind.io/'
     - text: "Risk Return App"
       href: 'https://quantresearchgk.shinyapps.io/Risk_Return_app/'
+    - text: "Path-Dependent Volatility App"
+      href: 'https://quantresearchgk.shinyapps.io/pdv-simulator/'
   right:
     - icon: fa-envelope fa-lg
       href: contact.html
@@ -38,7 +42,7 @@ navbar:
       href: https://twitter.com/QuantGk
     - icon: fa-linkedin fa-lg
       href: https://www.linkedin.com/in/gabriel-kaiser-a98a0083/
-      
+
 output:
   html_document:
     theme: paper
