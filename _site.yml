@@ -29,10 +29,12 @@ navbar:
             href: PDV.html
     - text: "My Book"
       href: 'https://aiap.rbind.io/'
-    - text: "Risk Return App"
-      href: 'https://quantresearchgk.shinyapps.io/Risk_Return_app/'
-    - text: "Path-Dependent Volatility App"
-      href: 'https://quantresearchgk.shinyapps.io/pdv-simulator/'
+    - text: "Apps"
+      menu:
+          - text: "Risk Return App"
+            href: 'https://quantresearchgk.shinyapps.io/Risk_Return_app/'
+          - text: "Path-Dependent Volatility App"
+            href: 'https://quantresearchgk.shinyapps.io/pdv-simulator/'
   right:
     - icon: fa-envelope fa-lg
       href: contact.html

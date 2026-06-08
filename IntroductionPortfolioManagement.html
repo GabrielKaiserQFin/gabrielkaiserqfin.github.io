@@ -13,7 +13,7 @@
 
 <title>A smooth Introduction to Portfolio Management</title>
 
-<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
@@ -64,7 +64,6 @@ if (window.hljs) {
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
-  margin-bottom: 0em;
 }
 .hanging div.csl-entry {
   margin-left:2em;
@@ -305,10 +304,28 @@ $(document).ready(function () {
     <li>
       <a href="groqR.html">Rpackage GroqR: Fun with LLM</a>
     </li>
+    <li>
+      <a href="PDV.html">Path-Dependent Volatility</a>
+    </li>
   </ul>
 </li>
 <li>
   <a href="https://aiap.rbind.io/">My Book</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Apps
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="https://quantresearchgk.shinyapps.io/Risk_Return_app/">Risk Return App</a>
+    </li>
+    <li>
+      <a href="https://quantresearchgk.shinyapps.io/pdv-simulator/">Path-Dependent Volatility App</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -494,12 +511,11 @@ risk</li>
 we should bear in mind that expectations estimated via the short to
 medium run might be better approximations for expected returns than long
 run measures.</p>
-<div id="refs" class="references csl-bib-body hanging-indent"
-entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-Bansal2004" class="csl-entry">
 Bansal, Ravi, and Amir Yaron. 2004. <span>“Risks for the Long Run: A
 Potential Resolution of Asset Pricing Puzzles.”</span> <em>The Journal
-of Finance</em> 59 (4): 1481–1509.
+of Finance</em> 59 (4): 1481–509.
 </div>
 <div id="ref-campbell1999force" class="csl-entry">
 Campbell, John Y, and John H Cochrane. 1999. <span>“By Force of Habit: A

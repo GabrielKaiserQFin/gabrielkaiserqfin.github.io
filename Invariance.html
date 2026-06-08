@@ -13,7 +13,7 @@
 
 <title>Market Microstructure Invariance</title>
 
-<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
@@ -64,7 +64,6 @@ if (window.hljs) {
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
-  margin-bottom: 0em;
 }
 .hanging div.csl-entry {
   margin-left:2em;
@@ -305,10 +304,28 @@ $(document).ready(function () {
     <li>
       <a href="groqR.html">Rpackage GroqR: Fun with LLM</a>
     </li>
+    <li>
+      <a href="PDV.html">Path-Dependent Volatility</a>
+    </li>
   </ul>
 </li>
 <li>
   <a href="https://aiap.rbind.io/">My Book</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Apps
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="https://quantresearchgk.shinyapps.io/Risk_Return_app/">Risk Return App</a>
+    </li>
+    <li>
+      <a href="https://quantresearchgk.shinyapps.io/pdv-simulator/">Path-Dependent Volatility App</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -472,12 +489,11 @@ observe in the market an increase in market velocity by a factor of 9,
 as mentioned above. If the invariance hypothesis is correct, it is
 necessary that the bet size <span class="math inline">\(\tilde{Q}_{i,
 t}\)</span> rises by 3.</p>
-<div id="refs" class="references csl-bib-body hanging-indent"
-entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-kyle2016market" class="csl-entry">
 Kyle, Albert S, and Anna A Obizhaeva. 2016. <span>“Market Microstructure
 Invariance: Empirical Hypotheses.”</span> <em>Econometrica</em> 84 (4):
-1345–1404.
+1345–404.
 </div>
 </div>
 </div>
