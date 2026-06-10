@@ -9,4 +9,4 @@ img/
 *.Rproj
 *.R
 *.Rdata
-
+.vscode/
