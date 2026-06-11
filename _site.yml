@@ -17,6 +17,8 @@ navbar:
             href: Markowitz.html
           - text: "CAPM"
             href: CAPM.html
+          - text: "PSO for Portfolio Optimization"
+            href: PSOforPortfolioOptimization.html
           - text: "Curse of Dimensionality"
             href: Regularization.html
           - text: "Invariance"
@@ -27,6 +29,8 @@ navbar:
             href: groqR.html
           - text: "Path-Dependent Volatility"
             href: PDV.html
+          - text: "Geometric Beta"
+            href: GMM.html
     - text: "My Book"
       href: 'https://aiap.rbind.io/'
     - text: "Apps"

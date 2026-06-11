@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>PSO for Portfolio Optimization</title>
+
+<script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="Standarstyle.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Gabriel Kaiser</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="Research.html">Research</a>
+</li>
+<li>
+  <a href="teaching.html">Teaching</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Tutorials
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="IntroductionPortfolioManagement.html">Introduction to Portfolio Management</a>
+    </li>
+    <li>
+      <a href="Markowitz.html">Minimum Variance Portfolio</a>
+    </li>
+    <li>
+      <a href="CAPM.html">CAPM</a>
+    </li>
+    <li>
+      <a href="PSOforPortfolioOptimization.html">PSO for Portfolio Optimization</a>
+    </li>
+    <li>
+      <a href="Regularization.html">Curse of Dimensionality</a>
+    </li>
+    <li>
+      <a href="Invariance.html">Invariance</a>
+    </li>
+    <li>
+      <a href="RBase.html">Fun with RBase</a>
+    </li>
+    <li>
+      <a href="groqR.html">Rpackage GroqR: Fun with LLM</a>
+    </li>
+    <li>
+      <a href="PDV.html">Path-Dependent Volatility</a>
+    </li>
+    <li>
+      <a href="GMM.html">Geometric Beta</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="https://aiap.rbind.io/">My Book</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Apps
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="https://quantresearchgk.shinyapps.io/Risk_Return_app/">Risk Return App</a>
+    </li>
+    <li>
+      <a href="https://quantresearchgk.shinyapps.io/pdv-simulator/">Path-Dependent Volatility App</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="contact.html">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://github.com/gabrielkaiserqfin">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://twitter.com/QuantGk">
+    <span class="fa fa-twitter fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.linkedin.com/in/gabriel-kaiser-a98a0083/">
+    <span class="fa fa-linkedin fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">PSO for Portfolio Optimization</h1>
+
+</div>
+
+
+<div id="particle-swarm-optimization" class="section level3">
+<h3>Particle Swarm Optimization</h3>
+<p>In this post we leave the world of closed-form solutions behind.
+While the <a
+href="https://gabrielkaiserqfin.github.io/Markowitz.html">minimum
+variance portfolio</a> and the <a
+href="https://gabrielkaiserqfin.github.io/CAPM.html">CAPM</a> can be
+solved analytically or with a quadratic programming solver, many
+realistic portfolio problems cannot. As soon as we add transaction
+costs, cardinality constraints or non-convex risk measures, the
+optimization problem loses the nice structure that solvers like
+<strong>quadprog</strong> rely on. This is where <strong>Particle Swarm
+Optimization</strong> (PSO) enters the stage. PSO is a
+<strong>population-based, stochastic meta-heuristic</strong> inspired by
+the flocking behaviour of birds (<span class="citation">Kennedy and
+Eberhart (1995)</span>). It only requires an objective function <span
+class="math inline">\(f(\mathbf{x})\)</span> and does not need any
+gradients, which makes it a natural candidate for non-convex,
+non-differentiable or heavily constrained problems.</p>
+<p>The idea is remarkably simple. A <em>swarm</em> of <span
+class="math inline">\(s\)</span> particles explores the search space,
+where each particle <span class="math inline">\(i\)</span> carries a
+current position <span class="math inline">\(\mathbf{x}_i\)</span> (a
+candidate solution), a velocity <span
+class="math inline">\(\mathbf{v}_i\)</span>, its <strong>personal
+best</strong> position <span class="math inline">\(\mathbf{p}_i\)</span>
+found so far, and knowledge of the <strong>global best</strong> position
+<span class="math inline">\(\mathbf{g}\)</span> found by any particle.
+At each iteration, velocity and position are updated as follows:</p>
+<p><span class="math display">\[
+\mathbf{v}_i \leftarrow \underbrace{w \, \mathbf{v}_i}_{\text{inertia}}
+  + \underbrace{c_p \, r_p \odot (\mathbf{p}_i -
+\mathbf{x}_i)}_{\text{cognitive (personal best)}}
+  + \underbrace{c_g \, r_g \odot (\mathbf{g} -
+\mathbf{x}_i)}_{\text{social (global best)}}
+\]</span> <span class="math display">\[
+\mathbf{x}_i \leftarrow \mathbf{x}_i + \mathbf{v}_i
+\]</span></p>
+<p>where <span class="math inline">\(r_p, r_g \sim
+\mathcal{U}(0,1)\)</span> are drawn fresh each iteration, <span
+class="math inline">\(\odot\)</span> denotes element-wise
+multiplication, and the <strong>inertia weight</strong> <span
+class="math inline">\(w\)</span> decreases linearly from <span
+class="math inline">\(w_0\)</span> to <span
+class="math inline">\(w_N\)</span> in order to balance exploration early
+on and exploitation later (<span class="citation">Hu et al.
+(2003)</span>). A comprehensive overview of PSO variants and their
+convergence behaviour is given by <span class="citation">Parsopoulos and
+Vrahatis (2002)</span>. The implementation below follows the standard
+scheme and is all we need for the rest of this post.</p>
+<pre class="r"><code># Helper: uniform random matrix
+mrunif &lt;- function(nr, nc, lower, upper) {
+    matrix(runif(nr * nc), nrow = nr, ncol = nc) * (upper - lower) + lower
+}
+
+# Standard PSO (minimisation)
+pso_default &lt;- function(par, fn, lower, upper, control = list()) {
+    ctrl &lt;- list(
+        s = 30, # swarm size
+        c.p = 0.5, # cognitive weight
+        c.g = 0.5, # social weight
+        maxiter = 300, # iterations
+        w0 = 1.2, # initial inertia
+        wN = 0.0, # final inertia
+        save_fit = FALSE # track best fitness per iteration
+    )
+    ctrl[names(control)] &lt;- control # override defaults
+
+    n &lt;- length(par)
+    s &lt;- ctrl$s
+
+    # Initialise positions &amp; velocities
+    X &lt;- mrunif(n, s, lower, upper)
+    X[, 1] &lt;- par # seed first particle
+    V &lt;- mrunif(n, s, -(upper - lower), upper - lower) / 10
+
+    X_fit &lt;- apply(X, 2, fn)
+    P &lt;- X
+    P_fit &lt;- X_fit
+    p_g &lt;- P[, which.min(P_fit)]
+    p_g_fit &lt;- min(P_fit)
+
+    fit_trace &lt;- if (ctrl$save_fit) numeric(ctrl$maxiter) else NULL
+
+    for (i in seq_len(ctrl$maxiter)) {
+        w &lt;- ctrl$w0 - (ctrl$w0 - ctrl$wN) * i / ctrl$maxiter # linear decay
+
+        # Velocity update
+        V &lt;- w * V + ctrl$c.p * t(runif(s) * t(P - X)) + ctrl$c.g * t(runif(s) * t(p_g - X))
+
+        X &lt;- X + V
+
+        # Boundary handling: absorb &amp; zero velocity
+        V[X &gt; upper] &lt;- 0
+        X[X &gt; upper] &lt;- upper
+        V[X &lt; lower] &lt;- 0
+        X[X &lt; lower] &lt;- lower
+
+        X_fit &lt;- apply(X, 2, fn)
+
+        # Update personal bests
+        improved &lt;- P_fit &gt; X_fit
+        P[, improved] &lt;- X[, improved]
+        P_fit[improved] &lt;- X_fit[improved]
+
+        # Update global best
+        if (min(P_fit) &lt; p_g_fit) {
+            p_g &lt;- P[, which.min(P_fit)]
+            p_g_fit &lt;- min(P_fit)
+        }
+
+        if (ctrl$save_fit) fit_trace[i] &lt;- p_g_fit
+    }
+
+    list(solution = p_g, fitness = p_g_fit, fit_trace = fit_trace)
+}</code></pre>
+<p>Before we let the swarm loose on a portfolio, let us verify that it
+works on a classic benchmark. The <strong>Rosenbrock function</strong>
+<span class="math inline">\(f(x,y) = (1-x)^2 + 100(y-x^2)^2\)</span> has
+its global minimum at <span class="math inline">\((1,1)\)</span> with
+<span class="math inline">\(f=0\)</span> and is notoriously hard because
+the minimum lies in a narrow curved valley.</p>
+<pre class="r"><code>set.seed(0)
+rosenbrock &lt;- function(x) (1 - x[1])^2 + 100 * (x[2] - x[1]^2)^2
+
+res &lt;- pso_default(
+    par = c(0, 0),
+    fn = rosenbrock,
+    lower = -2,
+    upper = 2,
+    control = list(s = 40, maxiter = 500, save_fit = TRUE)
+)
+
+cat(&quot;Solution: x =&quot;, round(res$solution, 4), &quot;| f(x) =&quot;, round(res$fitness, 6))</code></pre>
+<pre><code>## Solution: x = 1 1 | f(x) = 0</code></pre>
+<pre class="r"><code>ggplot(data.frame(iter = seq_along(res$fit_trace), fitness = res$fit_trace), aes(iter, fitness)) +
+    geom_line(colour = &quot;#2c7bb6&quot;) +
+    scale_y_log10() +
+    labs(title = &quot;PSO convergence on Rosenbrock (log scale)&quot;, x = &quot;Iteration&quot;, y = &quot;Best fitness (log)&quot;) +
+    theme_minimal()</code></pre>
+<p><img src="PSOforPortfolioOptimization_files/figure-html/toy_example-1.png" width="864" /></p>
+<p><br/></p>
+</div>
+<div id="portfolio-optimization-setup" class="section level3">
+<h3>Portfolio optimization setup</h3>
+<p>As investment universe we use five diversified ETFs covering US
+large-cap equities (<strong>SPY</strong>), developed ex-US equities
+(<strong>EFA</strong>), emerging market equities (<strong>EEM</strong>),
+US 7–10 year Treasuries (<strong>IEF</strong>) and gold
+(<strong>GLD</strong>). Daily adjusted prices are downloaded from Yahoo
+Finance and converted into log returns. We then split the sample into a
+training period for the optimization and a test period for an honest
+out-of-sample evaluation — a step that is omitted surprisingly often,
+even though any in-sample result is essentially meaningless for
+portfolio selection.</p>
+<pre class="r"><code>tickers &lt;- c(&quot;SPY&quot;, &quot;EFA&quot;, &quot;EEM&quot;, &quot;IEF&quot;, &quot;GLD&quot;)
+
+# Download adjusted prices from Yahoo Finance
+e &lt;- new.env()
+getSymbols(tickers, env = e, from = &quot;2015-01-01&quot;, to = &quot;2023-12-31&quot;, auto.assign = TRUE, warnings = FALSE)</code></pre>
+<pre><code>## [1] &quot;SPY&quot; &quot;EFA&quot; &quot;EEM&quot; &quot;IEF&quot; &quot;GLD&quot;</code></pre>
+<pre class="r"><code># Extract adjusted close prices, align dates
+prices &lt;- do.call(cbind, lapply(tickers, function(t) Ad(e[[t]])))
+colnames(prices) &lt;- tickers
+prices &lt;- na.locf(prices)
+
+# Daily log returns
+returns &lt;- diff(log(prices))[-1, ]
+cat(&quot;Date range:&quot;, format(start(returns)), &quot;to&quot;, format(end(returns)), &quot;| Observations:&quot;, nrow(returns))</code></pre>
+<pre><code>## Date range: 2015-01-05 to 2023-12-29 | Observations: 2263</code></pre>
+<pre class="r"><code>train_end &lt;- as.Date(&quot;2020-12-31&quot;)
+test_start &lt;- as.Date(&quot;2021-01-01&quot;)
+
+ret_train &lt;- returns[paste0(&quot;/&quot;, train_end)]
+ret_test &lt;- returns[paste0(test_start, &quot;/&quot;)]
+
+cat(&quot;Train:&quot;, nrow(ret_train), &quot;days |  Test:&quot;, nrow(ret_test), &quot;days&quot;)</code></pre>
+<pre><code>## Train: 1510 days |  Test: 753 days</code></pre>
+<p>As objective we revisit the classical <strong>minimum variance
+portfolio</strong> of <span class="citation">Markowitz (1952)</span> and
+minimise the portfolio variance <span class="math inline">\(\sigma^2_p =
+\mathbf{w}^\top \Sigma \mathbf{w}\)</span> subject to full investment
+(<span class="math inline">\(\sum_i w_i = 1\)</span>) and a long-only
+constraint (<span class="math inline">\(w_i \geq 0\)</span>). The
+long-only constraint is handled directly via the box constraints of the
+swarm, while the equality constraint is <strong>soft-penalised</strong>
+inside the objective, so that any solution violating it becomes
+unattractive to the swarm:</p>
+<p><span class="math display">\[\min_{\mathrm{w}\in \mathbb{R}^{n}} \
+w&#39;\Sigma w+\lambda\,(w&#39;1-1)^{2} \ \text{         subject
+to         } \ 0 \leq w_{i}\leq 1\]</span></p>
+<pre class="r"><code>Sigma &lt;- cov(ret_train) # sample covariance on training data
+n_assets &lt;- ncol(ret_train)
+
+# Penalty coefficient for sum-to-one constraint
+lambda &lt;- 1e4
+
+obj_fn &lt;- function(w) {
+    port_var &lt;- as.numeric(t(w) %*% Sigma %*% w)
+    constraint &lt;- lambda * (sum(w) - 1)^2 # soft equality penalty
+    port_var + constraint
+}</code></pre>
+<p><br/></p>
+</div>
+<div id="optimization-and-benchmarks" class="section level3">
+<h3>Optimization and benchmarks</h3>
+<p>We now run the swarm on the training data and compare the resulting
+weights against two benchmarks: the naive <strong>equal-weight
+portfolio</strong> and the exact minimum variance solution obtained with
+the analytical <strong>quadprog</strong> solver. Since the minimum
+variance problem is a convex quadratic programme, the QP solution serves
+as ground truth — if PSO works, its weights should land very close to
+it.</p>
+<pre class="r"><code>set.seed(42)
+
+# --- PSO min-variance ---
+pso_res &lt;- pso_default(
+    par = rep(1 / n_assets, n_assets),
+    fn = obj_fn,
+    lower = 0,
+    upper = 1,
+    control = list(s = 60, maxiter = 500, save_fit = TRUE)
+)
+
+w_pso &lt;- pso_res$solution / sum(pso_res$solution) # renormalise
+
+# --- Equal-weight benchmark ---
+w_ew &lt;- rep(1 / n_assets, n_assets)
+
+# --- Min-variance via analytical solver (quadprog) for reference ---
+w_qp &lt;- tryCatch(
+    {
+        library(quadprog)
+        Dmat &lt;- 2 * Sigma
+        dvec &lt;- rep(0, n_assets)
+        Amat &lt;- cbind(rep(1, n_assets), diag(n_assets))
+        bvec &lt;- c(1, rep(0, n_assets))
+        qp &lt;- solve.QP(Dmat, dvec, Amat, bvec, meq = 1)
+        qp$solution / sum(qp$solution)
+    },
+    error = function(e) NULL
+)
+
+# Print weights
+weights_df &lt;- data.frame(
+    Asset = tickers,
+    PSO = round(w_pso, 4),
+    EqualWeight = round(w_ew, 4)
+)
+if (!is.null(w_qp)) {
+    weights_df$QP_Reference &lt;- round(w_qp, 4)
+}
+print(weights_df)</code></pre>
+<pre><code>##   Asset    PSO EqualWeight QP_Reference
+## 1   SPY 0.1417         0.2       0.1219
+## 2   EFA 0.1662         0.2       0.0438
+## 3   EEM 0.1469         0.2       0.0000
+## 4   IEF 0.3326         0.2       0.8342
+## 5   GLD 0.2127         0.2       0.0000</code></pre>
+<pre class="r"><code>ggplot(data.frame(iter = seq_along(pso_res$fit_trace), fitness = pso_res$fit_trace), aes(iter, fitness)) +
+    geom_line(colour = &quot;#d7191c&quot;) +
+    labs(title = &quot;PSO convergence – portfolio variance objective&quot;, x = &quot;Iteration&quot;, y = &quot;Objective value&quot;) +
+    theme_minimal()</code></pre>
+<p><img src="PSOforPortfolioOptimization_files/figure-html/convergence_plot-1.png" width="864" /></p>
+<p><br/></p>
+</div>
+<div id="backtest" class="section level3">
+<h3>Backtest</h3>
+<p>The proof of the pudding is in the out-of-sample period. We hold the
+weights fixed and track the cumulative performance of the PSO minimum
+variance portfolio, the equal-weight portfolio and the market (SPY) over
+the test period.</p>
+<pre class="r"><code># Portfolio return series helper
+port_returns &lt;- function(ret_xts, weights) {
+    xts(as.numeric(ret_xts %*% weights), order.by = index(ret_xts))
+}
+
+# Cumulative return index (start = 100)
+cum_ret_idx &lt;- function(ret_xts) {
+    cumprod(1 + c(0, as.numeric(ret_xts))) * 100
+}
+
+# Build return series for both periods
+pso_train &lt;- port_returns(ret_train, w_pso)
+ew_train &lt;- port_returns(ret_train, w_ew)
+pso_test &lt;- port_returns(ret_test, w_pso)
+ew_test &lt;- port_returns(ret_test, w_ew)
+
+# SPY as market benchmark
+spy_test &lt;- returns[paste0(test_start, &quot;/&quot;), &quot;SPY&quot;]
+spy_train &lt;- returns[paste0(&quot;/&quot;, train_end), &quot;SPY&quot;]
+
+# --- Performance metrics helper ---
+perf_metrics &lt;- function(ret_vec, label) {
+    r &lt;- as.numeric(ret_vec)
+    ann &lt;- 252
+    data.frame(
+        Strategy = label,
+        Ann_Return = round((prod(1 + r)^(ann / length(r)) - 1) * 100, 2),
+        Ann_Vol = round(sd(r) * sqrt(ann) * 100, 2),
+        Sharpe = round((mean(r) / sd(r)) * sqrt(ann), 2),
+        MaxDrawdown = round(max(cummax(cumprod(1 + r)) - cumprod(1 + r)) * 100, 2)
+    )
+}
+
+metrics &lt;- bind_rows(
+    perf_metrics(pso_test, &quot;PSO min-variance&quot;),
+    perf_metrics(ew_test, &quot;Equal weight&quot;),
+    perf_metrics(spy_test, &quot;SPY (market)&quot;)
+)
+if (!is.null(w_qp)) {
+    qp_test &lt;- port_returns(ret_test, w_qp)
+    metrics &lt;- bind_rows(metrics, perf_metrics(qp_test, &quot;QP min-variance&quot;))
+}
+print(metrics, row.names = FALSE)</code></pre>
+<pre><code>##          Strategy Ann_Return Ann_Vol Sharpe MaxDrawdown
+##  PSO min-variance      -0.66    9.80  -0.02       22.61
+##      Equal weight       0.24   11.37   0.08       24.84
+##      SPY (market)       8.29   17.61   0.54       33.65
+##   QP min-variance      -3.45    7.96  -0.40       20.52</code></pre>
+<pre class="r"><code># Build long-format data frame for ggplot
+build_cum_df &lt;- function(ret_xts, label) {
+    dates &lt;- c(index(ret_xts)[1] - 1, index(ret_xts))
+    data.frame(
+        Date = dates,
+        Index = cum_ret_idx(ret_xts),
+        Series = label
+    )
+}
+
+plot_df &lt;- bind_rows(
+    build_cum_df(pso_test, &quot;PSO min-variance&quot;),
+    build_cum_df(ew_test, &quot;Equal weight&quot;),
+    build_cum_df(spy_test, &quot;SPY (market)&quot;)
+)
+if (!is.null(w_qp)) {
+    plot_df &lt;- bind_rows(plot_df, build_cum_df(qp_test, &quot;QP min-variance&quot;))
+}
+
+ggplot(plot_df, aes(Date, Index, colour = Series)) +
+    geom_line(linewidth = 0.9) +
+    geom_hline(yintercept = 100, linetype = &quot;dashed&quot;, colour = &quot;grey50&quot;) +
+    scale_colour_brewer(palette = &quot;Set1&quot;) +
+    labs(
+        title = &quot;Out-of-sample cumulative performance (test period)&quot;,
+        subtitle = paste0(test_start, &quot; – &quot;, max(plot_df$Date)),
+        y = &quot;Portfolio value (start = 100)&quot;,
+        x = NULL,
+        colour = NULL
+    ) +
+    theme_minimal() +
+    theme(legend.position = &quot;bottom&quot;)</code></pre>
+<p><img src="PSOforPortfolioOptimization_files/figure-html/plot_test-1.png" width="864" /></p>
+<p>For completeness, the in-sample performance during the training
+period is shown below. Keep in mind that the minimum variance weights
+were fitted on exactly this data, so the smooth ride here is partly by
+construction.</p>
+<pre class="r"><code>train_df &lt;- bind_rows(
+    build_cum_df(pso_train, &quot;PSO min-variance&quot;),
+    build_cum_df(ew_train, &quot;Equal weight&quot;),
+    build_cum_df(spy_train, &quot;SPY (market)&quot;)
+)
+
+ggplot(train_df, aes(Date, Index, colour = Series)) +
+    geom_line(linewidth = 0.9) +
+    geom_hline(yintercept = 100, linetype = &quot;dashed&quot;, colour = &quot;grey50&quot;) +
+    scale_colour_brewer(palette = &quot;Set1&quot;) +
+    labs(
+        title = &quot;In-sample cumulative performance (training period)&quot;,
+        subtitle = paste0(&quot;Up to &quot;, train_end),
+        y = &quot;Portfolio value (start = 100)&quot;,
+        x = NULL,
+        colour = NULL
+    ) +
+    theme_minimal() +
+    theme(legend.position = &quot;bottom&quot;)</code></pre>
+<p><img src="PSOforPortfolioOptimization_files/figure-html/plot_train-1.png" width="864" /></p>
+<p>Finally, a rolling 6-month Sharpe ratio over the test period shows
+how the risk-adjusted performance of the three strategies evolves over
+time.</p>
+<pre class="r"><code>rolling_sharpe &lt;- function(ret_xts, window = 126) {
+    r &lt;- as.numeric(ret_xts)
+    n &lt;- length(r)
+    if (n &lt; window) {
+        return(NULL)
+    }
+    idx &lt;- index(ret_xts)[window:n]
+    sh &lt;- sapply(window:n, function(i) {
+        w_ret &lt;- r[(i - window + 1):i]
+        mean(w_ret) / sd(w_ret) * sqrt(252)
+    })
+    xts(sh, order.by = idx)
+}
+
+rs_pso &lt;- rolling_sharpe(pso_test)
+rs_ew &lt;- rolling_sharpe(ew_test)
+rs_spy &lt;- rolling_sharpe(spy_test)
+
+if (!is.null(rs_pso)) {
+    rs_df &lt;- bind_rows(
+        data.frame(Date = index(rs_pso), Sharpe = as.numeric(rs_pso), Series = &quot;PSO&quot;),
+        data.frame(Date = index(rs_ew), Sharpe = as.numeric(rs_ew), Series = &quot;Equal weight&quot;),
+        data.frame(Date = index(rs_spy), Sharpe = as.numeric(rs_spy), Series = &quot;SPY&quot;)
+    )
+    ggplot(rs_df, aes(Date, Sharpe, colour = Series)) +
+        geom_line(linewidth = 0.8) +
+        geom_hline(yintercept = 0, linetype = &quot;dashed&quot;, colour = &quot;grey50&quot;) +
+        scale_colour_brewer(palette = &quot;Set1&quot;) +
+        labs(title = &quot;Rolling 6-month Sharpe ratio (test period)&quot;, y = &quot;Sharpe ratio (annualised)&quot;, x = NULL, colour = NULL) +
+        theme_minimal() +
+        theme(legend.position = &quot;bottom&quot;)
+}</code></pre>
+<p><img src="PSOforPortfolioOptimization_files/figure-html/rolling_sharpe-1.png" width="864" /></p>
+<p><br/></p>
+</div>
+<div id="pros-of-pso-for-portfolio-optimization" class="section level3">
+<h3>Pros of PSO for portfolio optimization:</h3>
+<ul>
+<li>No derivatives required – it works directly on the objective
+function, allowing non-standard objectives such as tracking error, tail
+risk or ESG scores without reformulation.</li>
+<li>Conceptually simple and easy to implement, as the few lines of code
+above demonstrate.</li>
+<li>Naturally handles box constraints, and further constraints can be
+added via penalty terms.</li>
+<li>Easily parallelisable, since the fitness of all particles can be
+evaluated independently.</li>
+</ul>
+<p><br/></p>
+</div>
+<div id="cons-of-pso-for-portfolio-optimization" class="section level3">
+<h3>Cons of PSO for portfolio optimization:</h3>
+<ul>
+<li>For convex problems such as the minimum variance portfolio,
+analytical solvers find the exact optimum, whereas PSO only approximates
+it — and needs considerably more time to do so.</li>
+<li>The result is stochastic: two runs with different seeds can produce
+(slightly) different portfolios.</li>
+<li>Hyperparameters matter: swarm size and number of iterations control
+the quality/time trade-off, while the inertia schedule <span
+class="math inline">\(w_0 \rightarrow w_N\)</span> governs exploration
+versus exploitation.</li>
+<li>Penalty-based constraint handling requires tuning of <span
+class="math inline">\(\lambda\)</span>; a value too small permits
+infeasible solutions, a value too large distorts the search
+landscape.</li>
+<li>As with every optimiser, PSO will happily overfit a short training
+window. Walk-forward backtesting is essential before trusting any
+result.</li>
+</ul>
+<p><br/></p>
+<p>Some PSO variations, such as binary PSO for cardinality-constrained
+portfolios, as well as more realistic constraint handling are discussed
+in upcoming posts.</p>
+<p><br/></p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-XiEb2002" class="csl-entry">
+Hu, Xiaohui, Russell C Eberhart, and Yuhui Shi. 2003. <span>“Engineering
+Optimization with Particle Swarm.”</span> <em>Proceedings of the 2003
+IEEE Swarm Intelligence Symposium. SIS’03 (Cat. No. 03EX706)</em>,
+53–57.
+</div>
+<div id="ref-KeEb1995" class="csl-entry">
+Kennedy, James, and Russell Eberhart. 1995. <span>“Particle Swarm
+Optimization.”</span> <em>Proceedings of ICNN’95-International
+Conference on Neural Networks</em> 4: 1942–48.
+</div>
+<div id="ref-Mark1952" class="csl-entry">
+Markowitz, Harry. 1952. <span>“<span>Portfolio Selection</span>.”</span>
+<em>Journal of Finance</em> 7 (1): 77–91. <a
+href="https://doi.org/j.1540-6261.1952.tb01525.">https://doi.org/j.1540-6261.1952.tb01525.</a>
+</div>
+<div id="ref-PaVr2002" class="csl-entry">
+Parsopoulos, Konstantinos E, and Michael N. Vrahatis. 2002.
+<span>“Recent Approaches to Global Optimization Problems Through
+Particle Swarm Optimization.”</span> <em>Natural Computing</em> 1 (2):
+235–306.
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

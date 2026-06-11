@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Geometric Beta: Projection, Orthogonality, and Market Geometry</title>
+
+<script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="Standarstyle.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Gabriel Kaiser</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="Research.html">Research</a>
+</li>
+<li>
+  <a href="teaching.html">Teaching</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Tutorials
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="IntroductionPortfolioManagement.html">Introduction to Portfolio Management</a>
+    </li>
+    <li>
+      <a href="Markowitz.html">Minimum Variance Portfolio</a>
+    </li>
+    <li>
+      <a href="CAPM.html">CAPM</a>
+    </li>
+    <li>
+      <a href="PSOforPortfolioOptimization.html">PSO for Portfolio Optimization</a>
+    </li>
+    <li>
+      <a href="Regularization.html">Curse of Dimensionality</a>
+    </li>
+    <li>
+      <a href="Invariance.html">Invariance</a>
+    </li>
+    <li>
+      <a href="RBase.html">Fun with RBase</a>
+    </li>
+    <li>
+      <a href="groqR.html">Rpackage GroqR: Fun with LLM</a>
+    </li>
+    <li>
+      <a href="PDV.html">Path-Dependent Volatility</a>
+    </li>
+    <li>
+      <a href="GMM.html">Geometric Beta</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="https://aiap.rbind.io/">My Book</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Apps
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="https://quantresearchgk.shinyapps.io/Risk_Return_app/">Risk Return App</a>
+    </li>
+    <li>
+      <a href="https://quantresearchgk.shinyapps.io/pdv-simulator/">Path-Dependent Volatility App</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="contact.html">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://github.com/gabrielkaiserqfin">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://twitter.com/QuantGk">
+    <span class="fa fa-twitter fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.linkedin.com/in/gabriel-kaiser-a98a0083/">
+    <span class="fa fa-linkedin fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Geometric Beta: Projection, Orthogonality,
+and Market Geometry</h1>
+
+</div>
+
+
+<!-- ########################################. -->
+<!-- ##############  Sources:  ############## -->
+<!-- ########################################. -->
+<!-- C:\Users\Gabriel\Nextcloud\WD4Red\Papers\OneDrive - IQAM Invest GmbH\PaperDatabase\MultiAsset\GMM\ -->
+<!-- https://agussudjianto.substack.com/p/the-geometric-investing-solving-the?utm_source=share&utm_medium=android&r=4zimwk&triedRedirect=true -->
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>Traditional beta collapses asset–market relationships into a single
+scalar. This obscures <em>how</em> an asset differs from the market.</p>
+<p><strong>Geometric beta</strong> decomposes asset behavior into:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Scalar alignment</strong> with the market (crowd risk)</li>
+<li><strong>Orthogonal divergence</strong> from the market (structural
+or diversifying risk)</li>
+</ol>
+<p>This document formalizes the mathematics and provides geometric
+intuition.</p>
+<hr />
+</div>
+<div id="vector-space-representation-of-returns" class="section level2">
+<h2>1. Vector Space Representation of Returns</h2>
+<p>Let returns over a rolling window of <span
+class="math inline">\(N\)</span> days be represented as vectors:</p>
+<p><span class="math display">\[
+\mathbf{m} = (m_1, m_2, \dots, m_N) \in \mathbb{R}^N
+\]</span></p>
+<p><span class="math display">\[
+\mathbf{a} = (a_1, a_2, \dots, a_N) \in \mathbb{R}^N
+\]</span></p>
+<p>Each coordinate corresponds to <strong>time</strong>, not a factor.
+This is geometry in <em>trajectory space</em>.</p>
+<hr />
+</div>
+<div id="scalar-beta-projection-onto-the-market" class="section level2">
+<h2>2. Scalar Beta (Projection onto the Market)</h2>
+<div id="definition" class="section level3">
+<h3>Definition</h3>
+<p>The scalar beta is the projection of the asset vector onto the market
+vector:</p>
+<p><span class="math display">\[
+\beta_{\text{scalar}} =
+\frac{\mathbf{a} \cdot \mathbf{m}}{\mathbf{m} \cdot \mathbf{m}}
+\]</span></p>
+</div>
+<div id="interpretation" class="section level3">
+<h3>Interpretation</h3>
+<ul>
+<li>Measures how much of the asset’s movement is explained by the
+market</li>
+<li>Equivalent to CAPM beta when returns are demeaned</li>
+<li>Represents <strong>crowd participation</strong></li>
+</ul>
+</div>
+<div id="geometric-meaning" class="section level3">
+<h3>Geometric Meaning</h3>
+<p>Scalar beta is the <em>shadow</em> of the asset vector on the market
+axis.</p>
+<p>If: <span class="math display">\[
+\mathbf{a} = k \mathbf{m}
+\]</span></p>
+<p>then: - <span class="math inline">\(\beta_{\text{scalar}} =
+k\)</span> - Asset is a pure market clone</p>
+<hr />
+</div>
+</div>
+<div id="bivector-beta-orthogonal-rejection" class="section level2">
+<h2>3. Bivector Beta (Orthogonal Rejection)</h2>
+<div id="rejection-vector" class="section level3">
+<h3>Rejection Vector</h3>
+<p>Remove the market-aligned component:</p>
+<p><span class="math display">\[
+\mathbf{r} = \mathbf{a} - \beta_{\text{scalar}} \mathbf{m}
+\]</span></p>
+</div>
+<div id="bivector-beta" class="section level3">
+<h3>Bivector Beta</h3>
+<p>Normalize the magnitude of the rejection:</p>
+<p><span class="math display">\[
+\beta_{\text{bivector}} =
+\frac{\|\mathbf{r}\|}{\|\mathbf{m}\|}
+\]</span></p>
+</div>
+<div id="interpretation-1" class="section level3">
+<h3>Interpretation</h3>
+<ul>
+<li>Measures movement <strong>independent of the market</strong></li>
+<li>Captures structural, idiosyncratic, or regime-specific behavior</li>
+<li>Represents <em>diversification geometry</em>, not volatility</li>
+</ul>
+</div>
+<div id="key-property" class="section level3">
+<h3>Key Property</h3>
+<p>If: <span class="math display">\[
+\mathbf{a} \cdot \mathbf{m} = 0
+\]</span></p>
+<p>then: - <span class="math inline">\(\beta_{\text{scalar}} =
+0\)</span> - Asset is purely orthogonal to the market</p>
+<hr />
+</div>
+</div>
+<div id="exterior-algebra-interpretation" class="section level2">
+<h2>4. Exterior Algebra Interpretation</h2>
+<div id="wedge-product" class="section level3">
+<h3>Wedge Product</h3>
+<p>The exterior (wedge) product:</p>
+<p><span class="math display">\[
+\mathbf{a} \wedge \mathbf{m}
+\]</span></p>
+<p>represents the <strong>oriented area</strong> spanned by the two
+vectors.</p>
+<p>Magnitude:</p>
+<p><span class="math display">\[
+\|\mathbf{a} \wedge \mathbf{m}\|
+=
+\sqrt{(\mathbf{a}\cdot\mathbf{a})(\mathbf{m}\cdot\mathbf{m})
+      - (\mathbf{a}\cdot\mathbf{m})^2}
+\]</span></p>
+</div>
+</div>
+<div id="two-dimensional-geometric-illustration" class="section level2">
+<h2>3.1 Two-Dimensional Geometric Illustration</h2>
+<p>To build intuition, we visualize the asset–market relationship in two
+dimensions. The horizontal axis represents the <strong>market
+direction</strong> and the vertical axis represents the
+<strong>orthogonal (non-market) direction</strong>.</p>
+<p>This is a geometric abstraction — the real vectors live in
+high-dimensional return space, but the relationships are identical.</p>
+<pre class="r"><code># Define simple 2D vectors
+market &lt;- c(1, 0)
+asset &lt;- c(0.8, 0.6)
+
+# Scalar beta (projection)
+beta_scalar &lt;- sum(asset * market) / sum(market * market)
+projection &lt;- beta_scalar * market
+
+# Rejection (bivector component)
+rejection &lt;- asset - projection
+
+# Plot setup
+plot(
+    c(0, 1.2),
+    c(0, 1.0),
+    type = &quot;n&quot;,
+    xlab = &quot;Market Direction&quot;,
+    ylab = &quot;Orthogonal Direction&quot;,
+    main = &quot;Geometric Beta Decomposition&quot;,
+    asp = 1
+)
+
+# Market vector
+arrows(0, 0, market[1], market[2], lwd = 2, col = &quot;black&quot;)
+text(1, 0.05, &quot;Market&quot;, pos = 4)
+
+# Asset vector
+arrows(0, 0, asset[1], asset[2], lwd = 2, col = &quot;darkgreen&quot;)
+text(asset[1], asset[2], &quot;Asset&quot;, pos = 4)
+
+# Projection (scalar beta)
+arrows(0, 0, projection[1], projection[2], lwd = 2, col = &quot;blue&quot;)
+text(projection[1] * .6, 0.025, &quot;Scalar Beta&quot;, col = &quot;blue&quot;, pos = 3)
+
+# Rejection (bivector beta)
+arrows(
+    projection[1],
+    projection[2],
+    asset[1],
+    asset[2],
+    lwd = 2,
+    col = &quot;red&quot;
+)
+text(
+    projection[1] + rejection[1] / 2,
+    projection[2] + rejection[2] / 2,
+    &quot;Bivector Beta&quot;,
+    col = &quot;red&quot;,
+    pos = 4
+)
+
+# Origin
+points(0, 0, pch = 16)</code></pre>
+<p><img src="GMM_files/figure-html/unnamed-chunk-1-1.png" width="576" /></p>
+<div id="equivalence" class="section level3">
+<h3>Equivalence</h3>
+<p>The rejection-based bivector beta satisfies:</p>
+<p><span class="math display">\[
+\|\mathbf{a} \wedge \mathbf{m}\|
+=
+\|\mathbf{m}\|^2 \cdot \beta_{\text{bivector}}
+\]</span></p>
+<p>Thus:</p>
+<ul>
+<li>Scalar beta → <strong>grade-0 (inner product)</strong></li>
+<li>Bivector beta → <strong>grade-2 (area element)</strong></li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="relationship-to-pca" class="section level2">
+<h2>5. Relationship to PCA</h2>
+<table>
+<thead>
+<tr class="header">
+<th>PCA</th>
+<th>Geometric Beta</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Rotates coordinate system</td>
+<td>Fixes market direction</td>
+</tr>
+<tr class="even">
+<td>Variance-based</td>
+<td>Orientation-based</td>
+</tr>
+<tr class="odd">
+<td>Symmetric</td>
+<td>Asymmetric (market-anchored)</td>
+</tr>
+<tr class="even">
+<td>Unstable in crises</td>
+<td>Stable under regime stress</td>
+</tr>
+</tbody>
+</table>
+<p>PCA asks: &gt; “What directions explain variance?”</p>
+<p>Geometric beta asks: &gt; “How much does this asset escape the market
+direction?”</p>
+<hr />
+</div>
+<div id="crisis-dynamics-and-early-warning" class="section level2">
+<h2>6. Crisis Dynamics and Early Warning</h2>
+<p>Before correlation collapses:</p>
+<ol style="list-style-type: decimal">
+<li>Market volatility rises</li>
+<li>Some assets rotate away from the market</li>
+<li><strong>Bivector beta spikes</strong></li>
+<li>Correlations later snap to one</li>
+</ol>
+<p>Correlation reacts <em>after</em> geometry collapses. Bivector beta
+reacts <em>during</em> geometric divergence.</p>
+<hr />
+</div>
+<div id="intuition-summary" class="section level2">
+<h2>7. Intuition Summary</h2>
+<ul>
+<li>Scalar beta: <em>How much you move with the crowd</em></li>
+<li>Bivector beta: <em>How different your path is</em></li>
+<li>Volatility: <em>How fast you move</em></li>
+<li>Correlation: <em>Average angle</em></li>
+<li>Geometry: <em>Dimensional structure</em></li>
+</ul>
+<p><strong>Geometric beta decomposes asset risk into market-aligned
+motion and orthogonal structural motion, enabling regime-aware
+diversification based on geometry rather than correlation.</strong></p>
+<hr />
+</div>
+<div id="application---multiasset-portfolio-construction"
+class="section level2">
+<h2>8. Application - Multiasset Portfolio Construction</h2>
+<p>Modern portfolio theory failed during several episodes of significant
+drawdowns as diversifiaction collapsed and all assets within the
+portfolio went sour. The most recent event was the drawdown in 2022, the
+“Everything Crash”. The reason is that risk metrics—correlation and
+traditional beta’s are geometrically incomplete. When inflation surged
+and interest rates reset, both equities and bonds declined
+simultaneously, revealing that conventional diversification relied on
+<em>flat</em> statistics that collapse under regime stress.</p>
+<p>This framework replaces correlation-based thinking with
+<strong>Geometric Investing</strong>, which treats markets as
+high-dimensional geometric objects rather than collections of pairwise
+relationships. Returns over time are represented as vectors, and risk is
+analyzed through <strong>orientation, area, and volume</strong> instead
+of variance alone.</p>
+<p>The approach is built on three geometric sensors:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Geometric Beta</strong> Decomposes asset risk into:
+<ul>
+<li><strong>Scalar Beta</strong>: market-aligned (crowd) risk</li>
+<li><strong>Bivector Beta</strong>: orthogonal, structurally independent
+risk This distinguishes assets that merely track the market from those
+that occupy genuinely independent dimensions of return space.</li>
+</ul></li>
+<li><strong>Wedge Volume (Regime Detection)</strong> Measures the
+hyper-volume spanned by sector return vectors using the Gram
+determinant.
+<ul>
+<li>High volume indicates a healthy, diversified market</li>
+<li>Low volume signals dimensional collapse and correlation
+convergence</li>
+</ul></li>
+<li><strong>Orientation (Trend Validation)</strong> Uses the wedge
+product of time and price to determine the directional “spin” of an
+asset’s trajectory. Only assets with positive orientation (upward spin)
+are eligible for allocation, regardless of their geometric
+uniqueness.</li>
+</ol>
+<p>Combined, these sensors form the <strong>Geometric Beta
+Portfolio</strong>, which dynamically rotates between equities,
+defensive assets, and cash based purely on geometric structure—without
+relying on traditional technical indicators.</p>
+<p>Empirical results since 2010 show that the strategy: - Fully
+participates in bull markets - Rapidly de-risks during structural
+collapses (e.g., 2020) - Avoids major drawdowns during correlation
+crises (e.g., 2022)</p>
+<p>The broader implication is that <strong>geometry provides a scalable
+language for risk</strong>. Just as flat statistics fail in finance,
+naive vector operations fail in other high-dimensional systems such as
+machine learning. Measuring and managing <em>shape</em> rather than
+averages offers a more robust foundation for complex
+decision-making.</p>
+<div id="implementation-notes-revised-backtest" class="section level3">
+<h3>Implementation notes (revised backtest)</h3>
+<p>The backtest below contains two corrections that apply to
+<strong>both</strong> variants:</p>
+<ul>
+<li><strong>Bug fix — execution timing:</strong> decisions are made on
+the monthly close but earn returns only from the next day onward. The
+original booked the decision day’s return although the signals already
+used that day’s close (~1.1% p.a. look-ahead bias).</li>
+<li><strong>Bug fix — dead code:</strong> the unused NNLS “dynamic
+gravity” block, the scalar-beta frame, and an unused rolling window were
+removed.</li>
+</ul>
+</div>
+<div id="the-two-strategy-variants" class="section level3">
+<h3>The two strategy variants</h3>
+<p>Both variants share the identical geometric core — wedge-volume
+regime detection (PANIC below the rolling 15th percentile, DEFENSE below
+the 40th), the 200-day orientation filter, and monthly rebalancing. They
+differ only in <em>which</em> defensive asset they buy and <em>how
+much</em> market exposure they take in OFFENSE:</p>
+<p><strong><code>Bivector.Unlevered</code></strong> — the pure geometric
+specification.</p>
+<ul>
+<li>Defensive asset (TLT vs GLD): the one with the <strong>largest
+bivector beta</strong> <span
+class="math inline">\(\|\mathbf{r}\|/\|\mathbf{m}\|\)</span>, i.e. the
+asset currently most orthogonal to the market in magnitude terms.</li>
+<li>OFFENSE: 100% SPY, no leverage.</li>
+</ul>
+<p><strong><code>Momentum.Levered</code></strong> — the return-oriented
+specification.</p>
+<ul>
+<li>Defensive asset: the one with the higher <strong>12-1
+momentum</strong> (12-month return excluding the most recent month).
+Geometry still decides <em>when</em> to defend; momentum decides
+<em>what</em> to hold.</li>
+<li>OFFENSE: <strong>1.25× SPY</strong>, the excess 25% financed at the
+cash (SHV) rate.</li>
+</ul>
+</div>
+<div id="differences-advantages-and-disadvantages"
+class="section level3">
+<h3>Differences, advantages, and disadvantages</h3>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><code>Bivector.Unlevered</code></th>
+<th><code>Momentum.Levered</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Defensive pick</td>
+<td>Largest orthogonal magnitude</td>
+<td>Strongest trend</td>
+</tr>
+<tr class="even">
+<td>Market exposure in OFFENSE</td>
+<td>1.00×</td>
+<td>1.25×</td>
+</tr>
+<tr class="odd">
+<td>CAGR / Sharpe / MaxDD (2010–2023)</td>
+<td>9.1% / 0.77 / 18.7%</td>
+<td>11.4% / 0.82 / 21.9%</td>
+</tr>
+</tbody>
+</table>
+<p><em><code>Bivector.Unlevered</code></em> — advantages: conceptually
+pure (every decision is geometric), no leverage, hence no financing
+cost, no margin requirements, and the lowest volatility (≈12%) and
+drawdown of the three series. Disadvantages: the bivector magnitude
+scales with the asset’s <strong>own volatility</strong>, so it
+systematically favors the most <em>volatile</em> diversifier rather than
+the most rewarding one — the orientation filter only slowly vetoes a
+deteriorating pick. Running at ~12% volatility against a ~17% benchmark,
+it cannot keep up with the market in long bull phases despite its higher
+Sharpe ratio.</p>
+<p><em><code>Momentum.Levered</code></em> — advantages: the defensive
+sleeve holds the asset that is actually being paid (≈ +0.6% p.a. from
+the pick alone), and the modest OFFENSE leverage converts the strategy’s
+Sharpe advantage into absolute return — it beats the buy-and-hold
+benchmark while still cutting the maximum drawdown roughly in half.
+Crisis protection is untouched because leverage applies only in OFFENSE.
+Disadvantages: it mixes a non-geometric ingredient (momentum) into the
+framework; it requires a leverage implementation (futures or margin)
+with financing-cost risk when short rates rise; and the 1.25× exposure
+amplifies whipsaw losses around OFFENSE↔︎BEAR transitions, giving
+slightly higher volatility and drawdown.</p>
+<p>In short: <code>Bivector.Unlevered</code> is the cleaner
+<em>risk-management</em> product, <code>Momentum.Levered</code> the
+better <em>total-return</em> product at a still markedly lower risk than
+the benchmark.</p>
+<pre class="r"><code>library(quantmod)
+library(zoo)
+library(PerformanceAnalytics)
+
+########################################.
+#######  1. GEOMETRIC OPERATORS  #######
+########################################.
+
+calculate_wedge_volume &lt;- function(returns, window = 60) {
+    vols &lt;- numeric()
+    dates &lt;- index(returns)[(window + 1):nrow(returns)]
+    r_val &lt;- coredata(returns)
+
+    for (i in seq(window + 1, nrow(r_val))) {
+        win &lt;- r_val[(i - window):(i - 1), , drop = FALSE]
+
+        norms &lt;- apply(win, 2, function(x) sqrt(sum(x^2)))
+        norms[norms == 0] &lt;- 1e-8
+        norm_win &lt;- sweep(win, 2, norms, &quot;/&quot;)
+
+        gram &lt;- t(norm_win) %*% norm_win
+        vols &lt;- c(vols, sqrt(abs(det(gram))))
+    }
+
+    return(xts(vols, order.by = dates))
+}
+
+
+calculate_geometric_beta &lt;- function(asset_returns, market_returns, window = 60) {
+    dates &lt;- index(asset_returns)[(window + 1):nrow(asset_returns)]
+    scalar &lt;- numeric()
+    bivector &lt;- numeric()
+
+    a &lt;- coredata(asset_returns)
+    m &lt;- coredata(market_returns)
+
+    for (i in seq(window + 1, length(a))) {
+        vec_a &lt;- a[(i - window):(i - 1)]
+        vec_m &lt;- m[(i - window):(i - 1)]
+
+        m_sq &lt;- sum(vec_m^2)
+        if (m_sq == 0) {
+            m_sq &lt;- 1e-8
+        }
+
+        sc &lt;- sum(vec_a * vec_m) / m_sq
+        rej &lt;- vec_a - sc * vec_m
+        bi &lt;- sqrt(sum(rej^2)) / sqrt(m_sq)
+
+        scalar &lt;- c(scalar, sc)
+        bivector &lt;- c(bivector, bi)
+    }
+
+    return(list(
+        scalar = xts(scalar, order.by = dates),
+        bivector = xts(bivector, order.by = dates)
+    ))
+}
+
+
+calculate_bivector_orientation &lt;- function(prices, window = 200) {
+    return(diff(prices, lag = window) &gt; 0)
+}
+
+
+########################################.
+#######  2. STRATEGY EXECUTION  ########
+########################################.
+
+runGMM &lt;- function(start_date = &quot;2010-01-01&quot;, end_date = &quot;2024-01-01&quot;) {
+    sectors &lt;- c(&quot;XLK&quot;, &quot;XLF&quot;, &quot;XLV&quot;, &quot;XLE&quot;, &quot;XLI&quot;, &quot;XLY&quot;, &quot;XLP&quot;, &quot;XLB&quot;, &quot;XLU&quot;)
+    assets &lt;- c(&quot;SPY&quot;, &quot;TLT&quot;, &quot;GLD&quot;)
+    cash &lt;- &quot;SHV&quot;
+    tickers &lt;- c(sectors, assets, cash)
+
+    getSymbols(tickers, from = start_date, to = end_date, auto.assign = TRUE)
+
+    prices &lt;- do.call(merge, lapply(tickers, function(t) Ad(get(t))))
+    colnames(prices) &lt;- tickers
+    returns &lt;- na.omit(diff(log(prices)))
+
+    spy &lt;- returns$SPY
+    sec_ret &lt;- returns[, sectors]
+
+    wedge_vol &lt;- calculate_wedge_volume(sec_ret, 60)
+    defense_thresh &lt;- rollapply(wedge_vol, 252, quantile, probs = 0.40, fill = NA)
+    panic_thresh &lt;- rollapply(wedge_vol, 252, quantile, probs = 0.15, fill = NA)
+
+    # Build bivector_df via list then merge (empty-xts column assignment fails)
+    gb_results &lt;- lapply(setNames(assets, assets), function(a) {
+        calculate_geometric_beta(returns[, a], spy, 60)
+    })
+    bivector_df &lt;- do.call(merge, lapply(gb_results, `[[`, &quot;bivector&quot;))
+    colnames(bivector_df) &lt;- assets
+
+    orientations &lt;- do.call(
+        merge,
+        lapply(setNames(tickers, tickers), function(t) {
+            calculate_bivector_orientation(prices[, t], 200)
+        })
+    )
+    colnames(orientations) &lt;- tickers
+
+    # 12-1 momentum, used by the improved variant&#39;s defensive pick
+    mom12 &lt;- do.call(
+        merge,
+        lapply(setNames(tickers, tickers), function(t) {
+            diff(log(prices[, t]), lag = 252) - diff(log(prices[, t]), lag = 21)
+        })
+    )
+    colnames(mom12) &lt;- tickers
+
+    # Intersect indices without stripping Date class
+    idx &lt;- index(wedge_vol)[
+        index(wedge_vol) %in% index(bivector_df) &amp; index(wedge_vol) %in% index(orientations)
+    ]
+    # Last trading day of each month
+    monthly &lt;- idx[!duplicated(format(idx, &quot;%Y-%m&quot;), fromLast = TRUE)]
+
+    run_variant &lt;- function(pick = c(&quot;bivector&quot;, &quot;momentum&quot;), offense_lev = 1) {
+        pick &lt;- match.arg(pick)
+        holdings &lt;- c(SPY = 1)
+        history &lt;- data.frame(date = as.Date(character()), mode = character(), stringsAsFactors = FALSE)
+        port_ret &lt;- numeric(length(idx))
+
+        # seq_along preserves Date/POSIXct class when subsetting idx[i]
+        for (i in seq_along(idx)) {
+            d &lt;- idx[i]
+
+            # Book the day&#39;s return BEFORE the (monthly) decision: the signals use
+            # the close of d, so new weights may only earn from d+1 (no look-ahead)
+            port_ret[i] &lt;- sum(holdings * as.numeric(returns[d, names(holdings)]))
+
+            if (d %in% monthly) {
+                vol &lt;- as.numeric(wedge_vol[d])
+                pth &lt;- as.numeric(panic_thresh[d])
+                dth &lt;- as.numeric(defense_thresh[d])
+
+                if (!is.na(vol) &amp;&amp; !is.na(pth) &amp;&amp; vol &lt; pth) {
+                    holdings &lt;- setNames(1, cash)
+                    mode &lt;- &quot;PANIC&quot;
+                } else if (!is.na(vol) &amp;&amp; !is.na(dth) &amp;&amp; vol &lt; dth) {
+                    cands &lt;- c(&quot;TLT&quot;, &quot;GLD&quot;)
+                    orient_vals &lt;- as.logical(orientations[d, cands])
+                    valid &lt;- cands[!is.na(orient_vals) &amp; orient_vals]
+
+                    if (length(valid) &gt; 0) {
+                        score &lt;- switch(pick, bivector = as.numeric(bivector_df[d, valid]), momentum = as.numeric(mom12[d, valid]))
+                        score[is.na(score)] &lt;- -Inf
+                        best &lt;- valid[which.max(score)]
+                        holdings &lt;- setNames(1, best)
+                        mode &lt;- paste(&quot;DEFENSE&quot;, best)
+                    } else {
+                        holdings &lt;- setNames(1, cash)
+                        mode &lt;- &quot;DEFENSE FAILED&quot;
+                    }
+                } else {
+                    spy_up &lt;- isTRUE(as.logical(orientations[d, &quot;SPY&quot;]))
+                    if (spy_up) {
+                        # offense_lev &gt; 1 borrows at the cash (SHV) rate
+                        holdings &lt;- c(SPY = offense_lev, setNames(1 - offense_lev, cash))
+                        holdings &lt;- holdings[holdings != 0]
+                        mode &lt;- &quot;OFFENSE&quot;
+                    } else {
+                        holdings &lt;- setNames(1, cash)
+                        mode &lt;- &quot;BEAR&quot;
+                    }
+                }
+                history &lt;- rbind(history, data.frame(date = as.Date(d), mode = mode, stringsAsFactors = FALSE))
+            }
+        }
+
+        list(ret = xts(port_ret, order.by = idx), history = history)
+    }
+
+    bivector_unlevered &lt;- run_variant(&quot;bivector&quot;, offense_lev = 1)
+    momentum_levered &lt;- run_variant(&quot;momentum&quot;, offense_lev = 1.25)
+
+    strat &lt;- merge(bivector_unlevered$ret, momentum_levered$ret)
+    bench &lt;- xts(as.numeric(spy[idx]), order.by = idx)
+    colnames(strat) &lt;- c(&quot;Bivector.Unlevered&quot;, &quot;Momentum.Levered&quot;)
+    colnames(bench) &lt;- &quot;Benchmark&quot;
+
+    list(
+        strategy = strat,
+        benchmark = bench,
+        history_bivector = bivector_unlevered$history,
+        history_momentum = momentum_levered$history
+    )
+}
+
+########################################.
+##########  3. VISUALIZATION  ##########
+########################################.
+
+plot_helper &lt;- function(strat, bench, history) {
+    charts.PerformanceSummary(
+        merge(strat, bench),
+        legend.loc = &quot;topleft&quot;,
+        main = &quot;Pure Geometric Fortress&quot;
+    )
+}
+
+res &lt;- runGMM()
+plot_helper(res$strategy, res$benchmark, res$history_bivector)</code></pre>
+<p><img src="GMM_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre class="r"><code>perf &lt;- merge(res$strategy, res$benchmark)
+rbind(
+    CAGR = round(Return.annualized(perf) * 100, 2),
+    Vol = round(StdDev.annualized(perf) * 100, 2),
+    Sharpe = round(SharpeRatio.annualized(perf, Rf = 0), 2),
+    MaxDD = round(maxDrawdown(perf) * 100, 2)
+)</code></pre>
+<pre><code>##                                 Bivector.Unlevered Momentum.Levered Benchmark
+## Annualized Return                             9.07            11.39     11.14
+## Annualized Standard Deviation                11.78            13.97     17.43
+## Annualized Sharpe Ratio (Rf=0%)               0.77             0.82      0.64
+## Worst Drawdown                               18.70            21.86     35.75</code></pre>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
