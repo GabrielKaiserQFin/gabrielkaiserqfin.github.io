@@ -1,0 +1,3 @@
+# To-dos for gabrielkaiserqfin.github.io - edit this file; the dashboard reads it.
+# One item per line. '- [ ]' = open, '- [x]' = done. '#' lines are ignored.
+- [ ] Define the next concrete step
