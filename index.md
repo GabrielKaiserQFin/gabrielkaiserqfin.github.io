@@ -17,12 +17,7 @@ title: "About me"
 <!-- <img src="img/G_Kai.jpg" style="width:20%; border:0px solid; margin-right: 20px" align="left"> -->
 ```
 
-```
-## Error: <text>:6:1: unexpected '<'
-## 5:
-## 6: <
-##    ^
-```
+
 
 
 

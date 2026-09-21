@@ -39,6 +39,8 @@ navbar:
             href: 'https://quantresearchgk.shinyapps.io/Risk_Return_app/'
           - text: "Path-Dependent Volatility App"
             href: 'https://quantresearchgk.shinyapps.io/pdv-simulator/'
+    - text: ""
+      href: dashboard_static.html
   right:
     - icon: fa-envelope fa-lg
       href: contact.html
