@@ -552,17 +552,17 @@ fit &lt;-
     penalty.factor = w
   )
 plot(fit)</code></pre>
-<p><img src="Regularization_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="Regularization_files/figure-html/unnamed-chunk-2-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>plot(fit$glmnet.fit, xvar = &quot;lambda&quot;, label = TRUE)
 abline(v = log(fit$lambda.min))
 abline(v = log(fit$lambda.1se))</code></pre>
-<p><img src="Regularization_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
+<p><img src="Regularization_files/figure-html/unnamed-chunk-2-2.png" width="100%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>coef(fit, s = fit$lambda.1se)</code></pre>
-<pre><code>## 3 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
-##                   s1
-## (Intercept) 8.397319
-## Height      .       
-## Volume      0.160786</code></pre>
+<pre><code>3 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
+                  s1
+(Intercept) 8.397319
+Height      .       
+Volume      0.160786</code></pre>
 <pre class="r"><code>coef &lt;- coef(fit, s = &quot;lambda.1se&quot;)
 selected_attributes &lt;- (coef@i[-1] + 1)
 # lasso.pred &lt;- predict(lasso.mod, s = bestlam, newx = x[test,])

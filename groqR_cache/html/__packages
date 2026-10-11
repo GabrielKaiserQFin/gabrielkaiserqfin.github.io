@@ -48,3 +48,7 @@ viridisLite
 viridis
 heatmaply
 glmnet
+nnls
+KeyboardSimulator
+pracma
+patchwork
