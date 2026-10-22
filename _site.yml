@@ -5,10 +5,8 @@ navbar:
   left:
     - text: "Home"
       href: index.html
-    - text: "Research"
-      href: Research.html
-    - text: "Teaching"
-      href: teaching.html
+    - text: "Commodity Dashboard"
+      href: CmdtyDashboard.html
     - text: "Tutorials"
       menu:
           - text: "Introduction to Portfolio Management"
@@ -39,6 +37,10 @@ navbar:
             href: 'https://quantresearchgk.shinyapps.io/Risk_Return_app/'
           - text: "Path-Dependent Volatility App"
             href: 'https://quantresearchgk.shinyapps.io/pdv-simulator/'
+    - text: "Research"
+      href: Research.html
+    - text: "Teaching"
+      href: teaching.html
     - text: ""
       href: dashboard_static.html
   right:

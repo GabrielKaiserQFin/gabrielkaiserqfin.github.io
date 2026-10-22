@@ -271,10 +271,7 @@ $(document).ready(function () {
   <a href="index.html">Home</a>
 </li>
 <li>
-  <a href="Research.html">Research</a>
-</li>
-<li>
-  <a href="teaching.html">Teaching</a>
+  <a href="CmdtyDashboard.html">Commodity Dashboard</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -332,6 +329,12 @@ $(document).ready(function () {
       <a href="https://quantresearchgk.shinyapps.io/pdv-simulator/">Path-Dependent Volatility App</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="Research.html">Research</a>
+</li>
+<li>
+  <a href="teaching.html">Teaching</a>
 </li>
 <li>
   <a href="dashboard_static.html"></a>
@@ -510,13 +513,13 @@ res &lt;- pso_default(
 )
 
 cat(&quot;Solution: x =&quot;, round(res$solution, 4), &quot;| f(x) =&quot;, round(res$fitness, 6))</code></pre>
-<pre><code>Solution: x = 1 1 | f(x) = 0</code></pre>
+<pre><code>## Solution: x = 1 1 | f(x) = 0</code></pre>
 <pre class="r"><code>ggplot(data.frame(iter = seq_along(res$fit_trace), fitness = res$fit_trace), aes(iter, fitness)) +
     geom_line(colour = &quot;#2c7bb6&quot;) +
     scale_y_log10() +
     labs(title = &quot;PSO convergence on Rosenbrock (log scale)&quot;, x = &quot;Iteration&quot;, y = &quot;Best fitness (log)&quot;) +
     theme_minimal()</code></pre>
-<p><img src="PSOforPortfolioOptimization_files/figure-html/toy_example-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="PSOforPortfolioOptimization_files/figure-html/toy_example-1.png" width="864" /></p>
 <p><br/></p>
 </div>
 <div id="portfolio-optimization-setup" class="section level3">
@@ -536,7 +539,7 @@ portfolio selection.</p>
 # Download adjusted prices from Yahoo Finance
 e &lt;- new.env()
 getSymbols(tickers, env = e, from = &quot;2015-01-01&quot;, to = &quot;2023-12-31&quot;, auto.assign = TRUE, warnings = FALSE)</code></pre>
-<pre><code>[1] &quot;SPY&quot; &quot;EFA&quot; &quot;EEM&quot; &quot;IEF&quot; &quot;GLD&quot;</code></pre>
+<pre><code>## [1] &quot;SPY&quot; &quot;EFA&quot; &quot;EEM&quot; &quot;IEF&quot; &quot;GLD&quot;</code></pre>
 <pre class="r"><code># Extract adjusted close prices, align dates
 prices &lt;- do.call(cbind, lapply(tickers, function(t) Ad(e[[t]])))
 colnames(prices) &lt;- tickers
@@ -545,7 +548,7 @@ prices &lt;- na.locf(prices)
 # Daily log returns
 returns &lt;- diff(log(prices))[-1, ]
 cat(&quot;Date range:&quot;, format(start(returns)), &quot;to&quot;, format(end(returns)), &quot;| Observations:&quot;, nrow(returns))</code></pre>
-<pre><code>Date range: 2015-01-05 to 2023-12-29 | Observations: 2263</code></pre>
+<pre><code>## Date range: 2015-01-05 to 2023-12-29 | Observations: 2263</code></pre>
 <pre class="r"><code>train_end &lt;- as.Date(&quot;2020-12-31&quot;)
 test_start &lt;- as.Date(&quot;2021-01-01&quot;)
 
@@ -553,7 +556,7 @@ ret_train &lt;- returns[paste0(&quot;/&quot;, train_end)]
 ret_test &lt;- returns[paste0(test_start, &quot;/&quot;)]
 
 cat(&quot;Train:&quot;, nrow(ret_train), &quot;days |  Test:&quot;, nrow(ret_test), &quot;days&quot;)</code></pre>
-<pre><code>Train: 1510 days |  Test: 753 days</code></pre>
+<pre><code>## Train: 1510 days |  Test: 753 days</code></pre>
 <p>As objective we revisit the classical <strong>minimum variance
 portfolio</strong> of <span class="citation">Markowitz (1952)</span> and
 minimise the portfolio variance <span class="math inline">\(\sigma^2_p =
@@ -629,17 +632,17 @@ if (!is.null(w_qp)) {
     weights_df$QP_Reference &lt;- round(w_qp, 4)
 }
 print(weights_df)</code></pre>
-<pre><code>  Asset    PSO EqualWeight QP_Reference
-1   SPY 0.1417         0.2       0.1219
-2   EFA 0.1662         0.2       0.0438
-3   EEM 0.1469         0.2       0.0000
-4   IEF 0.3326         0.2       0.8342
-5   GLD 0.2127         0.2       0.0000</code></pre>
+<pre><code>##   Asset    PSO EqualWeight QP_Reference
+## 1   SPY 0.1417         0.2       0.1219
+## 2   EFA 0.1662         0.2       0.0438
+## 3   EEM 0.1469         0.2       0.0000
+## 4   IEF 0.3326         0.2       0.8342
+## 5   GLD 0.2127         0.2       0.0000</code></pre>
 <pre class="r"><code>ggplot(data.frame(iter = seq_along(pso_res$fit_trace), fitness = pso_res$fit_trace), aes(iter, fitness)) +
     geom_line(colour = &quot;#d7191c&quot;) +
     labs(title = &quot;PSO convergence – portfolio variance objective&quot;, x = &quot;Iteration&quot;, y = &quot;Objective value&quot;) +
     theme_minimal()</code></pre>
-<p><img src="PSOforPortfolioOptimization_files/figure-html/convergence_plot-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="PSOforPortfolioOptimization_files/figure-html/convergence_plot-1.png" width="864" /></p>
 <p><br/></p>
 </div>
 <div id="backtest" class="section level3">
@@ -691,11 +694,11 @@ if (!is.null(w_qp)) {
     metrics &lt;- bind_rows(metrics, perf_metrics(qp_test, &quot;QP min-variance&quot;))
 }
 print(metrics, row.names = FALSE)</code></pre>
-<pre><code>         Strategy Ann_Return Ann_Vol Sharpe MaxDrawdown
- PSO min-variance      -0.66    9.80  -0.02       22.61
-     Equal weight       0.24   11.37   0.08       24.84
-     SPY (market)       8.29   17.61   0.54       33.65
-  QP min-variance      -3.45    7.96  -0.40       20.52</code></pre>
+<pre><code>##          Strategy Ann_Return Ann_Vol Sharpe MaxDrawdown
+##  PSO min-variance      -0.66    9.80  -0.02       22.61
+##      Equal weight       0.24   11.37   0.08       24.84
+##      SPY (market)       8.29   17.61   0.54       33.65
+##   QP min-variance      -3.45    7.96  -0.40       20.52</code></pre>
 <pre class="r"><code># Build long-format data frame for ggplot
 build_cum_df &lt;- function(ret_xts, label) {
     dates &lt;- c(index(ret_xts)[1] - 1, index(ret_xts))
@@ -728,7 +731,7 @@ ggplot(plot_df, aes(Date, Index, colour = Series)) +
     ) +
     theme_minimal() +
     theme(legend.position = &quot;bottom&quot;)</code></pre>
-<p><img src="PSOforPortfolioOptimization_files/figure-html/plot_test-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="PSOforPortfolioOptimization_files/figure-html/plot_test-1.png" width="864" /></p>
 <p>For completeness, the in-sample performance during the training
 period is shown below. Keep in mind that the minimum variance weights
 were fitted on exactly this data, so the smooth ride here is partly by
@@ -752,7 +755,7 @@ ggplot(train_df, aes(Date, Index, colour = Series)) +
     ) +
     theme_minimal() +
     theme(legend.position = &quot;bottom&quot;)</code></pre>
-<p><img src="PSOforPortfolioOptimization_files/figure-html/plot_train-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="PSOforPortfolioOptimization_files/figure-html/plot_train-1.png" width="864" /></p>
 <p>Finally, a rolling 6-month Sharpe ratio over the test period shows
 how the risk-adjusted performance of the three strategies evolves over
 time.</p>
@@ -788,7 +791,7 @@ if (!is.null(rs_pso)) {
         theme_minimal() +
         theme(legend.position = &quot;bottom&quot;)
 }</code></pre>
-<p><img src="PSOforPortfolioOptimization_files/figure-html/rolling_sharpe-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="PSOforPortfolioOptimization_files/figure-html/rolling_sharpe-1.png" width="864" /></p>
 <p><br/></p>
 </div>
 <div id="pros-of-pso-for-portfolio-optimization" class="section level3">

@@ -249,10 +249,7 @@ $(document).ready(function () {
   <a href="index.html">Home</a>
 </li>
 <li>
-  <a href="Research.html">Research</a>
-</li>
-<li>
-  <a href="teaching.html">Teaching</a>
+  <a href="CmdtyDashboard.html">Commodity Dashboard</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -310,6 +307,12 @@ $(document).ready(function () {
       <a href="https://quantresearchgk.shinyapps.io/pdv-simulator/">Path-Dependent Volatility App</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="Research.html">Research</a>
+</li>
+<li>
+  <a href="teaching.html">Teaching</a>
 </li>
 <li>
   <a href="dashboard_static.html"></a>
@@ -401,6 +404,118 @@ from Excel to R and vice versa. Actually, it also works for any
 clipboard content, lets say a data table from a webpage, etc. Depending
 on the separator, the data is split. You can change this parameter, as
 well as the header and decimal point seperator.</p>
+<pre class="r"><code>#######Useful functions###############
+
+
+#Copy Clipboard from Excel to R
+read.excel &lt;- function(header=FALSE, sep=&quot;\t&quot;, dec=&quot;.&quot;) {
+  read.table(&quot;clipboard&quot;,sep=sep,header=header, dec=dec)
+   
+}
+
+#Paste Clipboard from R to Excel
+write.excel &lt;- function(x,row.names=FALSE,col.names=TRUE,seperator=&quot;\t&quot;,...) {
+  write.table(x,&quot;clipboard&quot;,sep=seperator,row.names=row.names,col.names=col.names,...)
+}
+
+
+
+#Newtons method is an iterative root-finding algorithm where we start with an initial guess x0
+#and each successive guess is refined using the iterative process:
+#  
+#  xn+1=xn-f(xn)/f&#39;(xn)
+#
+#The algorithm will run until either the number of steps N has been reached, or 
+#the error tolerance |xn+1???xn|&lt;??, where ?? is defined as the tolerance parameter tol.
+#
+newton &lt;- function(f, tol=1E-12,x0=1,N=20, stepSize = 0.001) {
+  h &lt;- stepSize
+  i &lt;- 1; x1 &lt;- x0
+  p &lt;- numeric(N)
+  while (i&lt;=N) {
+    df.dx &lt;- (f(x0+h)-f(x0))/h
+    x1 &lt;- (x0 - (f(x0)/df.dx))
+    p[i] &lt;- x1
+    i &lt;- i + 1
+    if (abs(x1-x0) &lt; tol) break
+    x0 &lt;- x1
+  }
+  return(p[1:(i-1)])
+}
+
+
+
+#get packages: install them if necessary and load them
+getPackages &lt;- function(x){
+  for( i in x ){
+    i = gsub(&quot;.*/&quot;, &quot;&quot;, i)
+    #  require returns TRUE invisibly if it was able to load package
+    if( ! require( i , character.only = TRUE )){
+      #  If package was not able to be loaded then re-install
+      (install.packages( i , dependencies = TRUE))
+      
+      #  If package was not able to be installed then re-install with github   
+      if( ! require( i , character.only = TRUE )){
+        (devtools::install_github( i , dependencies = TRUE ))
+        print(&quot;Github Installation!&quot;)
+      }
+    }
+      
+      #  Load package
+    suppressPackageStartupMessages(require( i , character.only = TRUE ))
+  }
+}
+
+###Update R, RStudio, Github,...
+#suppressPackageStartupMessages(library(installr))
+#updateR()
+#check.for.updates.R()
+
+#do not save after q()
+# q &lt;- function (save = &quot;n&quot;, status = 0, runLast = TRUE)
+#   .Internal(quit(save, status, runLast))
+
+
+local({r &lt;- getOption(&quot;repos&quot;)
+r[&quot;CRAN&quot;] &lt;- &quot;https://cran.wu.ac.at/&quot;
+options(repos=r)})
+
+options(stringsAsFactors=FALSE)
+
+options(max.print=100)
+
+options(scipen=10)
+
+options(editor=&quot;vim&quot;)
+
+# options(show.signif.stars=FALSE)
+
+options(menu.graphics=FALSE)
+
+options(prompt=&quot;&gt; &quot;)
+options(continue=&quot;... &quot;)
+
+options(width = 80)
+
+
+utils::rc.settings(ipck=TRUE)
+
+.env &lt;- new.env()
+attach(.env)
+
+.env$unrowname &lt;- function(x) {
+  rownames(x) &lt;- NULL
+  x
+}
+
+.env$unfactor &lt;- function(df){
+  id &lt;- sapply(df, is.factor)
+  df[id] &lt;- lapply(df[id], as.character)
+  df
+}
+
+message(&quot;Successfully loaded .Rprofile&quot;)</code></pre>
+<pre><code>## Successfully loaded .Rprofile</code></pre>
 </div>
 
 
