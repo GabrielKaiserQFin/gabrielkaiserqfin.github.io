@@ -217,12 +217,16 @@ const LAYOUT_BASE = {
   showlegend: false,
 };
 
-function initChart(divId, color, name) {
+function initCandlestick(divId, name) {
   Plotly.newPlot(divId, [{
-    x: [], y: [], type: 'scatter', mode: 'lines',
-    line: { color, width: 1.5 },
-    name,
-  }], { ...LAYOUT_BASE }, PLOT_CFG);
+    type: 'candlestick', name,
+    x: [], open: [], high: [], low: [], close: [],
+    increasing: { line: { color: '#2ecc71' }, fillcolor: '#2ecc71' },
+    decreasing: { line: { color: '#e74c3c' }, fillcolor: '#e74c3c' },
+  }], {
+    ...LAYOUT_BASE,
+    xaxis: { ...LAYOUT_BASE.xaxis, type: 'date', rangeslider: { visible: false } },
+  }, PLOT_CFG);
 }
 
 function initChartDual(divId, color1, name1, color2, name2) {
@@ -238,14 +242,45 @@ function initChartDual(divId, color1, name1, color2, name2) {
   }, PLOT_CFG);
 }
 
-initChart('ch-spy',    '#4a9eff', 'SPY');
-initChart('ch-qqq',    '#2ecc71', 'QQQ');
+initCandlestick('ch-spy', 'SPY');
+initCandlestick('ch-qqq', 'QQQ');
 initChartDual('ch-ratio1', '#f39c12', 'SPY/QQQ', '#e74c3c', 'SPY/IWM');
 initChartDual('ch-ratio2', '#a29bfe', 'SPY/GLD', '#fd79a8', 'TLT');
 
 // ════════════════════════════════════════════════════════════════════════
-// CHART UPDATE HELPERS
+// CANDLESTICK AGGREGATION — 1-minute bars built from ticks
 // ════════════════════════════════════════════════════════════════════════
+const candles = {};  // {symbol: {minute: {o,h,l,c,ts}}}
+SYMBOLS.forEach(s => { candles[s] = {}; });
+
+function updateCandle(divId, symbol, price, dt) {
+  const minKey = dt.toISOString().slice(0, 16); // YYYY-MM-DDTHH:MM
+  const c = candles[symbol];
+  if (!c[minKey]) {
+    c[minKey] = { ts: new Date(minKey + ':00Z'), o: price, h: price, l: price, c: price };
+  } else {
+    c[minKey].h = Math.max(c[minKey].h, price);
+    c[minKey].l = Math.min(c[minKey].l, price);
+    c[minKey].c = price;
+  }
+
+  // Rebuild chart every time current bar updates (cheap — Plotly re-renders only diff)
+  const bars = Object.values(c).sort((a, b) => a.ts - b.ts).slice(-MAX_POINTS);
+  Plotly.react(divId, [{
+    type: 'candlestick',
+    x:     bars.map(b => b.ts),
+    open:  bars.map(b => b.o),
+    high:  bars.map(b => b.h),
+    low:   bars.map(b => b.l),
+    close: bars.map(b => b.c),
+    increasing: { line: { color: '#2ecc71' }, fillcolor: '#2ecc71' },
+    decreasing: { line: { color: '#e74c3c' }, fillcolor: '#e74c3c' },
+  }], {
+    ...LAYOUT_BASE,
+    xaxis: { ...LAYOUT_BASE.xaxis, type: 'date', rangeslider: { visible: false } },
+  }, PLOT_CFG);
+}
+
 function pushPoint(divId, traceIdx, ts, val) {
   Plotly.extendTraces(divId, { x: [[ts]], y: [[val]] }, [traceIdx], MAX_POINTS);
 }
@@ -338,11 +373,11 @@ function onTick(symbol, price, ts) {
 
   switch (symbol) {
     case 'SPY':
-      pushPoint('ch-spy', 0, dt, price);
+      updateCandle('ch-spy', 'SPY', price, dt);
       document.getElementById('lv-spy').textContent = price.toFixed(2);
       break;
     case 'QQQ':
-      pushPoint('ch-qqq', 0, dt, price);
+      updateCandle('ch-qqq', 'QQQ', price, dt);
       document.getElementById('lv-qqq').textContent = price.toFixed(2);
       break;
   }
