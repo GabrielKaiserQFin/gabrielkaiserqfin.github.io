@@ -228,9 +228,10 @@
 // CONFIG — change PROXY_URL after you deploy the Cloudflare Worker
 // ════════════════════════════════════════════════════════════════════════
 const PROXY_URL    = 'wss://lse-proxy.onrender.com';
-const REPLAY_HOURS = 6;          // hours of history to warm-up on load
+const PROXY_HTTP   = 'https://lse-proxy.onrender.com';
+const REPLAY_HOURS = 1;          // WS replay — just overlap, history loaded via HTTP
 const CORR_WINDOW  = 100;        // ticks for rolling correlation
-const MAX_POINTS   = 500;        // max points kept per series in chart
+const MAX_POINTS   = 500;        // max points per ratio chart line
 
 // Symbols the proxy will subscribe to
 const SYMBOLS = ['SPY', 'QQQ', 'GLD', 'IWM', 'TLT'];
@@ -477,6 +478,86 @@ function onTick(symbol, price, ts) {
 }
 
 // ════════════════════════════════════════════════════════════════════════
+// HISTORY LOADER — fetch 5-day 1m candles + 200-day daily for MA200
+// ════════════════════════════════════════════════════════════════════════
+function sma(closes, period) {
+  if (closes.length < period) return null;
+  return closes.slice(-period).reduce((a, b) => a + b, 0) / period;
+}
+
+async function loadHistory(symbol, divId) {
+  try {
+    // 5-day 1-minute candles
+    const r = await fetch(`${PROXY_HTTP}/candles?symbol=${symbol}&timeframe=1m&days=7`);
+    const rows = await r.json();
+    if (!Array.isArray(rows) || rows.length === 0) return;
+
+    // Build candle chart
+    const bars = rows.map(d => ({
+      ts:    new Date(d.ts),
+      o: d.open, h: d.high, l: d.low, c: d.close,
+    }));
+
+    // 200-day daily candles for MA200
+    const r2 = await fetch(`${PROXY_HTTP}/candles?symbol=${symbol}&timeframe=1d&days=210`);
+    const daily = await r2.json();
+    let ma200 = null, ma200ts = null;
+    if (Array.isArray(daily) && daily.length >= 200) {
+      const closes = daily.map(d => d.close);
+      ma200    = closes.map((_, i) => i >= 199 ? closes.slice(i-199, i+1).reduce((a,b)=>a+b,0)/200 : null);
+      ma200ts  = daily.map(d => new Date(d.ts));
+    }
+
+    Plotly.react(divId, [
+      {
+        type: 'candlestick', name: symbol,
+        x:     bars.map(b => b.ts),
+        open:  bars.map(b => b.o),
+        high:  bars.map(b => b.h),
+        low:   bars.map(b => b.l),
+        close: bars.map(b => b.c),
+        increasing: { line: { color: '#2ecc71' }, fillcolor: '#2ecc71' },
+        decreasing: { line: { color: '#e74c3c' }, fillcolor: '#e74c3c' },
+      },
+      // MA200 as a line — daily closes plotted over intraday axis
+      ...(ma200 ? [{
+        type: 'scatter', mode: 'lines', name: 'MA200',
+        x: ma200ts, y: ma200,
+        line: { color: '#f39c12', width: 1.5, dash: 'dot' },
+        yaxis: 'y',
+      }] : []),
+    ], {
+      ...LAYOUT_BASE,
+      xaxis: { ...LAYOUT_BASE.xaxis, type: 'date', rangeslider: { visible: false } },
+      showlegend: false,
+    }, PLOT_CFG);
+
+    // Seed buf for correlation
+    rows.forEach(d => {
+      if (!buf[symbol]) buf[symbol] = [];
+      buf[symbol].push({ ts: d.ts, price: d.close });
+    });
+    if (buf[symbol].length > CORR_WINDOW * 2)
+      buf[symbol] = buf[symbol].slice(-CORR_WINDOW * 2);
+
+    // Set open price from first bar
+    if (!open[symbol] && rows.length) open[symbol] = rows[0].open;
+
+    console.log(`[history] ${symbol}: ${rows.length} bars loaded`);
+  } catch(e) {
+    console.warn('[history] failed for', symbol, e);
+  }
+}
+
+async function loadAllHistory() {
+  await Promise.all(SYMBOLS.map((sym, i) => {
+    const divId = 'ch-' + sym.toLowerCase();
+    return loadHistory(sym, divId);
+  }));
+  updateCorrTable();
+}
+
+// ════════════════════════════════════════════════════════════════════════
 // WEBSOCKET
 // ════════════════════════════════════════════════════════════════════════
 let ws, reconnectTimer;
@@ -525,6 +606,7 @@ setInterval(() => {
 }, 1000);
 
 // ── START ──────────────────────────────────────────────────────────────
+loadAllHistory();
 connect();
 </script>
 </body>
