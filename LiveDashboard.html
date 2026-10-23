@@ -80,8 +80,8 @@
   main {
     flex: 1;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
     gap: 4px;
     padding: 4px;
     overflow: hidden;
@@ -112,10 +112,10 @@
 
   .chart-wrap { flex: 1; min-height: 0; }
 
-  /* ── Correlation panel (spans full bottom-right) ─────────────────────── */
+  /* ── Correlation panel spans full right column ───────────────────────── */
   #panel-corr {
-    grid-column: 3;
-    grid-row: 1 / 3;
+    grid-column: 4;
+    grid-row: 1 / 4;
   }
   #corr-table {
     padding: 8px;
@@ -147,27 +147,50 @@
 </div>
 
 <main>
+  <!-- Row 1: Candlesticks -->
   <div class="panel">
     <div class="panel-header">
-      <span>SPY — S&amp;P 500 ETF</span>
+      <span>SPY — S&amp;P 500</span>
       <span class="live-val" id="lv-spy">—</span>
     </div>
     <div class="chart-wrap" id="ch-spy"></div>
   </div>
-
   <div class="panel">
     <div class="panel-header">
-      <span>QQQ — Nasdaq 100 ETF</span>
+      <span>QQQ — Nasdaq 100</span>
       <span class="live-val" id="lv-qqq">—</span>
     </div>
     <div class="chart-wrap" id="ch-qqq"></div>
   </div>
+  <div class="panel">
+    <div class="panel-header">
+      <span>GLD — Gold</span>
+      <span class="live-val" id="lv-gld">—</span>
+    </div>
+    <div class="chart-wrap" id="ch-gld"></div>
+  </div>
 
-  <div class="panel" id="panel-corr" style="grid-column:3;grid-row:1/3">
+  <!-- Correlation panel spans all 3 rows -->
+  <div class="panel" id="panel-corr">
     <div class="panel-header"><span>Rolling Correlation (100 ticks)</span></div>
     <div id="corr-table"><table id="corr-matrix"></table></div>
   </div>
 
+  <!-- Row 2: More candlesticks -->
+  <div class="panel">
+    <div class="panel-header">
+      <span>IWM — Russell 2000</span>
+      <span class="live-val" id="lv-iwm">—</span>
+    </div>
+    <div class="chart-wrap" id="ch-iwm"></div>
+  </div>
+  <div class="panel">
+    <div class="panel-header">
+      <span>TLT — 20Y Treasuries</span>
+      <span class="live-val" id="lv-tlt">—</span>
+    </div>
+    <div class="chart-wrap" id="ch-tlt"></div>
+  </div>
   <div class="panel">
     <div class="panel-header">
       <span>SPY / QQQ &nbsp;·&nbsp; SPY / IWM</span>
@@ -176,12 +199,27 @@
     <div class="chart-wrap" id="ch-ratio1"></div>
   </div>
 
+  <!-- Row 3: Ratios -->
   <div class="panel">
     <div class="panel-header">
-      <span>SPY / GLD &nbsp;·&nbsp; TLT</span>
+      <span>SPY / GLD</span>
       <span class="live-val" id="lv-ratio2">—</span>
     </div>
     <div class="chart-wrap" id="ch-ratio2"></div>
+  </div>
+  <div class="panel">
+    <div class="panel-header">
+      <span>QQQ / GLD &nbsp;·&nbsp; IWM / TLT</span>
+      <span class="live-val" id="lv-ratio3">—</span>
+    </div>
+    <div class="chart-wrap" id="ch-ratio3"></div>
+  </div>
+  <div class="panel">
+    <div class="panel-header">
+      <span>SPY / TLT &nbsp;·&nbsp; QQQ / IWM</span>
+      <span class="live-val" id="lv-ratio4">—</span>
+    </div>
+    <div class="chart-wrap" id="ch-ratio4"></div>
   </div>
 </main>
 
@@ -244,8 +282,13 @@ function initChartDual(divId, color1, name1, color2, name2) {
 
 initCandlestick('ch-spy', 'SPY');
 initCandlestick('ch-qqq', 'QQQ');
+initCandlestick('ch-gld', 'GLD');
+initCandlestick('ch-iwm', 'IWM');
+initCandlestick('ch-tlt', 'TLT');
 initChartDual('ch-ratio1', '#f39c12', 'SPY/QQQ', '#e74c3c', 'SPY/IWM');
-initChartDual('ch-ratio2', '#a29bfe', 'SPY/GLD', '#fd79a8', 'TLT');
+initChartDual('ch-ratio2', '#a29bfe', 'SPY/GLD', '#4a9eff', 'SPY/GLD');
+initChartDual('ch-ratio3', '#2ecc71', 'QQQ/GLD', '#fd79a8', 'IWM/TLT');
+initChartDual('ch-ratio4', '#f39c12', 'SPY/TLT', '#e74c3c', 'QQQ/IWM');
 
 // ════════════════════════════════════════════════════════════════════════
 // CANDLESTICK AGGREGATION — 1-minute bars built from ticks
@@ -380,6 +423,18 @@ function onTick(symbol, price, ts) {
       updateCandle('ch-qqq', 'QQQ', price, dt);
       document.getElementById('lv-qqq').textContent = price.toFixed(2);
       break;
+    case 'GLD':
+      updateCandle('ch-gld', 'GLD', price, dt);
+      document.getElementById('lv-gld').textContent = price.toFixed(2);
+      break;
+    case 'IWM':
+      updateCandle('ch-iwm', 'IWM', price, dt);
+      document.getElementById('lv-iwm').textContent = price.toFixed(2);
+      break;
+    case 'TLT':
+      updateCandle('ch-tlt', 'TLT', price, dt);
+      document.getElementById('lv-tlt').textContent = price.toFixed(2);
+      break;
   }
 
   const spy = buf['SPY'];
@@ -394,16 +449,28 @@ function onTick(symbol, price, ts) {
     document.getElementById('lv-ratio1').textContent = r.toFixed(3);
   }
   if (spy.length && iwm.length && (symbol === 'SPY' || symbol === 'IWM')) {
-    const r = spy[spy.length-1].price / iwm[iwm.length-1].price;
-    pushPoint('ch-ratio1', 1, dt, r);
+    pushPoint('ch-ratio1', 1, dt, spy[spy.length-1].price / iwm[iwm.length-1].price);
   }
   if (spy.length && gld.length && (symbol === 'SPY' || symbol === 'GLD')) {
     const r = spy[spy.length-1].price / gld[gld.length-1].price;
     pushPoint('ch-ratio2', 0, dt, r);
     document.getElementById('lv-ratio2').textContent = r.toFixed(3);
   }
-  if (tlt.length && symbol === 'TLT') {
-    pushPoint('ch-ratio2', 1, dt, price);
+  if (qqq.length && gld.length && (symbol === 'QQQ' || symbol === 'GLD')) {
+    const r = qqq[qqq.length-1].price / gld[gld.length-1].price;
+    pushPoint('ch-ratio3', 0, dt, r);
+    document.getElementById('lv-ratio3').textContent = r.toFixed(3);
+  }
+  if (iwm.length && tlt.length && (symbol === 'IWM' || symbol === 'TLT')) {
+    pushPoint('ch-ratio3', 1, dt, iwm[iwm.length-1].price / tlt[tlt.length-1].price);
+  }
+  if (spy.length && tlt.length && (symbol === 'SPY' || symbol === 'TLT')) {
+    const r = spy[spy.length-1].price / tlt[tlt.length-1].price;
+    pushPoint('ch-ratio4', 0, dt, r);
+    document.getElementById('lv-ratio4').textContent = r.toFixed(3);
+  }
+  if (qqq.length && iwm.length && (symbol === 'QQQ' || symbol === 'IWM')) {
+    pushPoint('ch-ratio4', 1, dt, qqq[qqq.length-1].price / iwm[iwm.length-1].price);
   }
 
   updateCorrTable();
