@@ -7,6 +7,8 @@ navbar:
       href: index.html
     - text: "Commodity Dashboard"
       href: CmdtyDashboard.html
+    - text: "Live Dashboard"
+      href: LiveDashboard.html
     - text: "Tutorials"
       menu:
           - text: "Introduction to Portfolio Management"

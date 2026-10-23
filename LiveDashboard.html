@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Dashboard</title>
+<script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+<style>
+  :root {
+    --bg:       #0d0f14;
+    --panel:    #141720;
+    --border:   #252a38;
+    --text:     #c8cfe0;
+    --muted:    #5a6180;
+    --accent:   #4a9eff;
+    --green:    #2ecc71;
+    --red:      #e74c3c;
+    --yellow:   #f39c12;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── Header ─────────────────────────────────────────────────────────── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 16px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  header h1 { font-size: 13px; letter-spacing: 2px; color: var(--accent); }
+
+  #status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  #status-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--muted);
+    transition: background .3s;
+  }
+  #status-dot.live   { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  #status-dot.error  { background: var(--red); }
+
+  /* ── Ticker bar ──────────────────────────────────────────────────────── */
+  #ticker {
+    display: flex;
+    gap: 20px;
+    padding: 4px 16px;
+    background: #0a0c10;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    flex-shrink: 0;
+  }
+  .tick-item { display: flex; gap: 6px; align-items: baseline; white-space: nowrap; }
+  .tick-sym  { color: var(--muted); font-size: 10px; }
+  .tick-val  { color: var(--text);  font-size: 12px; font-weight: 600; }
+  .tick-chg  { font-size: 10px; }
+  .tick-chg.up   { color: var(--green); }
+  .tick-chg.down { color: var(--red);   }
+
+  /* ── Main grid ───────────────────────────────────────────────────────── */
+  main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 4px;
+    padding: 4px;
+    overflow: hidden;
+  }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .panel-header {
+    padding: 5px 10px;
+    border-bottom: 1px solid var(--border);
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .panel-header .live-val { color: var(--text); font-size: 12px; font-weight: 600; }
+
+  .chart-wrap { flex: 1; min-height: 0; }
+
+  /* ── Correlation panel (spans full bottom-right) ─────────────────────── */
+  #panel-corr {
+    grid-column: 3;
+    grid-row: 1 / 3;
+  }
+  #corr-table {
+    padding: 8px;
+    overflow-y: auto;
+    flex: 1;
+  }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 5px 8px; text-align: right; font-size: 11px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: normal; text-align: center; }
+  td:first-child { text-align: left; color: var(--muted); }
+  .corr-high-pos { color: var(--green); }
+  .corr-high-neg { color: var(--red); }
+  .corr-diag     { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>▸ MARKET DASHBOARD</h1>
+  <div id="status">
+    <div id="status-dot"></div>
+    <span id="status-text">Connecting…</span>
+    <span id="clock"></span>
+  </div>
+</header>
+
+<div id="ticker">
+  <!-- filled dynamically -->
+</div>
+
+<main>
+  <div class="panel" id="panel-spx">
+    <div class="panel-header">
+      <span>SPX500 / USD</span>
+      <span class="live-val" id="lv-spx">—</span>
+    </div>
+    <div class="chart-wrap" id="ch-spx"></div>
+  </div>
+
+  <div class="panel" id="panel-vix">
+    <div class="panel-header">
+      <span>VIX</span>
+      <span class="live-val" id="lv-vix">—</span>
+    </div>
+    <div class="chart-wrap" id="ch-vix"></div>
+  </div>
+
+  <div class="panel" id="panel-corr" style="grid-column:3;grid-row:1/3">
+    <div class="panel-header"><span>Rolling Correlation (100 ticks)</span></div>
+    <div id="corr-table"><table id="corr-matrix"></table></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <span>SPX500 / QQQ</span>
+      <span class="live-val" id="lv-ratio1">—</span>
+    </div>
+    <div class="chart-wrap" id="ch-ratio1"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <span>SPX500 / GLD &nbsp;·&nbsp; DXY</span>
+      <span class="live-val" id="lv-ratio2">—</span>
+    </div>
+    <div class="chart-wrap" id="ch-ratio2"></div>
+  </div>
+</main>
+
+<script>
+// ════════════════════════════════════════════════════════════════════════
+// CONFIG — change PROXY_URL after you deploy the Cloudflare Worker
+// ════════════════════════════════════════════════════════════════════════
+const PROXY_URL    = 'wss://morning-poetry-83ff.johnnydjmix2000.workers.dev';
+const REPLAY_HOURS = 6;          // hours of history to warm-up on load
+const CORR_WINDOW  = 100;        // ticks for rolling correlation
+const MAX_POINTS   = 500;        // max points kept per series in chart
+
+// Symbols the proxy will subscribe to
+const SYMBOLS = ['SPX500/USD', 'VIX/USD', 'DXY/USD', 'QQQ', 'GLD'];
+
+// ════════════════════════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════════════════════════
+const buf = {};          // {symbol: [{ts, price}]}
+const open = {};         // opening price per session {symbol: price}
+SYMBOLS.forEach(s => { buf[s] = []; });
+
+// ════════════════════════════════════════════════════════════════════════
+// CHART INIT  (dark Plotly theme)
+// ════════════════════════════════════════════════════════════════════════
+const PLOT_CFG = { displayModeBar: false, responsive: true };
+const LAYOUT_BASE = {
+  paper_bgcolor: 'transparent', plot_bgcolor: 'transparent',
+  margin: { l: 42, r: 8, t: 4, b: 28 },
+  font: { color: '#c8cfe0', family: 'SF Mono, Fira Code, monospace', size: 10 },
+  xaxis: { gridcolor: '#1e2233', showgrid: true, zeroline: false },
+  yaxis: { gridcolor: '#1e2233', showgrid: true, zeroline: false },
+  showlegend: false,
+};
+
+function initChart(divId, color, name) {
+  Plotly.newPlot(divId, [{
+    x: [], y: [], type: 'scatter', mode: 'lines',
+    line: { color, width: 1.5 },
+    name,
+  }], { ...LAYOUT_BASE }, PLOT_CFG);
+}
+
+function initChartDual(divId, color1, name1, color2, name2) {
+  Plotly.newPlot(divId, [
+    { x: [], y: [], type: 'scatter', mode: 'lines', line: { color: color1, width: 1.5 }, name: name1, yaxis: 'y' },
+    { x: [], y: [], type: 'scatter', mode: 'lines', line: { color: color2, width: 1.5 }, name: name2, yaxis: 'y2' },
+  ], {
+    ...LAYOUT_BASE,
+    yaxis:  { ...LAYOUT_BASE.yaxis, title: { text: name1, standoff: 2 } },
+    yaxis2: { ...LAYOUT_BASE.yaxis, overlaying: 'y', side: 'right', title: { text: name2, standoff: 2 }, showgrid: false },
+    showlegend: true,
+    legend: { x: 0, y: 1.05, orientation: 'h', font: { size: 9 } },
+  }, PLOT_CFG);
+}
+
+initChart('ch-spx',    '#4a9eff', 'SPX500');
+initChart('ch-vix',    '#f39c12', 'VIX');
+initChart('ch-ratio1', '#2ecc71', 'SPX/QQQ');
+initChartDual('ch-ratio2', '#e74c3c', 'SPX/GLD', '#a29bfe', 'DXY');
+
+// ════════════════════════════════════════════════════════════════════════
+// CHART UPDATE HELPERS
+// ════════════════════════════════════════════════════════════════════════
+function pushPoint(divId, traceIdx, ts, val) {
+  Plotly.extendTraces(divId, { x: [[ts]], y: [[val]] }, [traceIdx], MAX_POINTS);
+}
+
+function updateTicker(symbol, price, prevPrice) {
+  const id   = 'tick-' + symbol.replace(/[^a-zA-Z0-9]/g, '_');
+  let el = document.getElementById(id);
+  if (!el) {
+    el = document.createElement('div');
+    el.className = 'tick-item';
+    el.id = id;
+    el.innerHTML = `<span class="tick-sym">${symbol}</span><span class="tick-val">—</span><span class="tick-chg">—</span>`;
+    document.getElementById('ticker').appendChild(el);
+  }
+  const ref   = open[symbol] ?? price;
+  const chgPct = ((price - ref) / ref * 100).toFixed(2);
+  const dir   = price >= prevPrice ? 'up' : 'down';
+  el.querySelector('.tick-val').textContent = price.toFixed(2);
+  el.querySelector('.tick-chg').textContent = (chgPct >= 0 ? '+' : '') + chgPct + '%';
+  el.querySelector('.tick-chg').className   = 'tick-chg ' + (chgPct >= 0 ? 'up' : 'down');
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// ROLLING CORRELATION
+// ════════════════════════════════════════════════════════════════════════
+const CORR_PAIRS = [
+  ['SPX500/USD', 'VIX/USD'],
+  ['SPX500/USD', 'QQQ'],
+  ['SPX500/USD', 'GLD'],
+  ['SPX500/USD', 'DXY/USD'],
+  ['VIX/USD',    'DXY/USD'],
+  ['QQQ',        'GLD'],
+];
+
+function pearson(a, b) {
+  const n = Math.min(a.length, b.length, CORR_WINDOW);
+  if (n < 10) return null;
+  const ax = a.slice(-n).map(p => p.price);
+  const bx = b.slice(-n).map(p => p.price);
+  const ma = ax.reduce((s, v) => s + v, 0) / n;
+  const mb = bx.reduce((s, v) => s + v, 0) / n;
+  let num = 0, da = 0, db = 0;
+  for (let i = 0; i < n; i++) {
+    const a_ = ax[i] - ma, b_ = bx[i] - mb;
+    num += a_ * b_; da += a_ * a_; db += b_ * b_;
+  }
+  const denom = Math.sqrt(da * db);
+  return denom ? num / denom : null;
+}
+
+function updateCorrTable() {
+  const syms  = [...new Set(CORR_PAIRS.flat())];
+  const corrs = {};
+  CORR_PAIRS.forEach(([a, b]) => {
+    const r = pearson(buf[a], buf[b]);
+    corrs[`${a}|${b}`] = r;
+    corrs[`${b}|${a}`] = r;
+  });
+
+  const short = s => s.replace('/USD','').replace('500','');
+  let html = '<tr><th></th>' + syms.map(s => `<th>${short(s)}</th>`).join('') + '</tr>';
+  syms.forEach(row => {
+    html += `<tr><td>${short(row)}</td>`;
+    syms.forEach(col => {
+      if (row === col) { html += '<td class="corr-diag">1.00</td>'; return; }
+      const r = corrs[`${row}|${col}`];
+      if (r == null) { html += '<td class="corr-diag">—</td>'; return; }
+      const cls = r >  0.6 ? 'corr-high-pos'
+                : r < -0.6 ? 'corr-high-neg' : '';
+      html += `<td class="${cls}">${r.toFixed(2)}</td>`;
+    });
+    html += '</tr>';
+  });
+  document.getElementById('corr-matrix').innerHTML = html;
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// DISPATCH — called on every new tick
+// ════════════════════════════════════════════════════════════════════════
+function onTick(symbol, price, ts) {
+  const b   = buf[symbol];
+  const prev = b.length ? b[b.length-1].price : price;
+  if (!open[symbol]) open[symbol] = price;
+  b.push({ ts, price });
+  if (b.length > CORR_WINDOW * 2) b.shift();
+
+  updateTicker(symbol, price, prev);
+
+  const dt = new Date(typeof ts === 'number' ? ts * 1000 : ts);
+
+  switch (symbol) {
+    case 'SPX500/USD':
+      pushPoint('ch-spx', 0, dt, price);
+      document.getElementById('lv-spx').textContent = price.toFixed(2);
+      break;
+    case 'VIX/USD':
+      pushPoint('ch-vix', 0, dt, price);
+      document.getElementById('lv-vix').textContent = price.toFixed(2);
+      break;
+  }
+
+  // Ratios — compute whenever both buffers have data
+  const spx = buf['SPX500/USD'];
+  const qqq = buf['QQQ'];
+  const gld = buf['GLD'];
+  const dxy = buf['DXY/USD'];
+
+  if (spx.length && qqq.length && (symbol === 'SPX500/USD' || symbol === 'QQQ')) {
+    const r = spx[spx.length-1].price / qqq[qqq.length-1].price;
+    pushPoint('ch-ratio1', 0, dt, r);
+    document.getElementById('lv-ratio1').textContent = r.toFixed(3);
+  }
+  if (spx.length && gld.length && (symbol === 'SPX500/USD' || symbol === 'GLD')) {
+    const r = spx[spx.length-1].price / gld[gld.length-1].price;
+    pushPoint('ch-ratio2', 0, dt, r);
+    document.getElementById('lv-ratio2').textContent = r.toFixed(3);
+  }
+  if (dxy.length && (symbol === 'DXY/USD')) {
+    pushPoint('ch-ratio2', 1, dt, price);
+  }
+
+  updateCorrTable();
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// WEBSOCKET
+// ════════════════════════════════════════════════════════════════════════
+let ws, reconnectTimer;
+
+function setStatus(state, text) {
+  document.getElementById('status-dot').className  = state;
+  document.getElementById('status-text').textContent = text;
+}
+
+function connect() {
+  if (ws) { try { ws.close(); } catch {} }
+  setStatus('', 'Connecting…');
+
+  ws = new WebSocket(PROXY_URL);
+
+  ws.onopen = () => {
+    setStatus('live', 'LIVE');
+    const start = new Date(Date.now() - REPLAY_HOURS * 3600_000).toISOString();
+    SYMBOLS.forEach(sym => {
+      ws.send(JSON.stringify({ action: 'subscribe', symbol: sym, start }));
+    });
+  };
+
+  ws.onmessage = ({ data }) => {
+    let msg;
+    try { msg = JSON.parse(data); } catch { return; }
+    if (msg.type !== 'tick') return;
+    onTick(msg.symbol, msg.price, msg.ts);
+  };
+
+  ws.onerror = () => setStatus('error', 'Connection error');
+
+  ws.onclose = () => {
+    setStatus('error', 'Reconnecting…');
+    clearTimeout(reconnectTimer);
+    reconnectTimer = setTimeout(connect, 3000);
+  };
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// CLOCK
+// ════════════════════════════════════════════════════════════════════════
+setInterval(() => {
+  document.getElementById('clock').textContent =
+    new Date().toLocaleTimeString('en-GB', { hour12: false });
+}, 1000);
+
+// ── START ──────────────────────────────────────────────────────────────
+connect();
+</script>
+</body>
+</html>
