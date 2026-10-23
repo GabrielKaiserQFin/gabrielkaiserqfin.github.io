@@ -239,8 +239,9 @@ const SYMBOLS = ['SPY', 'QQQ', 'GLD', 'IWM', 'TLT'];
 // ════════════════════════════════════════════════════════════════════════
 // STATE
 // ════════════════════════════════════════════════════════════════════════
-const buf = {};          // {symbol: [{ts, price}]}
+const buf  = {};          // {symbol: [{ts, price}]}
 const open = {};         // opening price per session {symbol: price}
+window.buf = buf;
 SYMBOLS.forEach(s => { buf[s] = []; });
 
 // ════════════════════════════════════════════════════════════════════════
@@ -292,37 +293,64 @@ initChartDual('ch-ratio3', '#2ecc71', 'QQQ/GLD', '#fd79a8', 'IWM/TLT');
 initChartDual('ch-ratio4', '#f39c12', 'SPY/TLT', '#e74c3c', 'QQQ/IWM');
 
 // ════════════════════════════════════════════════════════════════════════
-// CANDLESTICK AGGREGATION — 1-minute bars built from ticks
+// CANDLESTICK AGGREGATION — 1-minute bars, merges with loaded history
 // ════════════════════════════════════════════════════════════════════════
-const candles = {};  // {symbol: {minute: {o,h,l,c,ts}}}
-SYMBOLS.forEach(s => { candles[s] = {}; });
+const candles = {};       // {symbol: Map<minKey, {ts,o,h,l,c}>}
+const histBars = {};      // {symbol: [{ts,o,h,l,c}]} — loaded via HTTP
+SYMBOLS.forEach(s => { candles[s] = new Map(); histBars[s] = []; });
 
-function updateCandle(divId, symbol, price, dt) {
-  const minKey = dt.toISOString().slice(0, 16); // YYYY-MM-DDTHH:MM
-  const c = candles[symbol];
-  if (!c[minKey]) {
-    c[minKey] = { ts: new Date(minKey + ':00Z'), o: price, h: price, l: price, c: price };
-  } else {
-    c[minKey].h = Math.max(c[minKey].h, price);
-    c[minKey].l = Math.min(c[minKey].l, price);
-    c[minKey].c = price;
-  }
+function renderCandle(divId, symbol) {
+  // Merge: history bars + live bars (live overwrites history bar for same minute)
+  const live = [...candles[symbol].values()];
+  const hist = histBars[symbol];
 
-  // Rebuild chart every time current bar updates (cheap — Plotly re-renders only diff)
-  const bars = Object.values(c).sort((a, b) => a.ts - b.ts).slice(-MAX_POINTS);
-  Plotly.react(divId, [{
-    type: 'candlestick',
-    x:     bars.map(b => b.ts),
-    open:  bars.map(b => b.o),
-    high:  bars.map(b => b.h),
-    low:   bars.map(b => b.l),
-    close: bars.map(b => b.c),
-    increasing: { line: { color: '#2ecc71' }, fillcolor: '#2ecc71' },
-    decreasing: { line: { color: '#e74c3c' }, fillcolor: '#e74c3c' },
-  }], {
+  // Build combined sorted array — live bars override history for same ts
+  const liveKeys = new Set(live.map(b => b.ts.toISOString().slice(0,16)));
+  const merged = [
+    ...hist.filter(b => !liveKeys.has(new Date(b.ts).toISOString().slice(0,16))),
+    ...live,
+  ].sort((a, b) => new Date(a.ts) - new Date(b.ts));
+
+  const ma200data = window._ma200?.[symbol];
+
+  Plotly.react(divId, [
+    {
+      type: 'candlestick', name: symbol,
+      x:     merged.map(b => new Date(b.ts)),
+      open:  merged.map(b => b.o),
+      high:  merged.map(b => b.h),
+      low:   merged.map(b => b.l),
+      close: merged.map(b => b.c),
+      increasing: { line: { color: '#2ecc71' }, fillcolor: '#2ecc71' },
+      decreasing: { line: { color: '#e74c3c' }, fillcolor: '#e74c3c' },
+    },
+    ...(ma200data ? [{
+      type: 'scatter', mode: 'lines', name: 'MA200',
+      x: ma200data.x, y: ma200data.y,
+      line: { color: '#f39c12', width: 1.5, dash: 'dot' },
+    }] : []),
+  ], {
     ...LAYOUT_BASE,
     xaxis: { ...LAYOUT_BASE.xaxis, type: 'date', rangeslider: { visible: false } },
+    showlegend: !!ma200data,
+    legend: { x: 0, y: 1.05, orientation: 'h', font: { size: 9 } },
   }, PLOT_CFG);
+}
+
+function updateCandle(divId, symbol, price, dt) {
+  const minKey = dt.toISOString().slice(0, 16);
+  const c = candles[symbol];
+  if (!c.has(minKey)) {
+    c.set(minKey, { ts: new Date(minKey + ':00Z'), o: price, h: price, l: price, c: price });
+  } else {
+    const bar = c.get(minKey);
+    bar.h = Math.max(bar.h, price);
+    bar.l = Math.min(bar.l, price);
+    bar.c = price;
+  }
+  // Keep only last 500 live bars
+  if (c.size > 500) c.delete(c.keys().next().value);
+  renderCandle(divId, symbol);
 }
 
 function pushPoint(divId, traceIdx, ts, val) {
@@ -480,80 +508,40 @@ function onTick(symbol, price, ts) {
 // ════════════════════════════════════════════════════════════════════════
 // HISTORY LOADER — fetch 5-day 1m candles + 200-day daily for MA200
 // ════════════════════════════════════════════════════════════════════════
-function sma(closes, period) {
-  if (closes.length < period) return null;
-  return closes.slice(-period).reduce((a, b) => a + b, 0) / period;
-}
+window._ma200 = {};
 
-async function loadHistory(symbol, divId) {
+async function loadHistory(symbol) {
+  const divId = 'ch-' + symbol.toLowerCase();
   try {
     // 5-day 1-minute candles
-    const r = await fetch(`${PROXY_HTTP}/candles?symbol=${symbol}&timeframe=1m&days=7`);
+    const r = await fetch(`${PROXY_HTTP}/candles?symbol=${encodeURIComponent(symbol)}&timeframe=1m&days=7`);
     const rows = await r.json();
-    if (!Array.isArray(rows) || rows.length === 0) return;
+    if (!Array.isArray(rows) || rows.length === 0) { console.warn('[history] no data for', symbol); return; }
 
-    // Build candle chart
-    const bars = rows.map(d => ({
-      ts:    new Date(d.ts),
-      o: d.open, h: d.high, l: d.low, c: d.close,
-    }));
-
-    // 200-day daily candles for MA200
-    const r2 = await fetch(`${PROXY_HTTP}/candles?symbol=${symbol}&timeframe=1d&days=210`);
-    const daily = await r2.json();
-    let ma200 = null, ma200ts = null;
-    if (Array.isArray(daily) && daily.length >= 200) {
-      const closes = daily.map(d => d.close);
-      ma200    = closes.map((_, i) => i >= 199 ? closes.slice(i-199, i+1).reduce((a,b)=>a+b,0)/200 : null);
-      ma200ts  = daily.map(d => new Date(d.ts));
-    }
-
-    Plotly.react(divId, [
-      {
-        type: 'candlestick', name: symbol,
-        x:     bars.map(b => b.ts),
-        open:  bars.map(b => b.o),
-        high:  bars.map(b => b.h),
-        low:   bars.map(b => b.l),
-        close: bars.map(b => b.c),
-        increasing: { line: { color: '#2ecc71' }, fillcolor: '#2ecc71' },
-        decreasing: { line: { color: '#e74c3c' }, fillcolor: '#e74c3c' },
-      },
-      // MA200 as a line — daily closes plotted over intraday axis
-      ...(ma200 ? [{
-        type: 'scatter', mode: 'lines', name: 'MA200',
-        x: ma200ts, y: ma200,
-        line: { color: '#f39c12', width: 1.5, dash: 'dot' },
-        yaxis: 'y',
-      }] : []),
-    ], {
-      ...LAYOUT_BASE,
-      xaxis: { ...LAYOUT_BASE.xaxis, type: 'date', rangeslider: { visible: false } },
-      showlegend: false,
-    }, PLOT_CFG);
+    histBars[symbol] = rows.map(d => ({ ts: d.ts, o: d.open, h: d.high, l: d.low, c: d.close }));
 
     // Seed buf for correlation
-    rows.forEach(d => {
-      if (!buf[symbol]) buf[symbol] = [];
-      buf[symbol].push({ ts: d.ts, price: d.close });
-    });
-    if (buf[symbol].length > CORR_WINDOW * 2)
-      buf[symbol] = buf[symbol].slice(-CORR_WINDOW * 2);
+    buf[symbol] = rows.map(d => ({ ts: d.ts, price: d.close }));
+    if (!open[symbol]) open[symbol] = rows[0].open;
 
-    // Set open price from first bar
-    if (!open[symbol] && rows.length) open[symbol] = rows[0].open;
+    // 200-day daily for MA200
+    const r2 = await fetch(`${PROXY_HTTP}/candles?symbol=${encodeURIComponent(symbol)}&timeframe=1d&days=210`);
+    const daily = await r2.json();
+    if (Array.isArray(daily) && daily.length >= 200) {
+      const closes = daily.map(d => d.close);
+      const ma200y = closes.map((_, i) => i >= 199 ? closes.slice(i-199, i+1).reduce((a,b)=>a+b,0)/200 : null);
+      window._ma200[symbol] = { x: daily.map(d => new Date(d.ts)), y: ma200y };
+    }
 
-    console.log(`[history] ${symbol}: ${rows.length} bars loaded`);
+    renderCandle(divId, symbol);
+    console.log(`[history] ${symbol}: ${rows.length} bars`);
   } catch(e) {
     console.warn('[history] failed for', symbol, e);
   }
 }
 
 async function loadAllHistory() {
-  await Promise.all(SYMBOLS.map((sym, i) => {
-    const divId = 'ch-' + sym.toLowerCase();
-    return loadHistory(sym, divId);
-  }));
+  await Promise.all(SYMBOLS.map(sym => loadHistory(sym)));
   updateCorrTable();
 }
 
