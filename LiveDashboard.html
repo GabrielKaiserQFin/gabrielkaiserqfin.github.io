@@ -147,20 +147,20 @@
 </div>
 
 <main>
-  <div class="panel" id="panel-spx">
+  <div class="panel">
     <div class="panel-header">
-      <span>SPX500 / USD</span>
-      <span class="live-val" id="lv-spx">—</span>
+      <span>SPY — S&amp;P 500 ETF</span>
+      <span class="live-val" id="lv-spy">—</span>
     </div>
-    <div class="chart-wrap" id="ch-spx"></div>
+    <div class="chart-wrap" id="ch-spy"></div>
   </div>
 
-  <div class="panel" id="panel-vix">
+  <div class="panel">
     <div class="panel-header">
-      <span>VIX</span>
-      <span class="live-val" id="lv-vix">—</span>
+      <span>QQQ — Nasdaq 100 ETF</span>
+      <span class="live-val" id="lv-qqq">—</span>
     </div>
-    <div class="chart-wrap" id="ch-vix"></div>
+    <div class="chart-wrap" id="ch-qqq"></div>
   </div>
 
   <div class="panel" id="panel-corr" style="grid-column:3;grid-row:1/3">
@@ -170,7 +170,7 @@
 
   <div class="panel">
     <div class="panel-header">
-      <span>SPX500 / QQQ</span>
+      <span>SPY / QQQ &nbsp;·&nbsp; SPY / IWM</span>
       <span class="live-val" id="lv-ratio1">—</span>
     </div>
     <div class="chart-wrap" id="ch-ratio1"></div>
@@ -178,7 +178,7 @@
 
   <div class="panel">
     <div class="panel-header">
-      <span>SPX500 / GLD &nbsp;·&nbsp; DXY</span>
+      <span>SPY / GLD &nbsp;·&nbsp; TLT</span>
       <span class="live-val" id="lv-ratio2">—</span>
     </div>
     <div class="chart-wrap" id="ch-ratio2"></div>
@@ -195,7 +195,7 @@ const CORR_WINDOW  = 100;        // ticks for rolling correlation
 const MAX_POINTS   = 500;        // max points kept per series in chart
 
 // Symbols the proxy will subscribe to
-const SYMBOLS = ['SPX500/USD', 'VIX/USD', 'DXY/USD', 'QQQ', 'GLD'];
+const SYMBOLS = ['SPY', 'QQQ', 'GLD', 'IWM', 'TLT'];
 
 // ════════════════════════════════════════════════════════════════════════
 // STATE
@@ -238,10 +238,10 @@ function initChartDual(divId, color1, name1, color2, name2) {
   }, PLOT_CFG);
 }
 
-initChart('ch-spx',    '#4a9eff', 'SPX500');
-initChart('ch-vix',    '#f39c12', 'VIX');
-initChart('ch-ratio1', '#2ecc71', 'SPX/QQQ');
-initChartDual('ch-ratio2', '#e74c3c', 'SPX/GLD', '#a29bfe', 'DXY');
+initChart('ch-spy',    '#4a9eff', 'SPY');
+initChart('ch-qqq',    '#2ecc71', 'QQQ');
+initChartDual('ch-ratio1', '#f39c12', 'SPY/QQQ', '#e74c3c', 'SPY/IWM');
+initChartDual('ch-ratio2', '#a29bfe', 'SPY/GLD', '#fd79a8', 'TLT');
 
 // ════════════════════════════════════════════════════════════════════════
 // CHART UPDATE HELPERS
@@ -272,12 +272,12 @@ function updateTicker(symbol, price, prevPrice) {
 // ROLLING CORRELATION
 // ════════════════════════════════════════════════════════════════════════
 const CORR_PAIRS = [
-  ['SPX500/USD', 'VIX/USD'],
-  ['SPX500/USD', 'QQQ'],
-  ['SPX500/USD', 'GLD'],
-  ['SPX500/USD', 'DXY/USD'],
-  ['VIX/USD',    'DXY/USD'],
-  ['QQQ',        'GLD'],
+  ['SPY', 'QQQ'],
+  ['SPY', 'GLD'],
+  ['SPY', 'IWM'],
+  ['SPY', 'TLT'],
+  ['QQQ', 'GLD'],
+  ['IWM', 'TLT'],
 ];
 
 function pearson(a, b) {
@@ -337,33 +337,37 @@ function onTick(symbol, price, ts) {
   const dt = new Date(typeof ts === 'number' ? ts * 1000 : ts);
 
   switch (symbol) {
-    case 'SPX500/USD':
-      pushPoint('ch-spx', 0, dt, price);
-      document.getElementById('lv-spx').textContent = price.toFixed(2);
+    case 'SPY':
+      pushPoint('ch-spy', 0, dt, price);
+      document.getElementById('lv-spy').textContent = price.toFixed(2);
       break;
-    case 'VIX/USD':
-      pushPoint('ch-vix', 0, dt, price);
-      document.getElementById('lv-vix').textContent = price.toFixed(2);
+    case 'QQQ':
+      pushPoint('ch-qqq', 0, dt, price);
+      document.getElementById('lv-qqq').textContent = price.toFixed(2);
       break;
   }
 
-  // Ratios — compute whenever both buffers have data
-  const spx = buf['SPX500/USD'];
+  const spy = buf['SPY'];
   const qqq = buf['QQQ'];
   const gld = buf['GLD'];
-  const dxy = buf['DXY/USD'];
+  const iwm = buf['IWM'];
+  const tlt = buf['TLT'];
 
-  if (spx.length && qqq.length && (symbol === 'SPX500/USD' || symbol === 'QQQ')) {
-    const r = spx[spx.length-1].price / qqq[qqq.length-1].price;
+  if (spy.length && qqq.length && (symbol === 'SPY' || symbol === 'QQQ')) {
+    const r = spy[spy.length-1].price / qqq[qqq.length-1].price;
     pushPoint('ch-ratio1', 0, dt, r);
     document.getElementById('lv-ratio1').textContent = r.toFixed(3);
   }
-  if (spx.length && gld.length && (symbol === 'SPX500/USD' || symbol === 'GLD')) {
-    const r = spx[spx.length-1].price / gld[gld.length-1].price;
+  if (spy.length && iwm.length && (symbol === 'SPY' || symbol === 'IWM')) {
+    const r = spy[spy.length-1].price / iwm[iwm.length-1].price;
+    pushPoint('ch-ratio1', 1, dt, r);
+  }
+  if (spy.length && gld.length && (symbol === 'SPY' || symbol === 'GLD')) {
+    const r = spy[spy.length-1].price / gld[gld.length-1].price;
     pushPoint('ch-ratio2', 0, dt, r);
     document.getElementById('lv-ratio2').textContent = r.toFixed(3);
   }
-  if (dxy.length && (symbol === 'DXY/USD')) {
+  if (tlt.length && symbol === 'TLT') {
     pushPoint('ch-ratio2', 1, dt, price);
   }
 
