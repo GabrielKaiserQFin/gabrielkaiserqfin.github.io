@@ -80,7 +80,7 @@
   main {
     flex: 1;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
     gap: 4px;
     padding: 4px;
@@ -114,7 +114,7 @@
 
   /* ── Correlation panel spans full right column ───────────────────────── */
   #panel-corr {
-    grid-column: 4;
+    grid-column: 5;
     grid-row: 1 / 4;
   }
   #corr-table {
@@ -147,78 +147,63 @@
 </div>
 
 <main>
-  <!-- Row 1: Candlesticks -->
+  <!-- Row 1: Equity -->
   <div class="panel">
-    <div class="panel-header">
-      <span>SPY — S&amp;P 500</span>
-      <span class="live-val" id="lv-spy">—</span>
-    </div>
+    <div class="panel-header"><span>SPY — S&amp;P 500</span><span class="live-val" id="lv-spy">—</span></div>
     <div class="chart-wrap" id="ch-spy"></div>
   </div>
   <div class="panel">
-    <div class="panel-header">
-      <span>QQQ — Nasdaq 100</span>
-      <span class="live-val" id="lv-qqq">—</span>
-    </div>
+    <div class="panel-header"><span>QQQ — Nasdaq 100</span><span class="live-val" id="lv-qqq">—</span></div>
     <div class="chart-wrap" id="ch-qqq"></div>
   </div>
   <div class="panel">
-    <div class="panel-header">
-      <span>GLD — Gold</span>
-      <span class="live-val" id="lv-gld">—</span>
-    </div>
+    <div class="panel-header"><span>GLD — Gold ETF</span><span class="live-val" id="lv-gld">—</span></div>
     <div class="chart-wrap" id="ch-gld"></div>
   </div>
+  <div class="panel">
+    <div class="panel-header"><span>IWM — Russell 2000</span><span class="live-val" id="lv-iwm">—</span></div>
+    <div class="chart-wrap" id="ch-iwm"></div>
+  </div>
 
-  <!-- Correlation panel spans all 3 rows -->
+  <!-- Corr spans rows 1–3 -->
   <div class="panel" id="panel-corr">
     <div class="panel-header"><span>Rolling Correlation (100 ticks)</span></div>
     <div id="corr-table"><table id="corr-matrix"></table></div>
   </div>
 
-  <!-- Row 2: More candlesticks -->
+  <!-- Row 2: Bonds + Commodities + FX -->
   <div class="panel">
-    <div class="panel-header">
-      <span>IWM — Russell 2000</span>
-      <span class="live-val" id="lv-iwm">—</span>
-    </div>
-    <div class="chart-wrap" id="ch-iwm"></div>
-  </div>
-  <div class="panel">
-    <div class="panel-header">
-      <span>TLT — 20Y Treasuries</span>
-      <span class="live-val" id="lv-tlt">—</span>
-    </div>
+    <div class="panel-header"><span>TLT — 20Y Treasury</span><span class="live-val" id="lv-tlt">—</span></div>
     <div class="chart-wrap" id="ch-tlt"></div>
   </div>
   <div class="panel">
-    <div class="panel-header">
-      <span>SPY / QQQ &nbsp;·&nbsp; SPY / IWM</span>
-      <span class="live-val" id="lv-ratio1">—</span>
-    </div>
-    <div class="chart-wrap" id="ch-ratio1"></div>
+    <div class="panel-header"><span>XAU/USD — Gold</span><span class="live-val" id="lv-xauusd">—</span></div>
+    <div class="chart-wrap" id="ch-xauusd"></div>
+  </div>
+  <div class="panel">
+    <div class="panel-header"><span>XAG/USD — Silver</span><span class="live-val" id="lv-xagusd">—</span></div>
+    <div class="chart-wrap" id="ch-xagusd"></div>
+  </div>
+  <div class="panel">
+    <div class="panel-header"><span>WTICO — WTI Crude</span><span class="live-val" id="lv-wticousd">—</span></div>
+    <div class="chart-wrap" id="ch-wticousd"></div>
   </div>
 
-  <!-- Row 3: Ratios -->
+  <!-- Row 3: FX + Ratios -->
   <div class="panel">
-    <div class="panel-header">
-      <span>SPY / GLD</span>
-      <span class="live-val" id="lv-ratio2">—</span>
-    </div>
+    <div class="panel-header"><span>USD/JPY</span><span class="live-val" id="lv-usdjpy">—</span></div>
+    <div class="chart-wrap" id="ch-usdjpy"></div>
+  </div>
+  <div class="panel">
+    <div class="panel-header"><span>SPY/QQQ · SPY/IWM</span><span class="live-val" id="lv-ratio1">—</span></div>
+    <div class="chart-wrap" id="ch-ratio1"></div>
+  </div>
+  <div class="panel">
+    <div class="panel-header"><span>SPY/GLD · XAU/XAG</span><span class="live-val" id="lv-ratio2">—</span></div>
     <div class="chart-wrap" id="ch-ratio2"></div>
   </div>
   <div class="panel">
-    <div class="panel-header">
-      <span>QQQ / GLD &nbsp;·&nbsp; IWM / TLT</span>
-      <span class="live-val" id="lv-ratio3">—</span>
-    </div>
-    <div class="chart-wrap" id="ch-ratio3"></div>
-  </div>
-  <div class="panel">
-    <div class="panel-header">
-      <span>SPY / TLT &nbsp;·&nbsp; QQQ / IWM</span>
-      <span class="live-val" id="lv-ratio4">—</span>
-    </div>
+    <div class="panel-header"><span>SPY/TLT · SPY/WTICO</span><span class="live-val" id="lv-ratio4">—</span></div>
     <div class="chart-wrap" id="ch-ratio4"></div>
   </div>
 </main>
@@ -234,7 +219,7 @@ const CORR_WINDOW  = 100;        // ticks for rolling correlation
 const MAX_POINTS   = 500;        // max points per ratio chart line
 
 // Symbols the proxy will subscribe to
-const SYMBOLS = ['SPY', 'QQQ', 'GLD', 'IWM', 'TLT'];
+const SYMBOLS = ['SPY', 'QQQ', 'GLD', 'IWM', 'TLT', 'XAU/USD', 'XAG/USD', 'WTICO/USD', 'USD/JPY'];
 
 // ════════════════════════════════════════════════════════════════════════
 // STATE
@@ -282,15 +267,18 @@ function initChartDual(divId, color1, name1, color2, name2) {
   }, PLOT_CFG);
 }
 
-initCandlestick('ch-spy', 'SPY');
-initCandlestick('ch-qqq', 'QQQ');
-initCandlestick('ch-gld', 'GLD');
-initCandlestick('ch-iwm', 'IWM');
-initCandlestick('ch-tlt', 'TLT');
+initCandlestick('ch-spy',     'SPY');
+initCandlestick('ch-qqq',     'QQQ');
+initCandlestick('ch-gld',     'GLD');
+initCandlestick('ch-iwm',     'IWM');
+initCandlestick('ch-tlt',     'TLT');
+initCandlestick('ch-xauusd',  'XAU/USD');
+initCandlestick('ch-xagusd',  'XAG/USD');
+initCandlestick('ch-wticousd','WTICO/USD');
+initCandlestick('ch-usdjpy',  'USD/JPY');
 initChartDual('ch-ratio1', '#f39c12', 'SPY/QQQ', '#e74c3c', 'SPY/IWM');
-initChartDual('ch-ratio2', '#a29bfe', 'SPY/GLD', '#4a9eff', 'SPY/GLD');
-initChartDual('ch-ratio3', '#2ecc71', 'QQQ/GLD', '#fd79a8', 'IWM/TLT');
-initChartDual('ch-ratio4', '#f39c12', 'SPY/TLT', '#e74c3c', 'QQQ/IWM');
+initChartDual('ch-ratio2', '#a29bfe', 'SPY/GLD', '#f39c12', 'XAU/XAG');
+initChartDual('ch-ratio4', '#4a9eff', 'SPY/TLT', '#2ecc71', 'SPY/WTICO');
 
 // ════════════════════════════════════════════════════════════════════════
 // CANDLESTICK AGGREGATION — 1-minute bars, merges with loaded history
@@ -383,8 +371,10 @@ const CORR_PAIRS = [
   ['SPY', 'GLD'],
   ['SPY', 'IWM'],
   ['SPY', 'TLT'],
-  ['QQQ', 'GLD'],
-  ['IWM', 'TLT'],
+  ['XAU/USD', 'XAG/USD'],
+  ['XAU/USD', 'WTICO/USD'],
+  ['SPY', 'WTICO/USD'],
+  ['USD/JPY', 'XAU/USD'],
 ];
 
 function pearson(a, b) {
@@ -464,43 +454,61 @@ function onTick(symbol, price, ts) {
       updateCandle('ch-tlt', 'TLT', price, dt);
       document.getElementById('lv-tlt').textContent = price.toFixed(2);
       break;
+    case 'XAU/USD':
+      updateCandle('ch-xauusd', 'XAU/USD', price, dt);
+      document.getElementById('lv-xauusd').textContent = price.toFixed(2);
+      break;
+    case 'XAG/USD':
+      updateCandle('ch-xagusd', 'XAG/USD', price, dt);
+      document.getElementById('lv-xagusd').textContent = price.toFixed(2);
+      break;
+    case 'WTICO/USD':
+      updateCandle('ch-wticousd', 'WTICO/USD', price, dt);
+      document.getElementById('lv-wticousd').textContent = price.toFixed(2);
+      break;
+    case 'USD/JPY':
+      updateCandle('ch-usdjpy', 'USD/JPY', price, dt);
+      document.getElementById('lv-usdjpy').textContent = price.toFixed(2);
+      break;
   }
 
-  const spy = buf['SPY'];
-  const qqq = buf['QQQ'];
-  const gld = buf['GLD'];
-  const iwm = buf['IWM'];
-  const tlt = buf['TLT'];
+  const spy   = buf['SPY'];
+  const qqq   = buf['QQQ'];
+  const gld   = buf['GLD'];
+  const iwm   = buf['IWM'];
+  const tlt   = buf['TLT'];
+  const xau   = buf['XAU/USD'];
+  const xag   = buf['XAG/USD'];
+  const wtico = buf['WTICO/USD'];
 
-  if (spy.length && qqq.length && (symbol === 'SPY' || symbol === 'QQQ')) {
-    const r = spy[spy.length-1].price / qqq[qqq.length-1].price;
+  const last = b => b.length ? b[b.length-1].price : null;
+
+  // ratio1: SPY/QQQ · SPY/IWM
+  if (spy.length && qqq.length && (symbol==='SPY'||symbol==='QQQ')) {
+    const r = last(spy)/last(qqq);
     pushPoint('ch-ratio1', 0, dt, r);
     document.getElementById('lv-ratio1').textContent = r.toFixed(3);
   }
-  if (spy.length && iwm.length && (symbol === 'SPY' || symbol === 'IWM')) {
-    pushPoint('ch-ratio1', 1, dt, spy[spy.length-1].price / iwm[iwm.length-1].price);
-  }
-  if (spy.length && gld.length && (symbol === 'SPY' || symbol === 'GLD')) {
-    const r = spy[spy.length-1].price / gld[gld.length-1].price;
+  if (spy.length && iwm.length && (symbol==='SPY'||symbol==='IWM'))
+    pushPoint('ch-ratio1', 1, dt, last(spy)/last(iwm));
+
+  // ratio2: SPY/GLD · XAU/XAG
+  if (spy.length && gld.length && (symbol==='SPY'||symbol==='GLD')) {
+    const r = last(spy)/last(gld);
     pushPoint('ch-ratio2', 0, dt, r);
     document.getElementById('lv-ratio2').textContent = r.toFixed(3);
   }
-  if (qqq.length && gld.length && (symbol === 'QQQ' || symbol === 'GLD')) {
-    const r = qqq[qqq.length-1].price / gld[gld.length-1].price;
-    pushPoint('ch-ratio3', 0, dt, r);
-    document.getElementById('lv-ratio3').textContent = r.toFixed(3);
-  }
-  if (iwm.length && tlt.length && (symbol === 'IWM' || symbol === 'TLT')) {
-    pushPoint('ch-ratio3', 1, dt, iwm[iwm.length-1].price / tlt[tlt.length-1].price);
-  }
-  if (spy.length && tlt.length && (symbol === 'SPY' || symbol === 'TLT')) {
-    const r = spy[spy.length-1].price / tlt[tlt.length-1].price;
+  if (xau.length && xag.length && (symbol==='XAU/USD'||symbol==='XAG/USD'))
+    pushPoint('ch-ratio2', 1, dt, last(xau)/last(xag));
+
+  // ratio4: SPY/TLT · SPY/WTICO
+  if (spy.length && tlt.length && (symbol==='SPY'||symbol==='TLT')) {
+    const r = last(spy)/last(tlt);
     pushPoint('ch-ratio4', 0, dt, r);
     document.getElementById('lv-ratio4').textContent = r.toFixed(3);
   }
-  if (qqq.length && iwm.length && (symbol === 'QQQ' || symbol === 'IWM')) {
-    pushPoint('ch-ratio4', 1, dt, qqq[qqq.length-1].price / iwm[iwm.length-1].price);
-  }
+  if (spy.length && wtico.length && (symbol==='SPY'||symbol==='WTICO/USD'))
+    pushPoint('ch-ratio4', 1, dt, last(spy)/last(wtico));
 
   updateCorrTable();
 }
