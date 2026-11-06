@@ -40,9 +40,9 @@ navbar:
           - text: "Path-Dependent Volatility App"
             href: 'https://quantresearchgk.shinyapps.io/pdv-simulator/'
           - text: "Commitment of Traders App"
-            href: 'https://connect.posit.cloud/quantresearch/content/01a1b186-1cdd-81a8-e7bb-ef35c97509b7'
+            href: 'https://01a1b186-1cdd-81a8-e7bb-ef35c97509b7.share.connect.posit.cloud'
           - text: "Heatmap OI"
-            href: 'https://connect.posit.cloud/quantresearch/content/01a1b167-f7fa-0997-32fb-5d8b34795cb1'
+            href: 'https://01a1b167-f7fa-0997-32fb-5d8b34795cb1.share.connect.posit.cloud'
     - text: "Research"
       href: Research.html
     - text: "Teaching"
