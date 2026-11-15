@@ -43,6 +43,8 @@ navbar:
             href: 'https://01a1b186-1cdd-81a8-e7bb-ef35c97509b7.share.connect.posit.cloud'
           - text: "Heatmap OI"
             href: 'https://01a1b167-f7fa-0997-32fb-5d8b34795cb1.share.connect.posit.cloud'
+          - text: "GEX SPX"
+            href: 'https://01a1e03f-5bb2-25ca-5a91-9b9e0a5e8964.share.connect.posit.cloud'
     - text: "Research"
       href: Research.html
     - text: "Teaching"
